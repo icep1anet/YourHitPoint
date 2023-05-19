@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  const MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: MainPage(),
     );
@@ -31,8 +31,8 @@ class _MainPageState extends State<MainPage> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      _pageViewController.animateToPage(index, duration: const Duration(milliseconds: 100), curve: Curves.easeOut);
-
+      _pageViewController.animateToPage(index,
+          duration: const Duration(milliseconds: 100), curve: Curves.easeOut);
     });
   }
 
@@ -41,7 +41,7 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       body: PageView(
         controller: _pageViewController,
-        children: const<Widget>[
+        children: const <Widget>[
           MyselfPage(),
           Text("b"),
         ],
