@@ -10,135 +10,161 @@ class MyselfPage extends StatefulWidget {
 
 // Stateを継承して使う
 class _MyselfPageState extends State<MyselfPage> {
+  Map test = {"x": 3, "y": 4};
+  double kon = 3;
+  double point = 0;
+  List<FlSpot> spots = const [
+    FlSpot(0, 98),
+    FlSpot(1, 92),
+    FlSpot(2, 79),
+    FlSpot(2.6, 40),
+    FlSpot(3, 68),
+    FlSpot(4, 62),
+    FlSpot(4.3, 80),
+    FlSpot(5, 49),
+    FlSpot(6, 35),
+    // FlSpot(7, 29),
+    // FlSpot(8, 19),
+    // FlSpot(9, 9),
+    // FlSpot(10, 0),
+  ];
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-        child: Container(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: <Widget>[
-                const SizedBox(
-                  height: 60,
-                ),
-                _currentmyAvatar(null),
-                const SizedBox(height: 30),
-                Container(
-                  width: 300,
-                  // width: double.infinity,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: const Color.fromARGB(255, 39, 98, 236),
-                        width: 2),
-                    borderRadius: BorderRadius.circular(8),
+    return Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text("Myself"),
+          actions: [
+            IconButton(onPressed: () {}, icon: const Icon(Icons.settings))
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Container(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: <Widget>[
+                  const SizedBox(
+                    height: 60,
                   ),
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    children: [
-                      Text("現在のHP : 100",
-                          style: Theme.of(context).textTheme.headlineSmall),
-                      const SizedBox(height: 10),
-                      Text("推定活動限界 : 04 : 28",
-                          style: Theme.of(context).textTheme.headlineSmall),
-                    ],
+                  // TextButton(
+                  //   onPressed: () {
+                  //     setState(() {
+                  //       spots.add(FlSpot(point, 10*point));
+                  //       point++;
+                  //     });
+                  //   },
+                  //   child: const Text('押せるよ'),
+                  // ),
+                  _currentmyAvatar(null),
+                  const SizedBox(height: 30),
+                  Container(
+                    width: 300,
+                    // width: double.infinity,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: const Color.fromARGB(255, 39, 98, 236),
+                          width: 2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                        Text("現在のHP : 100",
+                            style: Theme.of(context).textTheme.headlineSmall),
+                        const SizedBox(height: 10),
+                        Text("推定活動限界 : 04 : 28",
+                            style: Theme.of(context).textTheme.headlineSmall),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 40),
-                Container(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text("HP推移予測",
-                          style: Theme.of(context).textTheme.headlineSmall),
-                    )),
-                const SizedBox(height: 5),
-                Container(
-                  padding: const EdgeInsets.only(right: 20, bottom: 20),
-                  height: 200,
-                  child: LineChart(
-                    LineChartData(
-                      backgroundColor: Colors.grey[200],
-                      lineBarsData: [
-                        LineChartBarData(
+                  const SizedBox(height: 40),
+                  Container(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text("HP推移予測",
+                            style: Theme.of(context).textTheme.headlineSmall),
+                      )),
+                  const SizedBox(height: 5),
+                  Container(
+                    padding: const EdgeInsets.only(right: 20, bottom: 20),
+                    height: 200,
+                    child: LineChart(
+                      LineChartData(
+                        minX: 0,
+                        maxX: 6,
+                        backgroundColor: Colors.grey[200],
+                        lineBarsData: [
+                          LineChartBarData(
                             isCurved: true,
                             color: Colors.red[400],
                             barWidth: 3,
                             dotData: FlDotData(show: true),
-                            spots: const [
-                              FlSpot(0, 98),
-                              FlSpot(1, 92),
-                              FlSpot(2, 79),
-                              FlSpot(2.6, 40),
-                              FlSpot(3, 68),
-                              FlSpot(4, 62),
-                              FlSpot(4.3, 80),
-                              FlSpot(5, 49),
-                              FlSpot(6, 35),
-                              // FlSpot(7, 29),
-                              // FlSpot(8, 19),
-                              // FlSpot(9, 9),
-                              // FlSpot(10, 0),
-                            ])
-                      ],
-                      titlesData: FlTitlesData(
-                        rightTitles: AxisTitles(
-                            sideTitles: SideTitles(showTitles: false)),
-                        topTitles: AxisTitles(
-                            sideTitles: SideTitles(showTitles: false)),
-                        bottomTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            interval: 1,
-                            getTitlesWidget: (value, meta) {
-                              return bottomTitleWidgets(
-                                value,
-                                meta,
-                                // constraints.maxWidth,
-                              );
-                            },
-                            reservedSize: 30,
+                            spots: spots,
+                            dashArray: [10, 6],
+                          )
+                        ],
+                        titlesData: FlTitlesData(
+                          rightTitles: AxisTitles(
+                              sideTitles: SideTitles(showTitles: false)),
+                          topTitles: AxisTitles(
+                              sideTitles: SideTitles(showTitles: false)),
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              interval: 1,
+                              getTitlesWidget: (value, meta) {
+                                return bottomTitleWidgets(
+                                  value,
+                                  meta,
+                                  // constraints.maxWidth,
+                                );
+                              },
+                              reservedSize: 30,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                Container(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text("記録",
-                          style: Theme.of(context).textTheme.headlineSmall),
-                    )),
-                const SizedBox(height: 5),
-                Container(
-                  width: 300,
-                  // width: double.infinity,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: const Color.fromARGB(255, 39, 98, 236),
-                        width: 2),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    children: [
-                      Align(
+                  const SizedBox(height: 10),
+                  Container(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
                         alignment: Alignment.centerLeft,
-                        child: Text("就寝時残りHP",
+                        child: Text("記録",
                             style: Theme.of(context).textTheme.headlineSmall),
-                      ),
-                      const SizedBox(height: 10),
-                      Text("最高 : 70",
-                          style: Theme.of(context).textTheme.headlineSmall),
-                      const SizedBox(height: 10),
-                      Text("最低 : -30",
-                          style: Theme.of(context).textTheme.headlineSmall),
-                    ],
+                      )),
+                  const SizedBox(height: 5),
+                  Container(
+                    width: 300,
+                    // width: double.infinity,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: const Color.fromARGB(255, 39, 98, 236),
+                          width: 2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text("就寝時残りHP",
+                              style: Theme.of(context).textTheme.headlineSmall),
+                        ),
+                        const SizedBox(height: 10),
+                        Text("最高 : 70",
+                            style: Theme.of(context).textTheme.headlineSmall),
+                        const SizedBox(height: 10),
+                        Text("最低 : -30",
+                            style: Theme.of(context).textTheme.headlineSmall),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            )));
+                ],
+              )),
+        ));
   }
 
   Widget _currentmyAvatar(String? imgUrl) {
