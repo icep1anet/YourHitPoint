@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import "myself.dart";
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+// import "design.dart";
+// import "asset_manifest.dart";
 
 void main() {
   runApp(const MyApp());
@@ -51,33 +55,63 @@ class _MainPageState extends State<MainPage> {
           });
         },
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            // activeIcon: Icon(Icons.book_online),
-            label: 'Myself',
-            tooltip: "My Page",
-            backgroundColor: Color.fromARGB(255, 103, 219, 234),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            // activeIcon: Icon(Icons.school_outlined),
-            label: 'Friends',
-            tooltip: "Friends Page",
-            backgroundColor: Color.fromARGB(255, 231, 154, 195),
-          ),
-        ],
-        type: BottomNavigationBarType.shifting,
-        backgroundColor: Colors.red,
-        enableFeedback: true,
-        selectedFontSize: 20,
-        selectedIconTheme: const IconThemeData(size: 30, color: Colors.green),
-        selectedItemColor: Colors.black,
-        unselectedIconTheme: const IconThemeData(size: 25, color: Colors.white),
-      ),
+      bottomNavigationBar: SalomonBottomBar(
+          backgroundColor: const Color.fromARGB(255, 179, 206, 233),
+          currentIndex: _selectedIndex,
+          selectedItemColor: const Color(0xff6200ee),
+          unselectedItemColor: const Color(0xff757575),
+          onTap:  _onItemTapped,
+          //(index) {
+          //   setState(() {
+          //     _selectedIndex = index;
+          //   });
+          // },
+          items: _navBarItems),
     );
   }
 }
+
+final _navBarItems = [
+  SalomonBottomBarItem(
+    icon: const Icon(Icons.person),
+    title: Text(
+      "Myself",
+      style: GoogleFonts.orelegaOne(fontSize: 20),
+    ),
+    selectedColor:  Colors.green,
+  ),
+  SalomonBottomBarItem(
+      icon: const Icon(Icons.people),
+      title: Text("Friends", style: GoogleFonts.orelegaOne(fontSize: 20)),
+      selectedColor: Colors.pink)
+
+];
+        // onTap: _onItemTapped,
+        // selectedLabelStyle: GoogleFonts.orelegaOne(
+        //   fontSize: 25
+        // ),
+        // items: const <BottomNavigationBarItem>[
+        //   BottomNavigationBarItem(
+        //     icon: Icon(Icons.person),
+        //     // activeIcon: Icon(Icons.book_online),
+        //     label: 'Myself',
+
+        //     tooltip: "My Page",
+        //     backgroundColor: Color.fromARGB(255, 179, 206, 233),
+        //   ),
+        //   BottomNavigationBarItem(
+        //     icon: Icon(Icons.people),
+        //     // activeIcon: Icon(Icons.school_outlined),
+        //     label: 'Friends',
+        //     tooltip: "Friends Page",
+        //     backgroundColor: Color.fromARGB(255, 231, 154, 195),
+        //   ),
+        // ],
+        // type: BottomNavigationBarType.shifting,
+        // backgroundColor: Colors.red,
+        // enableFeedback: true,
+        // selectedFontSize: 20,
+        // // selectedIconTheme: const IconThemeData(size: 30, color: Color.fromARGB(255, 3, 146, 34)),
+        // selectedItemColor: Colors.black,
+        // unselectedIconTheme: const IconThemeData(size: 25, color: Colors.white),
+ 

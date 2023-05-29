@@ -10,6 +10,11 @@ dependencies:
   fl_chart: ^0.62.0
   flutter:
     sdk: flutter
+  google_fonts: ^4.0.0
+  fluttericon: ^2.0.0
+  salomon_bottom_bar: ^3.3.2
+
+  
 
 dev_dependencies:
   flutter_test:
