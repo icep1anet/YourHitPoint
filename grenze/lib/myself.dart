@@ -69,13 +69,14 @@ class _MyselfPageState extends State<MyselfPage> {
                   // stretchModes: []
                   centerTitle: true,
                   collapseMode: CollapseMode.parallax,
-                  title: Text("Grenze",
-                  style: GoogleFonts.italianno(
+                  title: Text("Hit Point",
+                  style: GoogleFonts.bebasNeue(
                   textStyle: Theme.of(context).textTheme.headlineMedium,
-                  fontSize: 70,
+                  fontSize: 50,
                   color: Colors.white)),
                   background: Image.network(
-                    "https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+                    // "https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+                    "https://www.sozailab.jp/db_img/sozai/15984/e6f2dcb31db39a2a7ad9f1622696c84e.png",
                     fit: BoxFit.cover,
                   )),
                    actions: [
@@ -279,7 +280,7 @@ class _MyselfPageState extends State<MyselfPage> {
                         alignment: Alignment.center,
                         child: Text("HP record",
                             style: GoogleFonts.orelegaOne(
-                              fontSize: 20,
+                              fontSize: 30,
                               color: Colors.black
                             )),
                       )),
