@@ -5,6 +5,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:fluttericon/iconic_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import "package:fluttericon/font_awesome5_icons.dart";
+import 'wave_view.dart';
+import 'main.dart';
 
 class MyselfPage extends StatefulWidget {
   const MyselfPage({Key? key}) : super(key: key);
@@ -69,14 +71,12 @@ class _MyselfPageState extends State<MyselfPage> {
                   // stretchModes: []
                   centerTitle: true,
                   collapseMode: CollapseMode.parallax,
-                  title: Text("Hit Point",
+                  title: Text("My Hit Point",
                   style: GoogleFonts.bebasNeue(
                   textStyle: Theme.of(context).textTheme.headlineMedium,
                   fontSize: 50,
                   color: Colors.white)),
-                  background: Image.network(
-                    // "https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-                    "https://www.sozailab.jp/db_img/sozai/15984/e6f2dcb31db39a2a7ad9f1622696c84e.png",
+                  background: Image.asset("assets/images/heartshock.png",  
                     fit: BoxFit.cover,
                   )),
                    actions: [
@@ -114,7 +114,39 @@ class _MyselfPageState extends State<MyselfPage> {
                   ),
                   const SizedBox(height: 30),
 
+                  Row(
+                    children:[
+                      const SizedBox(width: 20),
                   _currentmyAvatar(null),
+                  Padding(
+                        padding:
+                            const EdgeInsets.only(left: 20, right: 8, top: 16),
+                        child: Container(
+                          width: 60,
+                          height: 160,
+                          decoration: BoxDecoration(
+                            //ここがhpの上部分
+                            color: HexColor('#E8EDFE'),
+                            // color: HexColor("#0087aa"),
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(80.0),
+                                bottomLeft: Radius.circular(80.0),
+                                bottomRight: Radius.circular(80.0),
+                                topRight: Radius.circular(80.0)),
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                  color: const Color(0xFF3A5160).withOpacity(0.4),
+                                  offset: const Offset(2, 2),
+                                  blurRadius: 4),
+                            ],
+                          ),
+                          child: const WaveView(
+                            percentageValue: 60.0,
+                          ),
+                        ),
+                      ),
+                    ]
+                  ),
                   const SizedBox(height: 30),
 
                   Container(
@@ -150,60 +182,66 @@ class _MyselfPageState extends State<MyselfPage> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     padding: const EdgeInsets.all(10),
-                    child: Row(
-                      children: [
-                        const SizedBox(width: 10),
-                        Column(
-                          children: [
-                            Text("現在のHP",
-                                style: GoogleFonts.zenAntiqueSoft(
-                                  fontSize: 20
-                                )
-                                // Theme.of(context).textTheme.headlineSmall
-                                ),
-                            const SizedBox(height: 10),
-                            Text("推定活動限界",
-                                style: GoogleFonts.zenAntiqueSoft(
-                                  fontSize: 20
-                                )),
-                          ],
-                        ),
-                        const SizedBox(width: 30),
-                          Column(
-                            children: [
-                              Text("94",
-                                style: GoogleFonts.orelegaOne(
-                                  fontSize: 25,
-                                  color: Colors.red
-                                )
-                                // Theme.of(context).textTheme.headlineSmall
-                                ),
-                            const SizedBox(height: 10),
 
-                            Text("23:43",
-                                style: GoogleFonts.orelegaOne(
-                                  fontSize: 25,
-                                  color: Colors.red
-                                )),
-                            ]
-                          ),
-                          const SizedBox(width: 20,),
+                    child: IntrinsicWidth(
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 10),
                           Column(
                             children: [
-                              Transform.rotate(angle: 270 * pi / 180,
-                              child: const Icon(Icons.battery_4_bar)
-                              ),
-                              const SizedBox(height: 10),
-                              const Icon(Iconic.moon_inv)
+                              Text("現在のHP",
+                                  style: GoogleFonts.notoSansJavanese(
+                                    fontSize: 20
+                                  )
+                                  // Theme.of(context).textTheme.headlineSmall
+                                  ),
+                              // const SizedBox(height: 1),
+                              Text("推定活動限界",
+                                  style: GoogleFonts.notoSansJavanese(
+                                    fontSize: 20
+                                  )),
                             ],
                           ),
-                          // addAllListData(),
-
-                        ]
-
+                          const SizedBox(width: 10),
+                            Column(
+                              children: [
+                                Text("94",
+                                  style: GoogleFonts.sourceCodePro(
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red
+                                  )
+                                  // Theme.of(context).textTheme.headlineSmall
+                                  ),
+                              const SizedBox(height: 10),
+                    
+                              Text("23:43",
+                                  style: GoogleFonts.sourceCodePro(
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red
+                                  )),
+                              ]
+                            ),
+                            const SizedBox(width: 20,),
+                            Column(
+                              children: [
+                                Transform.rotate(angle: 270 * pi / 180,
+                                child: const Icon(Icons.battery_4_bar)
+                                ),
+                                const SizedBox(height: 10),
+                                const Icon(Iconic.moon_inv)
+                              ],
+                            ),
+                            // addAllListData(),
+                    
+                          ]
+                    
+                      ),
                     )
                   ),
                   const SizedBox(height: 40),
+                  
                   Container(
                       width: 300,
                       padding: const EdgeInsets.all(5),
@@ -357,7 +395,7 @@ class _MyselfPageState extends State<MyselfPage> {
         
         backgroundColor: hasImage ? Colors.transparent : color,
         backgroundImage: hasImage ? NetworkImage(imgUrl) : null,
-        radius: 120,
+        radius: 100,
         
         child: !hasImage
             ?  Text(
