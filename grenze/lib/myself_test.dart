@@ -253,34 +253,29 @@ class _MyselfPageState extends State<MyselfPage> {
     // }
     
     text = value.toInt().toString();
-    switch (value.toInt()) {
-      // case 0:
-      //   text = '00:00';
-      //   break;
-      // case 4:
-      //   text = '04:00';
-      //   break;
-      case 8:
-        text = '08:00';
+    switch (value.toInt().toString()) {
+      case "0":
+        text = '00:00';
         break;
-      case 12:
-        text = '12:00';
-        break;
-      case 16:
-        text = '16:00';
-        break;
-      case 20:
-        text = '20:00';
-        break;
-      case 0:
-        text = '23:59';
-        break;
-      case 4:
+      case "4":
         text = '04:00';
         break;
-      // case 7:
-      //   text = '404';
-      //   break;
+      case "8":
+        text = '08:00';
+        break;
+      case "12":
+        text = '12:00';
+        break;
+      case "16":
+        text = '16:00';
+        break;
+      case "20":
+        text = '20:00';
+        break;
+      case "24":
+        text = '23:59';
+        break;
+
 
 
       default:
