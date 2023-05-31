@@ -136,6 +136,7 @@ class _MyselfPageState extends State<MyselfPage> {
                         decoration: BoxDecoration(
                           //ここがhpの上部分
                           color: HexColor('#E8EDFE'),
+
                           // color: HexColor("#0087aa"),
                           borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(80.0),
@@ -150,7 +151,7 @@ class _MyselfPageState extends State<MyselfPage> {
                           ],
                         ),
                         child: const WaveView(
-                          percentageValue: 80.0,
+                          percentageValue: 0.0,
                         ),
                       ),
                     ),
@@ -205,22 +206,21 @@ class _MyselfPageState extends State<MyselfPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              // Text(
-                              //     // "現在のHP",
-                              //     "Current HP",
-                              //     // style: GoogleFonts.notoSansJavanese(
-                              //     style: GoogleFonts.roboto(
-                              //         fontWeight: FontWeight.w500, fontSize: 17)
-                              //     // Theme.of(context).textTheme.headlineSmall
-                              //     ),
-                                  Text(
-                                  "現在のHP",
+                              Text(
+                                  "Current HP",
                                   // style: GoogleFonts.notoSansJavanese(
-                                  // style: GoogleFonts.mochiyPopOne(
-                                    style: GoogleFonts.roboto(
-                                      fontWeight: FontWeight.w500, fontSize: 17)
+                                  style: GoogleFonts.roboto(
+                                      fontWeight: FontWeight.w500, fontSize: 20)
                                   // Theme.of(context).textTheme.headlineSmall
                                   ),
+                                  // Text(
+                                  // "現在のHP",
+                                  // // style: GoogleFonts.notoSansJavanese(
+                                  // // style: GoogleFonts.mochiyPopOne(
+                                  //   style: GoogleFonts.roboto(
+                                  //     fontWeight: FontWeight.w500, fontSize: 17)
+                                  // // Theme.of(context).textTheme.headlineSmall
+                                  // ),
                                   Text("94",
                                 style: GoogleFonts.sourceCodePro(
                                     fontSize: 27,
@@ -232,13 +232,7 @@ class _MyselfPageState extends State<MyselfPage> {
                               // const SizedBox(height: 3),
                               //japanese
                                   // const SizedBox(height: 5,),
-                              // Text(
-                              //     // "推定活動限界",
-                              //     "Activity limit time",
-                              //     // style: GoogleFonts.notoSansJavanese(
-                              //     style: GoogleFonts.roboto(
-                              //         fontWeight: FontWeight.w500,
-                              //         fontSize: 17)),
+                              // 
                               
                               Transform.rotate(
                                   angle: 270 * pi / 180,
@@ -254,12 +248,17 @@ class _MyselfPageState extends State<MyselfPage> {
                             
                             // const SizedBox(height: 10),
                             Text(
-                                  "推定活動限界",
-                                  // style: GoogleFonts.notoSansJavanese(
-                                  // style: GoogleFonts.mochiyPopOne(
-                                    style: GoogleFonts.roboto(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 17)),
+                                  "Activity limit time",
+                                  style: GoogleFonts.roboto(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18)),
+                            // Text(
+                            //       "推定活動限界",
+                            //       // style: GoogleFonts.notoSansJavanese(
+                            //       // style: GoogleFonts.mochiyPopOne(
+                            //         style: GoogleFonts.roboto(
+                            //           fontWeight: FontWeight.w500,
+                            //           fontSize: 17)),
 
                             Text("23:43",
                                 style: GoogleFonts.sourceCodePro(
@@ -383,34 +382,33 @@ class _MyselfPageState extends State<MyselfPage> {
                     padding: const EdgeInsets.all(10),
                     child: Row(children: [
                       const SizedBox(
-                        width: 40,
+                        //english
+                        width: 10,
+                        //日本語
+                        // width: 30,
                       ),
                       Column(
                         children: [
-                          // const Align(
-                          //   alignment: Alignment.center,
-                          //   // child: Text("就寝時残りHP",
-                          //   //     style: Theme.of(context).textTheme.headlineSmall),
-                          // ),
+                          
                           // const SizedBox(height: 10),
-                          // Text("highest HP",
-                          //     // style: GoogleFonts.orelegaOne(
-                          //     style: GoogleFonts.roboto(
-                          //         fontWeight: FontWeight.w500, fontSize: 23)),
-                          // const SizedBox(height: 3),
-                          // Text("lowest HP",
-                          //     // style: GoogleFonts.orelegaOne(
-                          //     style: GoogleFonts.roboto(
-                          //         fontWeight: FontWeight.w500, fontSize: 23)),
-                          Text("最高 HP",
+                          Text("record high HP",
                               // style: GoogleFonts.orelegaOne(
                               style: GoogleFonts.roboto(
                                   fontWeight: FontWeight.w500, fontSize: 23)),
                           const SizedBox(height: 7),
-                          Text("最低 HP",
+                          Text("record low HP",
                               // style: GoogleFonts.orelegaOne(
                               style: GoogleFonts.roboto(
                                   fontWeight: FontWeight.w500, fontSize: 23)),
+                          // Text("過去最高 HP",
+                          //     // style: GoogleFonts.orelegaOne(
+                          //     style: GoogleFonts.roboto(
+                          //         fontWeight: FontWeight.w500, fontSize: 23)),
+                          // const SizedBox(height: 7),
+                          // Text("過去最低 HP",
+                          //     // style: GoogleFonts.orelegaOne(
+                          //     style: GoogleFonts.roboto(
+                          //         fontWeight: FontWeight.w500, fontSize: 23)),
                         ],
                       ),
                       const SizedBox(width: 30),

@@ -103,8 +103,8 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                   gradient: LinearGradient(
                     colors: [
                       //濃い緑
-                       const Color(0xFF32cd32).withOpacity(0.2),
-                       const Color(0xFF32cd32).withOpacity(0.5)
+                      //  const Color(0xFF32cd32).withOpacity(0.2),
+                      //  const Color(0xFF32cd32).withOpacity(0.5)
                       //明るい緑
                         //  Color(0xff00ff7f).withOpacity(0.2),
                         //  Color(0xff00ff7f).withOpacity(0.5)
@@ -112,8 +112,8 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                         // Color(0xffffd700).withOpacity(0.2),
                         // Color(0xffffd700).withOpacity(0.5)
                         //赤
-                        // Color(0xffdc143c).withOpacity(0.2),
-                        // Color(0xffdc143c).withOpacity(0.5)
+                        Color(0xffdc143c).withOpacity(0.2),
+                        Color(0xffdc143c).withOpacity(0.5)
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -126,18 +126,19 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
               child: new Container(
                 decoration: BoxDecoration(
                   //濃い緑
-                  color:  const Color(0xFF32cd32),
+                  // color:  const Color(0xFF32cd32),
                   //明るい緑
                   // color:  Color(0xff00ff7f),
                   //黄色
                   // color: Color(0xffffd700),
                   //赤い
-                  // color: Color(0xffdc143c),
+                  color: Color(0xffdc143c),
+                  
                   gradient: LinearGradient(
                     colors: [
                       //濃い緑
-                      const Color(0xFF32cd32).withOpacity(0.4),
-                      const Color(0xFF32cd32),
+                      // const Color(0xFF32cd32).withOpacity(0.4),
+                      // const Color(0xFF32cd32),
                       //明るい緑
                       // Color(0xff00ff7f).withOpacity(0.4),
                       // Color(0xff00ff7f)
@@ -145,8 +146,8 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                       // Color(0xffffd700).withOpacity(0.4),
                       // Color(0xffffd700)
                       //赤い
-                      // Color(0xffdc143c).withOpacity(0.4),
-                      // Color(0xffdc143c)
+                      Color(0xffdc143c).withOpacity(0.4),
+                      Color(0xffdc143c)
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -161,7 +162,8 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
               clipper: new WaveClipper(animationController!.value, animList2),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 48),
+              //ここで%の高さを変更できる
+              padding: const EdgeInsets.only(top: 15),
               child: Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -175,9 +177,11 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                         fontWeight: FontWeight.w500,
                         fontSize: 24,
                         letterSpacing: 0.0,
-                        color: Color(0xFFFFFFFF),
+                        // color: Color(0xFFFFFFFF),
                         //yellowのみ
                         // color: Color(0xffdc143c)
+                        //0
+                        color: Colors.black
                       ),
                     ),
                     const Padding(
@@ -190,9 +194,11 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                           fontWeight: FontWeight.w500,
                           fontSize: 14,
                           letterSpacing: 0.0,
-                          color: Color(0xFFFFFFFF),
+                          // color: Color(0xFFFFFFFF),
                           //redのみ
                           // color: Color(0xffdc143c)
+                          //0
+                          color: Colors.black
                         ),
                       ),
                     ),
