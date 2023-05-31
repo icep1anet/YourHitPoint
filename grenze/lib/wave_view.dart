@@ -189,12 +189,12 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                 alignment: Alignment.center,
                 scale: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
                     parent: animationController!,
-                    curve: Interval(0.4, 1.0, curve: Curves.fastOutSlowIn))),
+                    curve: const Interval(0.4, 1.0, curve: Curves.fastOutSlowIn))),
                 child: Container(
                   width: 4,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Color(0xFFFFFFFF).withOpacity(0.4),
+                    color: const Color(0xFFFFFFFF).withOpacity(0.4),
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -208,12 +208,12 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                 alignment: Alignment.center,
                 scale: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
                     parent: animationController!,
-                    curve: Interval(0.6, 0.8, curve: Curves.fastOutSlowIn))),
+                    curve: const Interval(0.6, 0.8, curve: Curves.fastOutSlowIn))),
                 child: Container(
                   width: 3,
                   height: 3,
                   decoration: BoxDecoration(
-                    color: Color(0xFFFFFFFF).withOpacity(0.4),
+                    color: const Color(0xFFFFFFFF).withOpacity(0.4),
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -230,7 +230,7 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                   width: 4,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Color(0xFFFFFFFF).withOpacity(
+                    color: const Color(0xFFFFFFFF).withOpacity(
                         animationController!.status == AnimationStatus.reverse
                             ? 0.0
                             : 0.4),

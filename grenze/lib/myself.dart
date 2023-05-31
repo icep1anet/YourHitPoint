@@ -75,8 +75,9 @@ class _MyselfPageState extends State<MyselfPage> {
                   style: GoogleFonts.bebasNeue(
                   textStyle: Theme.of(context).textTheme.headlineMedium,
                   fontSize: 50,
+                  fontWeight: FontWeight.bold,
                   color: Colors.white)),
-                  background: Image.asset("assets/images/heartshock.png",  
+                  background: Image.asset("assets/images/heartshock2.jpg",  
                     fit: BoxFit.cover,
                   )),
                    actions: [
@@ -105,10 +106,11 @@ class _MyselfPageState extends State<MyselfPage> {
                       ),
                     ),
                     child: Text("Avatar name",
-                    style: GoogleFonts.orelegaOne(
-                      fontSize: 30,
-                      color: Colors.black,
-                      
+                    // style: GoogleFonts.orelegaOne(
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                        color: Colors.black,
                     ),),
 
                   ),
@@ -164,10 +166,11 @@ class _MyselfPageState extends State<MyselfPage> {
                       ),
                     ),
                     child: Text("statement",
-                    style: GoogleFonts.orelegaOne(
-                      fontSize: 30,
-                      color: Colors.black,
-                      
+                    // style: GoogleFonts.orelegaOne(
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                        color: Colors.black,
                     ),),),
 
                   const SizedBox(height: 20),
@@ -190,15 +193,19 @@ class _MyselfPageState extends State<MyselfPage> {
                           Column(
                             children: [
                               Text("現在のHP",
-                                  style: GoogleFonts.notoSansJavanese(
-                                    fontSize: 20
+                                  // style: GoogleFonts.notoSansJavanese(
+                                    style: GoogleFonts.dotGothic16(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 20
                                   )
                                   // Theme.of(context).textTheme.headlineSmall
                                   ),
                               // const SizedBox(height: 1),
                               Text("推定活動限界",
-                                  style: GoogleFonts.notoSansJavanese(
-                                    fontSize: 20
+                                  // style: GoogleFonts.notoSansJavanese(
+                                    style: GoogleFonts.dotGothic16(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 20
                                   )),
                             ],
                           ),
@@ -207,17 +214,17 @@ class _MyselfPageState extends State<MyselfPage> {
                               children: [
                                 Text("94",
                                   style: GoogleFonts.sourceCodePro(
-                                    fontSize: 25,
+                                    fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.red
                                   )
                                   // Theme.of(context).textTheme.headlineSmall
                                   ),
-                              const SizedBox(height: 10),
+                              // const SizedBox(height: 10),
                     
                               Text("23:43",
                                   style: GoogleFonts.sourceCodePro(
-                                    fontSize: 25,
+                                    fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.red
                                   )),
@@ -243,7 +250,7 @@ class _MyselfPageState extends State<MyselfPage> {
                   const SizedBox(height: 40),
                   
                   Container(
-                      width: 300,
+                      width: 200,
                       padding: const EdgeInsets.all(5),
 
                       
@@ -257,8 +264,10 @@ class _MyselfPageState extends State<MyselfPage> {
                       child: Align(
                         alignment: Alignment.center,
                         child: Text("HP graph",
-                            style: GoogleFonts.orelegaOne(
-                              fontSize: 25
+                            // style: GoogleFonts.orelegaOne(
+                              style: GoogleFonts.roboto(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 25
                             )),
                       )),
                   const SizedBox(height: 20),
@@ -313,22 +322,33 @@ class _MyselfPageState extends State<MyselfPage> {
                   ),
                   const SizedBox(height: 10),
                   Container(
-                      padding: const EdgeInsets.all(10),
+                    width: 200,
+                      // padding: const EdgeInsets.all(5),
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Color(0xff00a5bf),
+                            width: 1.5
+                          )
+                        )
+                      ),
                       child: Align(
                         alignment: Alignment.center,
                         child: Text("HP record",
-                            style: GoogleFonts.orelegaOne(
-                              fontSize: 30,
-                              color: Colors.black
+                            // style: GoogleFonts.orelegaOne(
+                              style: GoogleFonts.roboto(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 30,
+                                color: Colors.black
                             )),
                       )),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 10),
                   Container(
                     width: 300,
                     // width: double.infinity,
                     decoration: BoxDecoration(
                       border: Border.all(
-                          color: const Color(0xff0087aa),
+                          color: const Color(0xff00a5bf),
                           width: 5
                           ),
                       borderRadius: BorderRadius.circular(8),
@@ -344,31 +364,38 @@ class _MyselfPageState extends State<MyselfPage> {
                         //   //     style: Theme.of(context).textTheme.headlineSmall),
                         // ),
                         // const SizedBox(height: 10),
-                        Text("highesst HP",
-                            style: GoogleFonts.orelegaOne(
-                              fontSize: 30
+                        Text("highest HP",
+                            // style: GoogleFonts.orelegaOne(
+                              style: GoogleFonts.permanentMarker
+                              (
+                                // fontWeight: FontWeight.bold,
+                                fontSize: 30
                             )),
-                        const SizedBox(height: 10),
+                        // const SizedBox(height: 10),
                         Text("lowest HP",
-                            style: GoogleFonts.orelegaOne(
-                              fontSize: 30
+                            // style: GoogleFonts.orelegaOne(
+                              style: GoogleFonts.permanentMarker(
+                                // fontWeight: FontWeight.bold,
+                                fontSize: 30
                             )),
                       ],
                     ),
 
-                    const SizedBox(width: 50),
+                    const SizedBox(width: 30),
 
                     Column(
                       children: [
                       Text("110",
-                            style: GoogleFonts.orelegaOne(
+                            style: GoogleFonts.sourceCodePro(
                               fontSize: 30,
+                              fontWeight: FontWeight.bold,
                               color: Colors.red
                             )),
-                        const SizedBox(height: 10),
+                        // const SizedBox(height: 10),
                         Text("-10",
-                            style: GoogleFonts.orelegaOne(
+                            style: GoogleFonts.sourceCodePro(
                               fontSize: 30,
+                              fontWeight: FontWeight.bold,
                               color: Colors.red
                             )),
                       ]
@@ -400,8 +427,10 @@ class _MyselfPageState extends State<MyselfPage> {
         child: !hasImage
             ?  Text(
                 "Avatar image",
-                style: GoogleFonts.orelegaOne(
-                  fontSize: 26,
+                // style: GoogleFonts.orelegaOne(
+                  style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 26,
                 )
               )
             : null,

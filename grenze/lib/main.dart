@@ -76,6 +76,8 @@ final _navBarItems = [
     icon: const Icon(Icons.person),
     title: Text(
       "Myself",
+      //iconが真ん中startなのでできない
+      // textAlign: TextAlign.left,
       style: GoogleFonts.orelegaOne(fontSize: 20),
     ),
     selectedColor:  Colors.green,
