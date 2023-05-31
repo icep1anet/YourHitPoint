@@ -56,11 +56,11 @@ class _MainPageState extends State<MainPage> {
         },
       ),
       bottomNavigationBar: SalomonBottomBar(
-          backgroundColor: const Color.fromARGB(255, 179, 206, 233),
+          backgroundColor: Color.fromARGB(255, 178, 211, 244),
           currentIndex: _selectedIndex,
           selectedItemColor: const Color(0xff6200ee),
           unselectedItemColor: const Color(0xff757575),
-          onTap:  _onItemTapped,
+          onTap: _onItemTapped,
           //(index) {
           //   setState(() {
           //     _selectedIndex = index;
@@ -80,13 +80,12 @@ final _navBarItems = [
       // textAlign: TextAlign.left,
       style: GoogleFonts.orelegaOne(fontSize: 20),
     ),
-    selectedColor:  Colors.green,
+    selectedColor: const Color.fromARGB(255, 2, 179, 8),
   ),
   SalomonBottomBarItem(
       icon: const Icon(Icons.people),
       title: Text("Friends", style: GoogleFonts.orelegaOne(fontSize: 20)),
       selectedColor: Colors.pink)
-
 ];
 
 class HexColor extends Color {

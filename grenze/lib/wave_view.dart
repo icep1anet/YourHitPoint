@@ -87,7 +87,8 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
             new ClipPath(
               child: new Container(
                 decoration: BoxDecoration(
-                  color:  Color(0xFF32cd32).withOpacity(0.5),
+                  // color:  Color(0xFF32cd32).withOpacity(0.5),
+                  color: Colors.green,
                   borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(80.0),
                       bottomLeft: Radius.circular(80.0),
@@ -95,8 +96,10 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                       topRight: Radius.circular(80.0)),
                   gradient: LinearGradient(
                     colors: [
-                       const Color(0xFF32cd32).withOpacity(0.2),
-                       const Color(0xFF32cd32).withOpacity(0.5)
+                      //  const Color(0xFF32cd32).withOpacity(0.2),
+                      //  const Color(0xFF32cd32).withOpacity(0.5)
+                         Colors.green.withOpacity(0.2),
+                         Colors.green.withOpacity(0.5)
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -108,11 +111,13 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
             new ClipPath(
               child: new Container(
                 decoration: BoxDecoration(
-                  color:  const Color(0xFF32cd32),
+                  // color:  const Color(0xFF32cd32),
+                  color:  Colors.green,
                   gradient: LinearGradient(
                     colors: [
-                       const Color(0xFF32cd32).withOpacity(0.4),
-                       const Color(0xFF32cd32)
+                      //  const Color(0xFF32cd32).withOpacity(0.4),
+                      Colors.green.withOpacity(0.4),
+                      Colors.green
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
