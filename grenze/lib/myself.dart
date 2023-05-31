@@ -150,7 +150,7 @@ class _MyselfPageState extends State<MyselfPage> {
                           ],
                         ),
                         child: const WaveView(
-                          percentageValue: 60.0,
+                          percentageValue: 80.0,
                         ),
                       ),
                     ),
@@ -198,9 +198,12 @@ class _MyselfPageState extends State<MyselfPage> {
                       ),
                       padding: const EdgeInsets.all(10),
                       child: IntrinsicWidth(
-                        child: Row(children: [
+                        child: Column(
+                          children: [
                           const SizedBox(width: 10),
-                          Column(
+                          
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               // Text(
                               //     // "現在のHP",
@@ -218,10 +221,17 @@ class _MyselfPageState extends State<MyselfPage> {
                                       fontWeight: FontWeight.w500, fontSize: 17)
                                   // Theme.of(context).textTheme.headlineSmall
                                   ),
+                                  Text("94",
+                                style: GoogleFonts.sourceCodePro(
+                                    fontSize: 27,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red)
+                                // Theme.of(context).textTheme.headlineSmall
+                                ),
                                   //english
                               // const SizedBox(height: 3),
                               //japanese
-                                  const SizedBox(height: 5,),
+                                  // const SizedBox(height: 5,),
                               // Text(
                               //     // "推定活動限界",
                               //     "Activity limit time",
@@ -229,46 +239,44 @@ class _MyselfPageState extends State<MyselfPage> {
                               //     style: GoogleFonts.roboto(
                               //         fontWeight: FontWeight.w500,
                               //         fontSize: 17)),
-                              Text(
+                              
+                              Transform.rotate(
+                                  angle: 270 * pi / 180,
+                                  child: const Icon(Icons.battery_4_bar,
+                                  size: 20,)),
+                            ],
+                          ),
+                          // const SizedBox(width: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+                            children: [
+                            
+                            // const SizedBox(height: 10),
+                            Text(
                                   "推定活動限界",
                                   // style: GoogleFonts.notoSansJavanese(
                                   // style: GoogleFonts.mochiyPopOne(
                                     style: GoogleFonts.roboto(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 17)),
-                            ],
-                          ),
-                          const SizedBox(width: 20),
-                          Column(children: [
-                            Text("94",
-                                style: GoogleFonts.sourceCodePro(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.red)
-                                // Theme.of(context).textTheme.headlineSmall
-                                ),
-                            // const SizedBox(height: 10),
 
                             Text("23:43",
                                 style: GoogleFonts.sourceCodePro(
-                                    fontSize: 18,
+                                    fontSize: 27,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.red)),
-                          ]),
-                          const SizedBox(
-                            width: 15,
-                          ),
-                          Column(
-                            children: [
-                              Transform.rotate(
-                                  angle: 270 * pi / 180,
-                                  child: const Icon(Icons.battery_4_bar,
-                                  size: 20,)),
-                              const SizedBox(height: 10),
-                              const Icon(Iconic.moon_inv,
+                            const Icon(Iconic.moon_inv,
                               size: 15,)
-                            ],
-                          ),
+                          ]),
+                          // const SizedBox(width: 15,),
+                          // Column(
+                          //   children: [
+                              
+                          //     const SizedBox(height: 10),
+                              
+                          //   ],
+                          // ),
                           // addAllListData(),
                         ]),
                       )),
@@ -409,13 +417,13 @@ class _MyselfPageState extends State<MyselfPage> {
                       Column(children: [
                         Text("110",
                             style: GoogleFonts.sourceCodePro(
-                                fontSize: 23,
+                                fontSize: 30,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.red)),
                         // const SizedBox(height: 10),
                         Text("-10",
                             style: GoogleFonts.sourceCodePro(
-                                fontSize: 23,
+                                fontSize: 30,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.red)),
                       ])

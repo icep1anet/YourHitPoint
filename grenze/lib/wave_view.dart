@@ -87,8 +87,14 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
             new ClipPath(
               child: new Container(
                 decoration: BoxDecoration(
-                  // color:  Color(0xFF32cd32).withOpacity(0.5),
-                  color: Colors.green,
+                  //濃い緑
+                  color:  Color(0xFF32cd32).withOpacity(0.5),
+                  //明るい緑
+                  // color: Color(0xff00ff7f).withOpacity(0.5),
+                  //yellow
+                  // color: Colors.yellow.withOpacity(0.5),
+                  //red
+                  // color: Color(0xffdc143c).withOpacity(0.5)D,
                   borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(80.0),
                       bottomLeft: Radius.circular(80.0),
@@ -96,10 +102,18 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                       topRight: Radius.circular(80.0)),
                   gradient: LinearGradient(
                     colors: [
-                      //  const Color(0xFF32cd32).withOpacity(0.2),
-                      //  const Color(0xFF32cd32).withOpacity(0.5)
-                         Colors.green.withOpacity(0.2),
-                         Colors.green.withOpacity(0.5)
+                      //濃い緑
+                       const Color(0xFF32cd32).withOpacity(0.2),
+                       const Color(0xFF32cd32).withOpacity(0.5)
+                      //明るい緑
+                        //  Color(0xff00ff7f).withOpacity(0.2),
+                        //  Color(0xff00ff7f).withOpacity(0.5)
+                        //黄色
+                        // Color(0xffffd700).withOpacity(0.2),
+                        // Color(0xffffd700).withOpacity(0.5)
+                        //赤
+                        // Color(0xffdc143c).withOpacity(0.2),
+                        // Color(0xffdc143c).withOpacity(0.5)
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -111,13 +125,28 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
             new ClipPath(
               child: new Container(
                 decoration: BoxDecoration(
-                  // color:  const Color(0xFF32cd32),
-                  color:  Colors.green,
+                  //濃い緑
+                  color:  const Color(0xFF32cd32),
+                  //明るい緑
+                  // color:  Color(0xff00ff7f),
+                  //黄色
+                  // color: Color(0xffffd700),
+                  //赤い
+                  // color: Color(0xffdc143c),
                   gradient: LinearGradient(
                     colors: [
-                      //  const Color(0xFF32cd32).withOpacity(0.4),
-                      Colors.green.withOpacity(0.4),
-                      Colors.green
+                      //濃い緑
+                      const Color(0xFF32cd32).withOpacity(0.4),
+                      const Color(0xFF32cd32),
+                      //明るい緑
+                      // Color(0xff00ff7f).withOpacity(0.4),
+                      // Color(0xff00ff7f)
+                      //黄色
+                      // Color(0xffffd700).withOpacity(0.4),
+                      // Color(0xffffd700)
+                      //赤い
+                      // Color(0xffdc143c).withOpacity(0.4),
+                      // Color(0xffdc143c)
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -141,16 +170,18 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                     Text(
                       widget.percentageValue.round().toString(),
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontFamily: 'Roboto',
                         fontWeight: FontWeight.w500,
                         fontSize: 24,
                         letterSpacing: 0.0,
                         color: Color(0xFFFFFFFF),
+                        //yellowのみ
+                        // color: Color(0xffdc143c)
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 3.0),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 3.0),
                       child: Text(
                         '%',
                         textAlign: TextAlign.center,
@@ -160,6 +191,8 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                           fontSize: 14,
                           letterSpacing: 0.0,
                           color: Color(0xFFFFFFFF),
+                          //redのみ
+                          // color: Color(0xffdc143c)
                         ),
                       ),
                     ),
@@ -175,12 +208,12 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                 alignment: Alignment.center,
                 scale: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
                     parent: animationController!,
-                    curve: Interval(0.0, 1.0, curve: Curves.fastOutSlowIn))),
+                    curve: const Interval(0.0, 1.0, curve: Curves.fastOutSlowIn))),
                 child: Container(
                   width: 2,
                   height: 2,
                   decoration: BoxDecoration(
-                    color: Color(0xFFFFFFFF).withOpacity(0.4),
+                    color: const Color(0xFFFFFFFF).withOpacity(0.4),
                     shape: BoxShape.circle,
                   ),
                 ),

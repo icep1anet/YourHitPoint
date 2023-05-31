@@ -56,7 +56,7 @@ class _MainPageState extends State<MainPage> {
         },
       ),
       bottomNavigationBar: SalomonBottomBar(
-          backgroundColor: Color.fromARGB(255, 178, 211, 244),
+          backgroundColor: const Color.fromARGB(255, 178, 211, 244),
           currentIndex: _selectedIndex,
           selectedItemColor: const Color(0xff6200ee),
           unselectedItemColor: const Color(0xff757575),
