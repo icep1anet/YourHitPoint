@@ -1,3 +1,4 @@
+// import 'dart:js';
 import 'dart:math' as math;
 // import 'package:best_flutter_ui_templates/fitness_app/fitness_app_Theme.dart';
 import 'package:flutter/material.dart';
@@ -5,8 +6,13 @@ import 'package:vector_math/vector_math.dart' as vector;
 
 class WaveView extends StatefulWidget {
   final double percentageValue;
+  final Color fontcolor;
+  final Color barcolor;
+  final double fontposition;
 
-  const WaveView({Key? key, this.percentageValue = 100.0}) : super(key: key);
+  const WaveView({Key? key, this.percentageValue = 100.0, 
+                  this.fontcolor = Colors.white, this.barcolor = const Color(0xFF32cd32),
+                  this.fontposition = 48.5}) : super(key: key);
   @override
   WaveViewState createState() => WaveViewState();
 }
@@ -87,14 +93,8 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
               clipper: WaveClipper(animationController!.value, animList1),
               child: Container(
                 decoration: BoxDecoration(
-                  //濃い緑
-                  // color: Theme.of(context).hoverColor.withOpacity(0.5),
-                  //明るい緑
-                  color: Theme.of(context).splashColor.withOpacity(0.5),
-                  //yellow
-                  // color: Theme.of(context).dividerColor.withOpacity(0.5),
-                  //red
-                  // color: Theme.of(context).primaryColor.withOpacity(0.5)D,
+                  //引数
+                  color: widget.barcolor.withOpacity(0.5),
                   borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(80.0),
                       bottomLeft: Radius.circular(80.0),
@@ -102,18 +102,9 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                       topRight: Radius.circular(80.0)),
                   gradient: LinearGradient(
                     colors: [
-                      //濃い緑
-                      // Theme.of(context).hoverColor.withOpacity(0.2),
-                      // Theme.of(context).hoverColor.withOpacity(0.5)
-                      //明るい緑
-                       Theme.of(context).splashColor.withOpacity(0.2),
-                       Theme.of(context).splashColor.withOpacity(0.5)
-                      //黄色
-                      // Theme.of(context).dividerColor.withOpacity(0.2),
-                      // Theme.of(context).dividerColor.withOpacity(0.5)
-                      //赤
-                      // Theme.of(context).primaryColor.withOpacity(0.2),
-                      // Theme.of(context).primaryColor.withOpacity(0.5)
+                      //引数
+                      widget.barcolor.withOpacity(0.2),
+                      widget.barcolor.withOpacity(0.5)
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -125,29 +116,14 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
               clipper: WaveClipper(animationController!.value, animList2),
               child: Container(
                 decoration: BoxDecoration(
-                  //濃い緑
-                  // color: Theme.of(context).hoverColor,
-                  //明るい緑
-                  color:  Theme.of(context).splashColor,
-                  //黄色
-                  // color: Theme.of(context).dividerColor,
-                  //赤い
-                  // color: const Theme.of(context).primaryColor,
+                  //引数
+                  color: widget.barcolor,
 
                   gradient: LinearGradient(
                     colors: [
-                      //濃い緑
-                      // Theme.of(context).hoverColor.withOpacity(0.4),
-                      // Theme.of(context).hoverColor,
-                      //明るい緑
-                      Theme.of(context).splashColor.withOpacity(0.4),
-                      Theme.of(context).splashColor
-                      //黄色
-                      // Theme.of(context).dividerColor.withOpacity(0.4),
-                      // Theme.of(context).dividerColor
-                      //赤い
-                      // Theme.of(context).primaryColor.withOpacity(0.4),
-                      // Theme.of(context).primaryColor
+                      //引数
+                      widget.barcolor.withOpacity(0.4),
+                      widget.barcolor
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -161,8 +137,8 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
               ),
             ),
             Padding(
-              //ここで%の高さを変更できる
-              padding: const EdgeInsets.only(top: 15),
+              //ここで%の高さを変更できる　引数で決める
+              padding: EdgeInsets.only(top: widget.fontposition),
               child: Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -176,11 +152,8 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                         fontWeight: FontWeight.w500,
                         fontSize: 24,
                         letterSpacing: 0.0,
-                        color: Theme.of(context).cardColor,
-                        //redのみ
-                        // color: Theme.of(context).primaryColor
-                        //0
-                        // color: Colors.black
+                        //引数
+                        color: widget.fontcolor
                       ),
                     ),
                     Padding(
@@ -193,11 +166,8 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                           fontWeight: FontWeight.w500,
                           fontSize: 14,
                           letterSpacing: 0.0,
-                          color: Theme.of(context).cardColor,
-                          //redのみ
-                          // color: Theme.of(context).primaryColor
-                          //0
-                          // color: Colors.black
+                          //引数
+                          color: widget.fontcolor
                         ),
                       ),
                     ),

@@ -151,11 +151,28 @@ class _MyselfPageState extends State<MyselfPage> {
                                 blurRadius: 4),
                           ],
                         ),
-                        child: const WaveView(
+                        child: WaveView(
                           percentageValue: 60.0,
-                          // fontcolor:
-                          // barcolor:
-                          // fontpositon: 
+                          //black
+                          // fontcolor: Theme.of(context).shadowColor,
+                          //white
+                          fontcolor: Theme.of(context).cardColor,
+                          //red
+                          // fontcolor: Theme.of(context).shadowColor,
+
+                          //red
+                          // barcolor: Theme.of(context).primaryColor,
+                          //yellow
+                          // barcolor: Theme.of(context).dividerColor
+                          //light green
+                          // barcolor: Theme.of(context).splashColor,
+                          //green
+                          barcolor: Theme.of(context).hoverColor,
+
+                          //真ん中
+                          // fontposition: 15
+                          //中央下
+                          fontposition: 48.5, 
                         ),
                       ),
                     ),
@@ -211,6 +228,7 @@ class _MyselfPageState extends State<MyselfPage> {
                           
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
                                   "Current HP",
@@ -454,7 +472,7 @@ class _MyselfPageState extends State<MyselfPage> {
             ? Text("Avatar image",
                 // style: GoogleFonts.orelegaOne(
                 style: GoogleFonts.roboto(
-                  color: Theme.of(context).hoverColor,
+                  color: const Color(0xff1e90ff),
                   fontWeight: FontWeight.bold,
                   fontSize: 26,
                 ))
