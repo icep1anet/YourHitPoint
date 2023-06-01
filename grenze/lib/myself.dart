@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import "register.dart";
+import 'package:device_info_plus/device_info_plus.dart';
+import "main.dart";
+
 
 class MyselfPage extends StatefulWidget {
   const MyselfPage({Key? key}) : super(key: key);
@@ -28,6 +32,13 @@ class _MyselfPageState extends State<MyselfPage> {
     // FlSpot(9, 9),
     // FlSpot(10, 0),
   ];
+  // DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+  // Future testt() async{
+  //     final info = await deviceInfo.deviceInfo;
+  //     print(info.data);
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +46,23 @@ class _MyselfPageState extends State<MyselfPage> {
           centerTitle: true,
           title: const Text("Myself"),
           actions: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.settings))
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    fullscreenDialog: true,
+                    builder: (context) => const RegisterPage(),
+                  ),
+                );
+              }, 
+              icon: const Icon(Icons.settings)
+            ),
+            IconButton(
+              onPressed: () {
+                // testt();
+              }, 
+              icon: const Icon(Icons.add)
+            ),
           ],
         ),
         body: SingleChildScrollView(
@@ -162,6 +189,7 @@ class _MyselfPageState extends State<MyselfPage> {
                       ],
                     ),
                   ),
+                  if (userId != null) Text(userId!),
                 ],
               )),
         ));

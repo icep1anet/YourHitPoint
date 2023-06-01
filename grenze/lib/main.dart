@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import "myself.dart";
+import "register.dart";
+import "package:shared_preferences/shared_preferences.dart";
+import 'package:flutter/services.dart';
 
-void main() {
+String? userId;
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -27,6 +33,36 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   final _pageViewController = PageController();
   int _selectedIndex = 0;
+  // String? userId;
+
+  
+
+  @override
+  void initState() {
+    super.initState();
+    _getPrefItems();
+  }
+
+  void moveToRegister() async{
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (context) => const RegisterPage(),
+      ),
+    );
+  }
+
+  void _getPrefItems() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userId = prefs.getString("userId");
+    });
+    if (userId == null) {
+      print("no");
+    } else {
+      print("yes");
+    }
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -38,6 +74,38 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (userId == null) {
+      return Scaffold(
+        appBar: AppBar(
+          //オーバーレイが明るいカラースキームになります。
+          systemOverlayStyle: SystemUiOverlayStyle.light,
+          title: const Text('Register'),
+          centerTitle: true,
+        ),
+        body: Container(
+          alignment: Alignment.center,
+          margin: const EdgeInsets.only(
+            bottom: 200,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Not registered'),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      fullscreenDialog: true,
+                      builder: (context) => const RegisterPage(),
+                    ),
+                  );
+                },
+                child: const Text('Register'),
+              ),
+            ],
+          ),
+        ));
+    } else{
     return Scaffold(
       body: PageView(
         controller: _pageViewController,
@@ -78,6 +146,6 @@ class _MainPageState extends State<MainPage> {
         selectedItemColor: Colors.black,
         unselectedIconTheme: const IconThemeData(size: 25, color: Colors.white),
       ),
-    );
+    );}
   }
 }
