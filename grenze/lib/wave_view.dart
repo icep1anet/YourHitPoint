@@ -1,5 +1,5 @@
 import 'dart:math' as math;
-// import 'package:best_flutter_ui_templates/fitness_app/fitness_app_theme.dart';
+// import 'package:best_flutter_ui_templates/fitness_app/fitness_app_Theme.dart';
 import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math.dart' as vector;
 
@@ -25,19 +25,18 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
         duration: const Duration(milliseconds: 2000), vsync: this);
     waveAnimationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
-    animationController!
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          animationController?.reverse();
-        } else if (status == AnimationStatus.dismissed) {
-          animationController?.forward();
-        }
-      });
+    animationController!.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        animationController?.reverse();
+      } else if (status == AnimationStatus.dismissed) {
+        animationController?.forward();
+      }
+    });
     waveAnimationController!.addListener(() {
       animList1.clear();
       for (int i = -2 - bottleOffset1.dx.toInt(); i <= 60 + 2; i++) {
         animList1.add(
-          new Offset(
+          Offset(
             i.toDouble() + bottleOffset1.dx.toInt(),
             math.sin((waveAnimationController!.value * 360 - i) %
                         360 *
@@ -50,7 +49,7 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
       animList2.clear();
       for (int i = -2 - bottleOffset2.dx.toInt(); i <= 60 + 2; i++) {
         animList2.add(
-          new Offset(
+          Offset(
             i.toDouble() + bottleOffset2.dx.toInt(),
             math.sin((waveAnimationController!.value * 360 - i) %
                         360 *
@@ -77,24 +76,25 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      child: new AnimatedBuilder(
-        animation: new CurvedAnimation(
+      child: AnimatedBuilder(
+        animation: CurvedAnimation(
           parent: animationController!,
           curve: Curves.easeInOut,
         ),
-        builder: (context, child) => new Stack(
+        builder: (context, child) => Stack(
           children: <Widget>[
-            new ClipPath(
-              child: new Container(
+            ClipPath(
+              clipper: WaveClipper(animationController!.value, animList1),
+              child: Container(
                 decoration: BoxDecoration(
                   //濃い緑
-                  color:  Color(0xFF32cd32).withOpacity(0.5),
+                  // color: Theme.of(context).hoverColor.withOpacity(0.5),
                   //明るい緑
-                  // color: Color(0xff00ff7f).withOpacity(0.5),
+                  color: Theme.of(context).splashColor.withOpacity(0.5),
                   //yellow
-                  // color: Colors.yellow.withOpacity(0.5),
+                  // color: Theme.of(context).dividerColor.withOpacity(0.5),
                   //red
-                  // color: Color(0xffdc143c).withOpacity(0.5)D,
+                  // color: Theme.of(context).primaryColor.withOpacity(0.5)D,
                   borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(80.0),
                       bottomLeft: Radius.circular(80.0),
@@ -103,51 +103,51 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                   gradient: LinearGradient(
                     colors: [
                       //濃い緑
-                      //  const Color(0xFF32cd32).withOpacity(0.2),
-                      //  const Color(0xFF32cd32).withOpacity(0.5)
+                      // Theme.of(context).hoverColor.withOpacity(0.2),
+                      // Theme.of(context).hoverColor.withOpacity(0.5)
                       //明るい緑
-                        //  Color(0xff00ff7f).withOpacity(0.2),
-                        //  Color(0xff00ff7f).withOpacity(0.5)
-                        //黄色
-                        // Color(0xffffd700).withOpacity(0.2),
-                        // Color(0xffffd700).withOpacity(0.5)
-                        //赤
-                        Color(0xffdc143c).withOpacity(0.2),
-                        Color(0xffdc143c).withOpacity(0.5)
+                       Theme.of(context).splashColor.withOpacity(0.2),
+                       Theme.of(context).splashColor.withOpacity(0.5)
+                      //黄色
+                      // Theme.of(context).dividerColor.withOpacity(0.2),
+                      // Theme.of(context).dividerColor.withOpacity(0.5)
+                      //赤
+                      // Theme.of(context).primaryColor.withOpacity(0.2),
+                      // Theme.of(context).primaryColor.withOpacity(0.5)
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                 ),
               ),
-              clipper: new WaveClipper(animationController!.value, animList1),
             ),
-            new ClipPath(
-              child: new Container(
+            ClipPath(
+              clipper: WaveClipper(animationController!.value, animList2),
+              child: Container(
                 decoration: BoxDecoration(
                   //濃い緑
-                  // color:  const Color(0xFF32cd32),
+                  // color: Theme.of(context).hoverColor,
                   //明るい緑
-                  // color:  Color(0xff00ff7f),
+                  color:  Theme.of(context).splashColor,
                   //黄色
-                  // color: Color(0xffffd700),
+                  // color: Theme.of(context).dividerColor,
                   //赤い
-                  color: Color(0xffdc143c),
-                  
+                  // color: const Theme.of(context).primaryColor,
+
                   gradient: LinearGradient(
                     colors: [
                       //濃い緑
-                      // const Color(0xFF32cd32).withOpacity(0.4),
-                      // const Color(0xFF32cd32),
+                      // Theme.of(context).hoverColor.withOpacity(0.4),
+                      // Theme.of(context).hoverColor,
                       //明るい緑
-                      // Color(0xff00ff7f).withOpacity(0.4),
-                      // Color(0xff00ff7f)
+                      Theme.of(context).splashColor.withOpacity(0.4),
+                      Theme.of(context).splashColor
                       //黄色
-                      // Color(0xffffd700).withOpacity(0.4),
-                      // Color(0xffffd700)
+                      // Theme.of(context).dividerColor.withOpacity(0.4),
+                      // Theme.of(context).dividerColor
                       //赤い
-                      Color(0xffdc143c).withOpacity(0.4),
-                      Color(0xffdc143c)
+                      // Theme.of(context).primaryColor.withOpacity(0.4),
+                      // Theme.of(context).primaryColor
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -159,7 +159,6 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                       topRight: Radius.circular(80.0)),
                 ),
               ),
-              clipper: new WaveClipper(animationController!.value, animList2),
             ),
             Padding(
               //ここで%の高さを変更できる
@@ -172,20 +171,20 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                     Text(
                       widget.percentageValue.round().toString(),
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'Roboto',
                         fontWeight: FontWeight.w500,
                         fontSize: 24,
                         letterSpacing: 0.0,
-                        // color: Color(0xFFFFFFFF),
-                        //yellowのみ
-                        // color: Color(0xffdc143c)
+                        color: Theme.of(context).cardColor,
+                        //redのみ
+                        // color: Theme.of(context).primaryColor
                         //0
-                        color: Colors.black
+                        // color: Colors.black
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 3.0),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 3.0),
                       child: Text(
                         '%',
                         textAlign: TextAlign.center,
@@ -194,11 +193,11 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                           fontWeight: FontWeight.w500,
                           fontSize: 14,
                           letterSpacing: 0.0,
-                          // color: Color(0xFFFFFFFF),
+                          color: Theme.of(context).cardColor,
                           //redのみ
-                          // color: Color(0xffdc143c)
+                          // color: Theme.of(context).primaryColor
                           //0
-                          color: Colors.black
+                          // color: Colors.black
                         ),
                       ),
                     ),
@@ -210,16 +209,17 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
               top: 0,
               left: 6,
               bottom: 8,
-              child: new ScaleTransition(
+              child: ScaleTransition(
                 alignment: Alignment.center,
                 scale: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
                     parent: animationController!,
-                    curve: const Interval(0.0, 1.0, curve: Curves.fastOutSlowIn))),
+                    curve:
+                        const Interval(0.0, 1.0, curve: Curves.fastOutSlowIn))),
                 child: Container(
                   width: 2,
                   height: 2,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFFFFF).withOpacity(0.4),
+                    color: Theme.of(context).cardColor.withOpacity(0.4),
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -229,16 +229,17 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
               left: 24,
               right: 0,
               bottom: 16,
-              child: new ScaleTransition(
+              child: ScaleTransition(
                 alignment: Alignment.center,
                 scale: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
                     parent: animationController!,
-                    curve: const Interval(0.4, 1.0, curve: Curves.fastOutSlowIn))),
+                    curve:
+                        const Interval(0.4, 1.0, curve: Curves.fastOutSlowIn))),
                 child: Container(
                   width: 4,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFFFFF).withOpacity(0.4),
+                    color: Theme.of(context).cardColor.withOpacity(0.4),
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -248,16 +249,17 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
               left: 0,
               right: 24,
               bottom: 32,
-              child: new ScaleTransition(
+              child: ScaleTransition(
                 alignment: Alignment.center,
                 scale: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
                     parent: animationController!,
-                    curve: const Interval(0.6, 0.8, curve: Curves.fastOutSlowIn))),
+                    curve:
+                        const Interval(0.6, 0.8, curve: Curves.fastOutSlowIn))),
                 child: Container(
                   width: 3,
                   height: 3,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFFFFF).withOpacity(0.4),
+                    color: Theme.of(context).cardColor.withOpacity(0.4),
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -267,14 +269,14 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
               top: 0,
               right: 20,
               bottom: 0,
-              child: new Transform(
-                transform: new Matrix4.translationValues(
+              child: Transform(
+                transform: Matrix4.translationValues(
                     0.0, 16 * (1.0 - animationController!.value), 0.0),
                 child: Container(
                   width: 4,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFFFFF).withOpacity(
+                    color: Theme.of(context).cardColor.withOpacity(
                         animationController!.status == AnimationStatus.reverse
                             ? 0.0
                             : 0.4),
@@ -307,7 +309,7 @@ class WaveClipper extends CustomClipper<Path> {
 
   @override
   Path getClip(Size size) {
-    Path path = new Path();
+    Path path = Path();
 
     path.addPolygon(waveList1, false);
 

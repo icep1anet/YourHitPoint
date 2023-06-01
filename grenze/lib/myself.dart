@@ -64,7 +64,8 @@ class _MyselfPageState extends State<MyselfPage> {
             stretch: true,
             // primary: false,
             collapsedHeight: 100,
-            backgroundColor: const Color(0xff00a5bf),
+            backgroundColor: Theme.of(context).focusColor,
+            // const Color(0xff00a5bf),
             toolbarHeight: 100,
             flexibleSpace: FlexibleSpaceBar(
                 // stretchModes: []
@@ -75,7 +76,7 @@ class _MyselfPageState extends State<MyselfPage> {
                         textStyle: Theme.of(context).textTheme.headlineMedium,
                         fontSize: 50,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white)),
+                        color: Theme.of(context).cardColor)),
                 background: Image.asset(
                   "assets/images/heartshock2.jpg",
                   fit: BoxFit.cover,
@@ -99,9 +100,9 @@ class _MyselfPageState extends State<MyselfPage> {
                   Container(
                     alignment: Alignment.center,
                     width: 200,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       border: Border(
-                        bottom: BorderSide(color: Color(0xff00a5bf)),
+                        bottom: BorderSide(color: Theme.of(context).focusColor),
                       ),
                     ),
                     // child: Text(
@@ -119,7 +120,7 @@ class _MyselfPageState extends State<MyselfPage> {
                       style: GoogleFonts.roboto(
                         fontWeight: FontWeight.bold,
                         fontSize: 30,
-                        color: Colors.black,
+                        color: Theme.of(context).shadowColor,
                       ),
                     ),
                   ),
@@ -151,7 +152,10 @@ class _MyselfPageState extends State<MyselfPage> {
                           ],
                         ),
                         child: const WaveView(
-                          percentageValue: 0.0,
+                          percentageValue: 60.0,
+                          // fontcolor:
+                          // barcolor:
+                          // fontpositon: 
                         ),
                       ),
                     ),
@@ -160,13 +164,15 @@ class _MyselfPageState extends State<MyselfPage> {
                   Container(
                     alignment: Alignment.center,
                     width: 200,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       //なんか合わない
                       // color: Color.fromARGB(255, 209, 209, 209),
 
                       border: Border(
                         bottom: BorderSide(
-                            color: Color.fromARGB(255, 24, 168, 190)),
+                            color: Theme.of(context).focusColor
+                            // Color.fromARGB(255, 24, 168, 190)
+                            ),
                       ),
                     ),
                     // child: Text(
@@ -184,7 +190,7 @@ class _MyselfPageState extends State<MyselfPage> {
                       style: GoogleFonts.roboto(
                         fontWeight: FontWeight.bold,
                         fontSize: 30,
-                        color: Colors.black,
+                        color: Theme.of(context).shadowColor,
                       ),
                     ),
                   ),
@@ -194,7 +200,7 @@ class _MyselfPageState extends State<MyselfPage> {
                       // width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(
-                            color: const Color(0xff00a5bf), width: 5),
+                            color: Theme.of(context).focusColor, width: 5),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       padding: const EdgeInsets.all(10),
@@ -225,7 +231,7 @@ class _MyselfPageState extends State<MyselfPage> {
                                 style: GoogleFonts.sourceCodePro(
                                     fontSize: 27,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.red)
+                                    color: Theme.of(context).hintColor)
                                 // Theme.of(context).textTheme.headlineSmall
                                 ),
                                   //english
@@ -264,7 +270,7 @@ class _MyselfPageState extends State<MyselfPage> {
                                 style: GoogleFonts.sourceCodePro(
                                     fontSize: 27,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.red)),
+                                    color: Theme.of(context).hintColor)),
                             const Icon(Iconic.moon_inv,
                               size: 15,)
                           ]),
@@ -283,9 +289,9 @@ class _MyselfPageState extends State<MyselfPage> {
                   Container(
                       width: 200,
                       padding: const EdgeInsets.all(5),
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                           border: Border(
-                              bottom: BorderSide(color: Color(0xff0087aa)))),
+                              bottom: BorderSide(color: Theme.of(context).focusColor))),
                       child: Align(
                         alignment: Alignment.center,
                         // child: Text("HP graph",
@@ -334,7 +340,7 @@ class _MyselfPageState extends State<MyselfPage> {
                               showTitles: true,
                               interval: 1,
                               getTitlesWidget: (value, meta) {
-                                return bottomTitleWidgets(
+                                return bottomGraphWidgets(
                                   value,
                                   meta,
                                   // constraints.maxWidth,
@@ -351,10 +357,10 @@ class _MyselfPageState extends State<MyselfPage> {
                   Container(
                       width: 200,
                       // padding: const EdgeInsets.all(5),
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                           border: Border(
                               bottom: BorderSide(
-                                  color: Color(0xff00a5bf), width: 1.5))),
+                                  color: Theme.of(context).focusColor, width: 1.5))),
                       child: Align(
                         alignment: Alignment.center,
                         // child: Text("HP record",
@@ -376,7 +382,7 @@ class _MyselfPageState extends State<MyselfPage> {
                     // width: double.infinity,
                     decoration: BoxDecoration(
                       border:
-                          Border.all(color: const Color(0xff00a5bf), width: 5),
+                          Border.all(color: Theme.of(context).focusColor, width: 5),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     padding: const EdgeInsets.all(10),
@@ -417,13 +423,13 @@ class _MyselfPageState extends State<MyselfPage> {
                             style: GoogleFonts.sourceCodePro(
                                 fontSize: 30,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.red)),
+                                color: Theme.of(context).hintColor)),
                         // const SizedBox(height: 10),
                         Text("-10",
                             style: GoogleFonts.sourceCodePro(
                                 fontSize: 30,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.red)),
+                                color: Theme.of(context).hintColor)),
                       ])
                     ]),
                   )
@@ -438,7 +444,7 @@ class _MyselfPageState extends State<MyselfPage> {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(width: 5, color: const Color(0xff00a5bf)),
+        border: Border.all(width: 5, color: Theme.of(context).focusColor),
       ),
       child: CircleAvatar(
         backgroundColor: hasImage ? Colors.transparent : color,
@@ -448,6 +454,7 @@ class _MyselfPageState extends State<MyselfPage> {
             ? Text("Avatar image",
                 // style: GoogleFonts.orelegaOne(
                 style: GoogleFonts.roboto(
+                  color: Theme.of(context).hoverColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 26,
                 ))
@@ -456,7 +463,7 @@ class _MyselfPageState extends State<MyselfPage> {
     );
   }
 
-  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+  Widget bottomGraphWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
       color: Colors.pink,

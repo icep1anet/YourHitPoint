@@ -14,9 +14,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MainPage(),
+      theme: ThemeData(
+        useMaterial3: true,
+        primaryColor: const Color(0xffdc143c),
+        hintColor: Colors.red,
+        focusColor: const Color(0xff00a5bf),
+        cardColor: Colors.white,
+        shadowColor: Colors.black,
+        canvasColor: const Color(0xffd0e3ce),
+        hoverColor: const Color(0xFF32cd32),
+        splashColor: const Color(0xff00ff7f),
+        dividerColor: const Color(0xffffd700),
+        
+      ),
+      home: const MainPage(),
     );
   }
 }
