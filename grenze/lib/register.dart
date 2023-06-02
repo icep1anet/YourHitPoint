@@ -133,7 +133,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       const EdgeInsets.only(top: 40, left: 24, right: 24),
                   child: Column(
                     children: [
-                      // Text("UserID: $userId",
+                      // Text("userId: $userId",
                       //     style: const TextStyle(
                       //         fontWeight: FontWeight.bold, fontSize: 15)),
                       // const SizedBox(height: 15),
@@ -162,7 +162,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         textCapitalization: TextCapitalization.none,
                         textInputAction: TextInputAction.next,
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 50),
                       Container(
                         margin: const EdgeInsets.symmetric(vertical: 8),
                         child: TextField(
