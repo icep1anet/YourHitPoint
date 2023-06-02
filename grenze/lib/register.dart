@@ -31,6 +31,8 @@ class _RegisterPageState extends State<RegisterPage> {
   // XFile? pickerFile;
   String? imageUrl;
   bool? hasData;
+  List<String> choices = ["猫", "犬", "鶴", "鴨", "キジ"];
+  String avatarType = "猫";
 
 
   @override
@@ -38,7 +40,9 @@ class _RegisterPageState extends State<RegisterPage> {
     super.initState();
     // initializeFlutterFire();
     // initSharedPreferences();
-    _getPrefItems();
+    // _getPrefItems();
+    _fNode = FocusNode();
+    _focusNode = FocusNode();
     _userNameController = TextEditingController(text: "");
     _avatarNameController = TextEditingController(text: "");
   }
@@ -189,7 +193,33 @@ class _RegisterPageState extends State<RegisterPage> {
                           textInputAction: TextInputAction.done,
                         ),
                       ),
-                      
+                      /*
+                      dropdownColor：ドロップダウンの背景色
+                      elevation：リストを開いた時の影の濃さ
+                      icon：ドロップダウンボタンのアイコン
+                      iconSize：ドロップダウンボタンのアイコンの大きさ
+                      itemHeight：リストの高さ
+                      style：テキストスタイル
+                      underline：ドロップダウンボタンの下線
+                      */
+                    DropdownButton(
+                      items: choices.map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      value: avatarType,
+                      onChanged: (String? value) {
+                        setState(() {
+                          avatarType = value!;
+                        });
+                      },
+                    ),
+
+
+
+
                       // Container(
                       //     margin: const EdgeInsets.only(top: 16),
                       //     child: Row(
@@ -232,13 +262,15 @@ class _RegisterPageState extends State<RegisterPage> {
                       const SizedBox(height: 30),
                       TextButton(
                         onPressed: () {
-                          //firstNameとlastNameは必須で入力しないと登録できないようにする
-                          // if (_registering == false &&
-                          //     _userNameController?.text != "" &&
-                          //     _avatarNameController?.text != "") {
-                          //   _register();
-                          // }
-                          _register();
+                          // firstNameとlastNameは必須で入力しないと登録できないようにする
+                          if (_registering == false &&
+                              _userNameController?.text != "" &&
+                              _avatarNameController?.text != "") {
+                            _register();
+                            navigateMain();
+                          }
+                          // _register();
+                          // navigateMain();
                         },
                         child: hasData != null
                             ? const Text("Change Profile")
@@ -301,11 +333,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
       // if (!mounted) return;
       // Navigator.of(context).pop();
-      await Navigator.pushNamedAndRemoveUntil(
-        context,
-        "/home",
-        (route) => false,
-      );
+
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString("userId", "gokiburii");
+      prefs.setString("userName", _userNameController!.text);
+      prefs.setString("avatarName", _avatarNameController!.text);
+      prefs.setString("avatarType", avatarType);
     } catch (e) {
       setState(() {
         _registering = false;
@@ -329,6 +362,14 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       );
     }
+  }
+
+  void navigateMain() async {
+      await Navigator.pushNamedAndRemoveUntil(
+        context,
+        "/home",
+        (route) => false,
+      );
   }
 
   // void _selectImage() async {

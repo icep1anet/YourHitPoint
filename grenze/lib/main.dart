@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 import "myself.dart";
 import "register.dart";
 import "package:shared_preferences/shared_preferences.dart";
-import 'package:flutter/services.dart';
+import "package:flutter/services.dart";
 
 String? userId;
 
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: const MainPage(),
       routes: {
-        '/home': (context) => const MainPage(),
+        "/home": (context) => const MainPage(),
       },
     );
   }
@@ -43,7 +43,16 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
+    // initTest();
     _getPrefItems();
+  }
+
+  void initTest() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove("userId");
+    for (int i = 0; i <= 10; i++) {
+      prefs.remove("userId" + i.toString());
+    }
   }
 
   void moveToRegister() async{
@@ -53,10 +62,10 @@ class _MainPageState extends State<MainPage> {
         builder: (context) => const RegisterPage(),
       ),
     );
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      userId = prefs.getString("userId");
-    });
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // setState(() {
+    //   userId = prefs.getString("userId");
+    // });
   }
 
   void _getPrefItems() async {
@@ -64,6 +73,13 @@ class _MainPageState extends State<MainPage> {
     setState(() {
       userId = prefs.getString("userId");
     });
+    String? userName = prefs.getString("userName");
+    // String? avatarName = prefs.getString("avatarName");
+    // String? avatarType = prefs.getString("avatarType");
+    if (userName != null)
+      print("userName:" + userName);
+
+    
   }
 
   
@@ -84,7 +100,7 @@ class _MainPageState extends State<MainPage> {
         appBar: AppBar(
           //オーバーレイが明るいカラースキームになります。
           systemOverlayStyle: SystemUiOverlayStyle.light,
-          title: const Text('Register'),
+          title: const Text("Register"),
           centerTitle: true,
         ),
         body: Container(
@@ -95,7 +111,7 @@ class _MainPageState extends State<MainPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('Not registered'),
+              const Text("Not registered"),
               TextButton(
                 onPressed: () {
                   Navigator.of(context).push(
@@ -105,7 +121,7 @@ class _MainPageState extends State<MainPage> {
                     ),
                   );
                 },
-                child: const Text('Register'),
+                child: const Text("Register"),
               ),
             ],
           ),
@@ -132,14 +148,14 @@ class _MainPageState extends State<MainPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             // activeIcon: Icon(Icons.book_online),
-            label: 'Myself',
+            label: "Myself",
             tooltip: "My Page",
             backgroundColor: Color.fromARGB(255, 103, 219, 234),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.people),
             // activeIcon: Icon(Icons.school_outlined),
-            label: 'Friends',
+            label: "Friends",
             tooltip: "Friends Page",
             backgroundColor: Color.fromARGB(255, 231, 154, 195),
           ),

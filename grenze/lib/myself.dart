@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
+import "package:flutter/material.dart";
+import "package:fl_chart/fl_chart.dart";
 import "register.dart";
-import 'package:device_info_plus/device_info_plus.dart';
+import "package:device_info_plus/device_info_plus.dart";
 import "main.dart";
 
 
@@ -73,6 +73,7 @@ class _MyselfPageState extends State<MyselfPage> {
                   const SizedBox(
                     height: 60,
                   ),
+                  if (userId != null) Text(userId!),
                   // TextButton(
                   //   onPressed: () {
                   //     setState(() {
@@ -80,7 +81,7 @@ class _MyselfPageState extends State<MyselfPage> {
                   //       point++;
                   //     });
                   //   },
-                  //   child: const Text('押せるよ'),
+                  //   child: const Text("押せるよ"),
                   // ),
                   _currentmyAvatar(null),
                   const SizedBox(height: 30),
@@ -189,7 +190,7 @@ class _MyselfPageState extends State<MyselfPage> {
                       ],
                     ),
                   ),
-                  if (userId != null) Text(userId!),
+                  
                 ],
               )),
         ));
@@ -214,30 +215,30 @@ class _MyselfPageState extends State<MyselfPage> {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
       color: Colors.pink,
-      fontFamily: 'Digital',
+      fontFamily: "Digital",
     );
     String text;
     switch (value.toInt()) {
       case 0:
-        text = '00:00';
+        text = "00:00";
         break;
       case 1:
-        text = '04:00';
+        text = "04:00";
         break;
       case 2:
-        text = '08:00';
+        text = "08:00";
         break;
       case 3:
-        text = '12:00';
+        text = "12:00";
         break;
       case 4:
-        text = '16:00';
+        text = "16:00";
         break;
       case 5:
-        text = '20:00';
+        text = "20:00";
         break;
       case 6:
-        text = '23:59';
+        text = "23:59";
         break;
       default:
         return Container();
