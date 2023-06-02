@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 
 String? userId;
 
-void main() async {
+void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
@@ -16,9 +16,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return  MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MainPage(),
+      home: const MainPage(),
+      routes: {
+        '/home': (context) => const MainPage(),
+      },
     );
   }
 }
@@ -35,24 +38,25 @@ class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
   // String? userId;
 
+  
+
   @override
   void initState() {
     super.initState();
-    // _getPrefItems();
+    _getPrefItems();
   }
 
-  void moveToRegister() async {
+  void moveToRegister() async{
     await Navigator.of(context).push(
       MaterialPageRoute(
         fullscreenDialog: true,
         builder: (context) => const RegisterPage(),
       ),
     );
-  }
-
-  Stream<String> getuserIdStream() async* {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    yield prefs.getString("userId") ?? "";
+    setState(() {
+      userId = prefs.getString("userId");
+    });
   }
 
   void _getPrefItems() async {
@@ -60,12 +64,9 @@ class _MainPageState extends State<MainPage> {
     setState(() {
       userId = prefs.getString("userId");
     });
-    if (userId == null) {
-      print("no");
-    } else {
-      print("yes");
-    }
   }
+
+  
 
   void _onItemTapped(int index) {
     setState(() {
@@ -77,101 +78,80 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<String>(
-      stream: getuserIdStream(),
-      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          print("loading");
-          // データが読み込まれるまでの間に表示するUI
-          return const CircularProgressIndicator();
-        }
-        if (snapshot.hasError) {
-          // エラーが発生した場合に表示するUI
-          return Text('Error: ${snapshot.error}');
-        }
-        if (!snapshot.hasData) {
-          print("nodata");
-          print(userId);
-          // データが存在しない場合に表示するUI
-          return Scaffold(
-              appBar: AppBar(
-                //オーバーレイが明るいカラースキームになります。
-                systemOverlayStyle: SystemUiOverlayStyle.light,
-                title: const Text('Register'),
-                centerTitle: true,
-              ),
-              body: Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(
-                  bottom: 200,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Not registered'),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            fullscreenDialog: true,
-                            builder: (context) => const RegisterPage(),
-                          ),
-                        );
-                      },
-                      child: const Text('Register'),
+    if (userId == null) {
+      print("null");
+      return Scaffold(
+        appBar: AppBar(
+          //オーバーレイが明るいカラースキームになります。
+          systemOverlayStyle: SystemUiOverlayStyle.light,
+          title: const Text('Register'),
+          centerTitle: true,
+        ),
+        body: Container(
+          alignment: Alignment.center,
+          margin: const EdgeInsets.only(
+            bottom: 200,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Not registered'),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      fullscreenDialog: true,
+                      builder: (context) => const RegisterPage(),
                     ),
-                  ],
-                ),
-              ));
-        }
-
-        // データが存在する場合に表示するUI
-        print("hasdata");
-        print(userId);
-        return Scaffold(
-          body: PageView(
-            controller: _pageViewController,
-            children: const <Widget>[
-              MyselfPage(),
-              Text("b"),
-            ],
-            onPageChanged: (index) {
-              setState(() {
-                _selectedIndex = index;
-              });
-            },
-          ),
-          bottomNavigationBar: BottomNavigationBar(
-            currentIndex: _selectedIndex,
-            onTap: _onItemTapped,
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                // activeIcon: Icon(Icons.book_online),
-                label: 'Myself',
-                tooltip: "My Page",
-                backgroundColor: Color.fromARGB(255, 103, 219, 234),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.people),
-                // activeIcon: Icon(Icons.school_outlined),
-                label: 'Friends',
-                tooltip: "Friends Page",
-                backgroundColor: Color.fromARGB(255, 231, 154, 195),
+                  );
+                },
+                child: const Text('Register'),
               ),
             ],
-            type: BottomNavigationBarType.shifting,
-            backgroundColor: Colors.red,
-            enableFeedback: true,
-            selectedFontSize: 20,
-            selectedIconTheme:
-                const IconThemeData(size: 30, color: Colors.green),
-            selectedItemColor: Colors.black,
-            unselectedIconTheme:
-                const IconThemeData(size: 25, color: Colors.white),
           ),
-        );
-      },
-    );
+        ));
+    } else{
+    print("hasdata");
+    return Scaffold(
+      body: PageView(
+        controller: _pageViewController,
+        children: const <Widget>[
+          MyselfPage(),
+          Text("b"),
+        ],
+        onPageChanged: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            // activeIcon: Icon(Icons.book_online),
+            label: 'Myself',
+            tooltip: "My Page",
+            backgroundColor: Color.fromARGB(255, 103, 219, 234),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            // activeIcon: Icon(Icons.school_outlined),
+            label: 'Friends',
+            tooltip: "Friends Page",
+            backgroundColor: Color.fromARGB(255, 231, 154, 195),
+          ),
+        ],
+        type: BottomNavigationBarType.shifting,
+        backgroundColor: Colors.red,
+        enableFeedback: true,
+        selectedFontSize: 20,
+        selectedIconTheme: const IconThemeData(size: 30, color: Colors.green),
+        selectedItemColor: Colors.black,
+        unselectedIconTheme: const IconThemeData(size: 25, color: Colors.white),
+      ),
+    );}
   }
 }

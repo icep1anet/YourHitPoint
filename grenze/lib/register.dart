@@ -57,7 +57,6 @@ class _RegisterPageState extends State<RegisterPage> {
   _setPrefItems(String userId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("userId", userId);
-  
   }
 
   _getPrefItems() async {
@@ -301,13 +300,12 @@ class _RegisterPageState extends State<RegisterPage> {
       // );
 
       // if (!mounted) return;
-      Navigator.of(context).pop();
-      // await Navigator.of(context).push(
-      //   MaterialPageRoute(
-      //     fullscreenDialog: true,
-      //     builder: (context) => const MainPage(),
-      //   ),
-      // );
+      // Navigator.of(context).pop();
+      await Navigator.pushNamedAndRemoveUntil(
+        context,
+        "/home",
+        (route) => false,
+      );
     } catch (e) {
       setState(() {
         _registering = false;
