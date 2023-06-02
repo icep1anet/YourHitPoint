@@ -1,12 +1,9 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttericon/iconic_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
-// import "package:fluttericon/font_awesome5_icons.dart";
-import 'wave_view.dart';
-import 'main.dart';
 
 class MyselfPage extends StatefulWidget {
   const MyselfPage({Key? key}) : super(key: key);
@@ -114,7 +111,7 @@ class _MyselfPageState extends State<MyselfPage> {
                     //     color: Colors.black,
                     //   ),
                     // ),
-                     child: Text(
+                    child: Text(
                       "アバター名",
                       // style: GoogleFonts.orelegaOne(
                       style: GoogleFonts.roboto(
@@ -128,54 +125,51 @@ class _MyselfPageState extends State<MyselfPage> {
                   Row(children: [
                     const SizedBox(width: 20),
                     _currentmyAvatar(null),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(left: 20, right: 8, top: 16),
-                      child: Container(
-                        width: 60,
-                        height: 160,
-                        decoration: BoxDecoration(
-                          //ここがhpの上部分
-                          color: HexColor('#E8EDFE'),
-
-                          // color: HexColor("#0087aa"),
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(80.0),
-                              bottomLeft: Radius.circular(80.0),
-                              bottomRight: Radius.circular(80.0),
-                              topRight: Radius.circular(80.0)),
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                                color: const Color(0xFF3A5160).withOpacity(0.4),
-                                offset: const Offset(2, 2),
-                                blurRadius: 4),
-                          ],
-                        ),
-                        child: WaveView(
-                          percentageValue: 60.0,
-                          //black
-                          // fontcolor: Theme.of(context).shadowColor,
-                          //white
-                          fontcolor: Theme.of(context).cardColor,
-                          //red
-                          // fontcolor: Theme.of(context).shadowColor,
-
-                          //red
-                          // barcolor: Theme.of(context).primaryColor,
-                          //yellow
-                          // barcolor: Theme.of(context).dividerColor
-                          //light green
-                          // barcolor: Theme.of(context).splashColor,
-                          //green
-                          barcolor: Theme.of(context).hoverColor,
-
-                          //真ん中
-                          // fontposition: 15
-                          //中央下
-                          fontposition: 48.5, 
-                        ),
-                      ),
-                    ),
+                    // Padding(
+                    //   padding:
+                    //       const EdgeInsets.only(left: 20, right: 8, top: 16),
+                    //   child: Container(
+                    //     width: 60,
+                    //     height: 160,
+                    //     decoration: BoxDecoration(
+                    //       //ここがhpの上部分
+                    //       color: HexColor('#E8EDFE'),
+                    //       // color: HexColor("#0087aa"),
+                    //       borderRadius: const BorderRadius.only(
+                    //           topLeft: Radius.circular(80.0),
+                    //           bottomLeft: Radius.circular(80.0),
+                    //           bottomRight: Radius.circular(80.0),
+                    //           topRight: Radius.circular(80.0)),
+                    //       boxShadow: <BoxShadow>[
+                    //         BoxShadow(
+                    //             color: const Color(0xFF3A5160).withOpacity(0.4),
+                    //             offset: const Offset(2, 2),
+                    //             blurRadius: 4),
+                    //       ],
+                    //     ),
+                    //     child: WaveView(
+                    //       percentageValue: 60.0,
+                    //       //black
+                    //       // fontcolor: Theme.of(context).shadowColor,
+                    //       //white
+                    //       fontcolor: Theme.of(context).cardColor,
+                    //       //red
+                    //       // fontcolor: Theme.of(context).shadowColor,
+                    //       //red
+                    //       // barcolor: Theme.of(context).primaryColor,
+                    //       //yellow
+                    //       // barcolor: Theme.of(context).dividerColor
+                    //       //light green
+                    //       // barcolor: Theme.of(context).splashColor,
+                    //       //green
+                    //       barcolor: Theme.of(context).hoverColor,
+                    //       //真ん中
+                    //       // fontposition: 15
+                    //       //中央下
+                    //       fontposition: 48.5,
+                    //     ),
+                    //   ),
+                    // ),
                   ]),
                   const SizedBox(height: 30),
                   Container(
@@ -186,8 +180,7 @@ class _MyselfPageState extends State<MyselfPage> {
                       // color: Color.fromARGB(255, 209, 209, 209),
 
                       border: Border(
-                        bottom: BorderSide(
-                            color: Theme.of(context).focusColor
+                        bottom: BorderSide(color: Theme.of(context).focusColor
                             // Color.fromARGB(255, 24, 168, 190)
                             ),
                       ),
@@ -222,85 +215,52 @@ class _MyselfPageState extends State<MyselfPage> {
                       ),
                       padding: const EdgeInsets.all(10),
                       child: IntrinsicWidth(
-                        child: Column(
-                          children: [
-                          const SizedBox(width: 10),
-                          
+                        child: Column(children: [
+
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                  "Current HP",
-                                  // style: GoogleFonts.notoSansJavanese(
+                              Text("現在のHP",
                                   style: GoogleFonts.roboto(
                                       fontWeight: FontWeight.w500, fontSize: 20)
                                   // Theme.of(context).textTheme.headlineSmall
                                   ),
-                                  // Text(
-                                  // "現在のHP",
-                                  // // style: GoogleFonts.notoSansJavanese(
-                                  // // style: GoogleFonts.mochiyPopOne(
-                                  //   style: GoogleFonts.roboto(
-                                  //     fontWeight: FontWeight.w500, fontSize: 17)
-                                  // // Theme.of(context).textTheme.headlineSmall
-                                  // ),
-                                  Text("94",
-                                style: GoogleFonts.sourceCodePro(
-                                    fontSize: 27,
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context).hintColor)
-                                // Theme.of(context).textTheme.headlineSmall
-                                ),
-                                  //english
-                              // const SizedBox(height: 3),
-                              //japanese
-                                  // const SizedBox(height: 5,),
-                              // 
-                              
+                              Text("94",
+                                  style: GoogleFonts.sourceCodePro(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context).hintColor)
+                                  ),
+
                               Transform.rotate(
                                   angle: 270 * pi / 180,
-                                  child: const Icon(Icons.battery_4_bar,
-                                  size: 20,)),
+                                  child: const Icon(
+                                    Icons.battery_4_bar,
+                                    size: 20,
+                                  )),
                             ],
                           ),
                           // const SizedBox(width: 20),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                      "推定活動限界",
+                                        style: GoogleFonts.roboto(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 20)),
 
-                            children: [
-                            
-                            // const SizedBox(height: 10),
-                            Text(
-                                  "Activity limit time",
-                                  style: GoogleFonts.roboto(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 18)),
-                            // Text(
-                            //       "推定活動限界",
-                            //       // style: GoogleFonts.notoSansJavanese(
-                            //       // style: GoogleFonts.mochiyPopOne(
-                            //         style: GoogleFonts.roboto(
-                            //           fontWeight: FontWeight.w500,
-                            //           fontSize: 17)),
-
-                            Text("23:43",
-                                style: GoogleFonts.sourceCodePro(
-                                    fontSize: 27,
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context).hintColor)),
-                            const Icon(Iconic.moon_inv,
-                              size: 15,)
-                          ]),
-                          // const SizedBox(width: 15,),
-                          // Column(
-                          //   children: [
-                              
-                          //     const SizedBox(height: 10),
-                              
-                          //   ],
-                          // ),
-                          // addAllListData(),
+                                Text("23:43",
+                                    style: GoogleFonts.sourceCodePro(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context).hintColor)),
+                                const Icon(
+                                  Iconic.moon_inv,
+                                  size: 15,
+                                )
+                              ]),
                         ]),
                       )),
                   const SizedBox(height: 40),
@@ -309,15 +269,11 @@ class _MyselfPageState extends State<MyselfPage> {
                       padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
                           border: Border(
-                              bottom: BorderSide(color: Theme.of(context).focusColor))),
+                              bottom: BorderSide(
+                                  color: Theme.of(context).focusColor))),
                       child: Align(
                         alignment: Alignment.center,
-                        // child: Text("HP graph",
-                        //     // style: GoogleFonts.orelegaOne(
-                        //     style: GoogleFonts.roboto(
-                        //         fontWeight: FontWeight.bold, fontSize: 30)),
                         child: Text("HP グラフ",
-                            // style: GoogleFonts.orelegaOne(
                             style: GoogleFonts.roboto(
                                 fontWeight: FontWeight.bold, fontSize: 30)),
                       )),
@@ -325,14 +281,6 @@ class _MyselfPageState extends State<MyselfPage> {
                   Container(
                     padding: const EdgeInsets.only(right: 20),
                     height: 200,
-                    //微妙
-                    // decoration: const BoxDecoration(
-                    //   border: Border(
-                    //     bottom: BorderSide(
-                    //       color: Color(0xff0087aa)
-                    //     )
-                    //   )
-                    // ),
                     child: LineChart(
                       LineChartData(
                         minX: 0,
@@ -374,11 +322,11 @@ class _MyselfPageState extends State<MyselfPage> {
                   const SizedBox(height: 10),
                   Container(
                       width: 200,
-                      // padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
                           border: Border(
                               bottom: BorderSide(
-                                  color: Theme.of(context).focusColor, width: 1.5))),
+                                  color: Theme.of(context).focusColor,
+                                  width: 1.5))),
                       child: Align(
                         alignment: Alignment.center,
                         // child: Text("HP record",
@@ -399,8 +347,8 @@ class _MyselfPageState extends State<MyselfPage> {
                     width: 300,
                     // width: double.infinity,
                     decoration: BoxDecoration(
-                      border:
-                          Border.all(color: Theme.of(context).focusColor, width: 5),
+                      border: Border.all(
+                          color: Theme.of(context).focusColor, width: 5),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     padding: const EdgeInsets.all(10),
@@ -413,26 +361,13 @@ class _MyselfPageState extends State<MyselfPage> {
                       ),
                       Column(
                         children: [
-                          
-                          // const SizedBox(height: 10),
-                          Text("record high HP",
-                              // style: GoogleFonts.orelegaOne(
+                          Text("過去最高 HP",
                               style: GoogleFonts.roboto(
                                   fontWeight: FontWeight.w500, fontSize: 23)),
                           const SizedBox(height: 7),
-                          Text("record low HP",
-                              // style: GoogleFonts.orelegaOne(
+                          Text("過去最低 HP",
                               style: GoogleFonts.roboto(
                                   fontWeight: FontWeight.w500, fontSize: 23)),
-                          // Text("過去最高 HP",
-                          //     // style: GoogleFonts.orelegaOne(
-                          //     style: GoogleFonts.roboto(
-                          //         fontWeight: FontWeight.w500, fontSize: 23)),
-                          // const SizedBox(height: 7),
-                          // Text("過去最低 HP",
-                          //     // style: GoogleFonts.orelegaOne(
-                          //     style: GoogleFonts.roboto(
-                          //         fontWeight: FontWeight.w500, fontSize: 23)),
                         ],
                       ),
                       const SizedBox(width: 30),
