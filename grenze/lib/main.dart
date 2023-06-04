@@ -59,12 +59,12 @@ class _MainPageState extends State<MainPage> {
   ];
   String? avatarName;
   String? avatarType;
-  int? currentHP;
+  int currentHP = 0;
   String? userName;
   int? past_maxRemainHP;
   int? past_minRemainHP;
-
-
+  int HPnumber = 0;
+  List HPlist = [];
 
   @override
   void initState() {
@@ -73,11 +73,26 @@ class _MainPageState extends State<MainPage> {
     _getPrefItems();
     // _timeLog();
     fetchFirebaseData();
-    Timer.periodic(const Duration(seconds: 10), (timer) {
+    changeHP();
+    Timer.periodic(const Duration(seconds: 30), (timer) {
+      zeroHP();
+    });
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      changeHP();
       // _timeLog();
       // fetchFirebaseData();
     });
+
     // print("timer");
+  }
+
+  void zeroHP() {
+    if (mounted) {
+      setState(() {
+        print("reset!!!!!!!");
+        HPnumber = 0;
+      });
+    }
   }
 
   void _timeLog() {
@@ -136,22 +151,36 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
-Future<void> fetchFirebaseData() async {
-  print("startttttt");
-  var url = Uri.parse('https://o2nr395oib.execute-api.ap-northeast-1.amazonaws.com/default/get_HP_data');
-  print("1");
-  var response = await http.get(url);
-  print("2");
+  Future<void> fetchFirebaseData() async {
+    print("startttttt");
+    var url = Uri.parse(
+        'https://o2nr395oib.execute-api.ap-northeast-1.amazonaws.com/default/get_HP_data');
+    print("1");
+    var response = await http.get(url);
+    print("2");
 
-  if (response.statusCode == 200) {
-    // リクエストが成功した場合、レスポンスの内容を取得して表示します
-    print(response.body);
-    var responseJson = jsonDecode(response.body);
-  } else {
-    // リクエストが失敗した場合、エラーメッセージを表示します
-    print('Request failed with status: ${response.statusCode}');
+    if (response.statusCode == 200) {
+      // リクエストが成功した場合、レスポンスの内容を取得して表示します
+      print(response.body);
+      var responseJson = jsonDecode(response.body);
+    } else {
+      // リクエストが失敗した場合、エラーメッセージを表示します
+      print('Request failed with status: ${response.statusCode}');
+    }
   }
-}
+
+  void changeHP() {
+    if (mounted) {
+      setState(() {
+        currentHP = HPnumber;
+        // currentHP = HPlist[HPnumber]["y"];
+      });
+      if (HPnumber < 14) {
+        HPnumber += 1;
+      } else {}
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (userId == null) {
@@ -187,48 +216,50 @@ Future<void> fetchFirebaseData() async {
             ),
           ));
     } else {
-            return Scaffold(
-              body: PageView(
-                controller: _pageViewController,
-                children: <Widget>[
-                  MyselfPage(spots: spots),
-                  const Text("b"),
-                ],
-                onPageChanged: (index) {
-                  setState(() {
-                    _selectedIndex = index;
-                  });
-                },
-              ),
-              bottomNavigationBar: BottomNavigationBar(
-                currentIndex: _selectedIndex,
-                onTap: _onItemTapped,
-                items: const <BottomNavigationBarItem>[
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.person),
-                    // activeIcon: Icon(Icons.book_online),
-                    label: "Myself",
-                    tooltip: "My Page",
-                    backgroundColor: Color.fromARGB(255, 103, 219, 234),
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.people),
-                    // activeIcon: Icon(Icons.school_outlined),
-                    label: "Friends",
-                    tooltip: "Friends Page",
-                    backgroundColor: Color.fromARGB(255, 231, 154, 195),
-                  ),
-                ],
-                type: BottomNavigationBarType.shifting,
-                backgroundColor: Colors.red,
-                enableFeedback: true,
-                selectedFontSize: 20,
-                selectedIconTheme:
-                    const IconThemeData(size: 30, color: Colors.green),
-                selectedItemColor: Colors.black,
-                unselectedIconTheme:
-                    const IconThemeData(size: 25, color: Colors.white),
-              ),
+      return Scaffold(
+        body: PageView(
+          controller: _pageViewController,
+          children: <Widget>[
+            MyselfPage(
+              spots: spots,
+              currentHP: currentHP,
+            ),
+            const Text("b"),
+          ],
+          onPageChanged: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              // activeIcon: Icon(Icons.book_online),
+              label: "Myself",
+              tooltip: "My Page",
+              backgroundColor: Color.fromARGB(255, 103, 219, 234),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.people),
+              // activeIcon: Icon(Icons.school_outlined),
+              label: "Friends",
+              tooltip: "Friends Page",
+              backgroundColor: Color.fromARGB(255, 231, 154, 195),
+            ),
+          ],
+          type: BottomNavigationBarType.shifting,
+          backgroundColor: Colors.red,
+          enableFeedback: true,
+          selectedFontSize: 20,
+          selectedIconTheme: const IconThemeData(size: 30, color: Colors.green),
+          selectedItemColor: Colors.black,
+          unselectedIconTheme:
+              const IconThemeData(size: 25, color: Colors.white),
+        ),
       );
     }
   }

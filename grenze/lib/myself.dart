@@ -8,7 +8,9 @@ import "main.dart";
 class MyselfPage extends StatefulWidget {
   // MyselfPage({Key? key}) : super(key: key);
   final List<FlSpot> spots;
-  const MyselfPage({required this.spots, Key? key}) : super(key: key);
+  final int currentHP;
+  const MyselfPage({required this.spots, required this.currentHP, Key? key})
+      : super(key: key);
   // 使用するStateを指定
   @override
   State createState() => _MyselfPageState();
@@ -99,7 +101,7 @@ class _MyselfPageState extends State<MyselfPage> {
                     padding: const EdgeInsets.all(10),
                     child: Column(
                       children: [
-                        Text("現在のHP : 100",
+                        Text("現在のHP : ${widget.currentHP}",
                             style: Theme.of(context).textTheme.headlineSmall),
                         const SizedBox(height: 10),
                         Text("推定活動限界 : 04 : 28",
