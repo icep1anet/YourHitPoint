@@ -1,3 +1,4 @@
+import "dart:convert";
 import "package:flutter/material.dart";
 import "myself.dart";
 import "register.dart";
@@ -5,6 +6,7 @@ import "package:shared_preferences/shared_preferences.dart";
 import "package:flutter/services.dart";
 import 'dart:async';
 import "package:fl_chart/fl_chart.dart";
+import 'package:http/http.dart' as http;
 
 String? userId;
 
@@ -55,15 +57,26 @@ class _MainPageState extends State<MainPage> {
     // FlSpot(9, 9),
     // FlSpot(10, 0),
   ];
+  String? avatarName;
+  String? avatarType;
+  int? currentHP;
+  String? userName;
+  int? past_maxRemainHP;
+  int? past_minRemainHP;
+
+
+
   @override
   void initState() {
     super.initState();
     // initTest();
     _getPrefItems();
     // _timeLog();
-    Timer.periodic(const Duration(seconds: 1),(timer) {
-      _timeLog();
-      });
+    fetchFirebaseData();
+    Timer.periodic(const Duration(seconds: 10), (timer) {
+      // _timeLog();
+      // fetchFirebaseData();
+    });
     // print("timer");
   }
 
@@ -123,6 +136,22 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
+Future<void> fetchFirebaseData() async {
+  print("startttttt");
+  var url = Uri.parse('https://o2nr395oib.execute-api.ap-northeast-1.amazonaws.com/default/get_HP_data');
+  print("1");
+  var response = await http.get(url);
+  print("2");
+
+  if (response.statusCode == 200) {
+    // リクエストが成功した場合、レスポンスの内容を取得して表示します
+    print(response.body);
+    var responseJson = jsonDecode(response.body);
+  } else {
+    // リクエストが失敗した場合、エラーメッセージを表示します
+    print('Request failed with status: ${response.statusCode}');
+  }
+}
   @override
   Widget build(BuildContext context) {
     if (userId == null) {
@@ -158,48 +187,48 @@ class _MainPageState extends State<MainPage> {
             ),
           ));
     } else {
-      print("hasdata");
-      return Scaffold(
-        body: PageView(
-          controller: _pageViewController,
-          children: <Widget>[
-            MyselfPage(spots: spots),
-            const Text("b"),
-          ],
-          onPageChanged: (index) {
-            setState(() {
-              _selectedIndex = index;
-            });
-          },
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              // activeIcon: Icon(Icons.book_online),
-              label: "Myself",
-              tooltip: "My Page",
-              backgroundColor: Color.fromARGB(255, 103, 219, 234),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.people),
-              // activeIcon: Icon(Icons.school_outlined),
-              label: "Friends",
-              tooltip: "Friends Page",
-              backgroundColor: Color.fromARGB(255, 231, 154, 195),
-            ),
-          ],
-          type: BottomNavigationBarType.shifting,
-          backgroundColor: Colors.red,
-          enableFeedback: true,
-          selectedFontSize: 20,
-          selectedIconTheme: const IconThemeData(size: 30, color: Colors.green),
-          selectedItemColor: Colors.black,
-          unselectedIconTheme:
-              const IconThemeData(size: 25, color: Colors.white),
-        ),
+            return Scaffold(
+              body: PageView(
+                controller: _pageViewController,
+                children: <Widget>[
+                  MyselfPage(spots: spots),
+                  const Text("b"),
+                ],
+                onPageChanged: (index) {
+                  setState(() {
+                    _selectedIndex = index;
+                  });
+                },
+              ),
+              bottomNavigationBar: BottomNavigationBar(
+                currentIndex: _selectedIndex,
+                onTap: _onItemTapped,
+                items: const <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.person),
+                    // activeIcon: Icon(Icons.book_online),
+                    label: "Myself",
+                    tooltip: "My Page",
+                    backgroundColor: Color.fromARGB(255, 103, 219, 234),
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.people),
+                    // activeIcon: Icon(Icons.school_outlined),
+                    label: "Friends",
+                    tooltip: "Friends Page",
+                    backgroundColor: Color.fromARGB(255, 231, 154, 195),
+                  ),
+                ],
+                type: BottomNavigationBarType.shifting,
+                backgroundColor: Colors.red,
+                enableFeedback: true,
+                selectedFontSize: 20,
+                selectedIconTheme:
+                    const IconThemeData(size: 30, color: Colors.green),
+                selectedItemColor: Colors.black,
+                unselectedIconTheme:
+                    const IconThemeData(size: 25, color: Colors.white),
+              ),
       );
     }
   }
