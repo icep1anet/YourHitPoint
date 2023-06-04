@@ -61,11 +61,13 @@ class _MainPageState extends State<MainPage> {
     // initTest();
     _getPrefItems();
     // _timeLog();
-    Timer.periodic(const Duration(seconds: 1), _timeLog);
+    Timer.periodic(const Duration(seconds: 1),(timer) {
+      _timeLog();
+      });
     // print("timer");
   }
 
-  void _timeLog(Timer timer) {
+  void _timeLog() {
     if (mounted) {
       setState(() {
         _now = DateTime.now();
