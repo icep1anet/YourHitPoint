@@ -1,12 +1,14 @@
 import "package:flutter/material.dart";
 import "package:fl_chart/fl_chart.dart";
 import "register.dart";
-import "package:device_info_plus/device_info_plus.dart";
+// import "package:device_info_plus/device_info_plus.dart";
+import "package:shared_preferences/shared_preferences.dart";
 import "main.dart";
 
-
 class MyselfPage extends StatefulWidget {
-  const MyselfPage({Key? key}) : super(key: key);
+  // MyselfPage({Key? key}) : super(key: key);
+  final List<FlSpot> spots;
+  const MyselfPage({required this.spots, Key? key}) : super(key: key);
   // 使用するStateを指定
   @override
   State createState() => _MyselfPageState();
@@ -17,27 +19,29 @@ class _MyselfPageState extends State<MyselfPage> {
   Map test = {"x": 3, "y": 4};
   double kon = 3;
   double point = 0;
-  List<FlSpot> spots = const [
-    FlSpot(0, 98),
-    FlSpot(1, 92),
-    FlSpot(2, 79),
-    FlSpot(2.6, 40),
-    FlSpot(3, 68),
-    FlSpot(4, 62),
-    FlSpot(4.3, 80),
-    FlSpot(5, 49),
-    FlSpot(6, 35),
-    // FlSpot(7, 29),
-    // FlSpot(8, 19),
-    // FlSpot(9, 9),
-    // FlSpot(10, 0),
-  ];
-  // DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
-  // Future testt() async{
-  //     final info = await deviceInfo.deviceInfo;
-  //     print(info.data);
-  // }
+  // final List<FlSpot> spots;
+  // List<FlSpot> spots = const [
+  //   FlSpot(0, 98),
+  //   FlSpot(1, 92),
+  //   FlSpot(2, 79),
+  //   FlSpot(2.6, 40),
+  //   FlSpot(3, 68),
+  //   FlSpot(4, 62),
+  //   FlSpot(4.3, 80),
+  //   FlSpot(5, 49),
+  //   FlSpot(6, 35),
+  //   // FlSpot(7, 29),
+  //   // FlSpot(8, 19),
+  //   // FlSpot(9, 9),
+  //   // FlSpot(10, 0),
+  // ];
+
+  void initTest() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove("userId");
+    print("delete");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,22 +51,20 @@ class _MyselfPageState extends State<MyselfPage> {
           title: const Text("Myself"),
           actions: [
             IconButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    fullscreenDialog: true,
-                    builder: (context) => const RegisterPage(),
-                  ),
-                );
-              }, 
-              icon: const Icon(Icons.settings)
-            ),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      fullscreenDialog: true,
+                      builder: (context) => const RegisterPage(),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.settings)),
             IconButton(
-              onPressed: () {
-                // testt();
-              }, 
-              icon: const Icon(Icons.add)
-            ),
+                onPressed: () {
+                  initTest();
+                },
+                icon: const Icon(Icons.add)),
           ],
         ),
         body: SingleChildScrollView(
@@ -128,7 +130,7 @@ class _MyselfPageState extends State<MyselfPage> {
                             color: Colors.red[400],
                             barWidth: 3,
                             dotData: FlDotData(show: true),
-                            spots: spots,
+                            spots: widget.spots,
                             dashArray: [10, 6],
                           )
                         ],
@@ -190,7 +192,6 @@ class _MyselfPageState extends State<MyselfPage> {
                       ],
                     ),
                   ),
-                  
                 ],
               )),
         ));

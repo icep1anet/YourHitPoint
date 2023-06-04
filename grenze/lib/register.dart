@@ -8,9 +8,6 @@ import "package:flutter/services.dart";
 import "main.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
-
-
-
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -34,7 +31,6 @@ class _RegisterPageState extends State<RegisterPage> {
   List<String> choices = ["猫", "犬", "鶴", "鴨", "キジ"];
   String avatarType = "猫";
 
-
   @override
   void initState() {
     super.initState();
@@ -43,8 +39,8 @@ class _RegisterPageState extends State<RegisterPage> {
     // _getPrefItems();
     _fNode = FocusNode();
     _focusNode = FocusNode();
-    _userNameController = TextEditingController(text: "");
-    _avatarNameController = TextEditingController(text: "");
+    _userNameController = TextEditingController(text: "aaa");
+    _avatarNameController = TextEditingController(text: "bbb");
   }
 
   @override
@@ -77,7 +73,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // void addUserToFirestore(String userName, String avatarName, int avatarType) async{
   //   CollectionReference users = FirebaseFirestore.instance.collection("users");
-    
+
   //   await users.doc("test").collection("user_info").doc("user_data").set({
   //     "userName": _userNameController!.text,
   //     "avatarName": _avatarNameController!.text,
@@ -88,10 +84,6 @@ class _RegisterPageState extends State<RegisterPage> {
   //     print("Failed to add user: $error");
   //   });
   // }
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -107,33 +99,30 @@ class _RegisterPageState extends State<RegisterPage> {
                 systemOverlayStyle: SystemUiOverlayStyle.light,
                 title: const Text("Profile"),
                 actions: [
-                //   if (hasData != null)
-                //     IconButton(
-                //       onPressed: () {
-                //         showQRcode(userId);
-                //       },
-                //       icon: const Icon(Icons.qr_code_2),
-                //       color: Colors.pink,
-                //       iconSize: 35,
-                //     ),
+                  //   if (hasData != null)
+                  //     IconButton(
+                  //       onPressed: () {
+                  //         showQRcode(userId);
+                  //       },
+                  //       icon: const Icon(Icons.qr_code_2),
+                  //       color: Colors.pink,
+                  //       iconSize: 35,
+                  //     ),
                   IconButton(
-                    onPressed: () {
-                      _setPrefItems("12345kusa");
-                    }, 
-                    icon: const Icon(Icons.add)
-                  ),
+                      onPressed: () {
+                        _setPrefItems("12345kusa");
+                      },
+                      icon: const Icon(Icons.add)),
                   IconButton(
-                    onPressed: () {
-                      _getPrefItems();
-                    }, 
-                    icon: const Icon(Icons.add)
-                  ),
+                      onPressed: () {
+                        _getPrefItems();
+                      },
+                      icon: const Icon(Icons.add)),
                 ],
               ),
               body: SingleChildScrollView(
                 child: Container(
-                  padding:
-                      const EdgeInsets.only(top: 40, left: 24, right: 24),
+                  padding: const EdgeInsets.only(top: 40, left: 24, right: 24),
                   child: Column(
                     children: [
                       // Text("userId: $userId",
@@ -153,8 +142,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           labelText: "userName",
                           suffixIcon: IconButton(
                             icon: const Icon(Icons.cancel),
-                            onPressed: () =>
-                                _userNameController?.clear(),
+                            onPressed: () => _userNameController?.clear(),
                           ),
                         ),
                         keyboardType: TextInputType.text,
@@ -180,8 +168,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             labelText: "avatarName",
                             suffixIcon: IconButton(
                               icon: const Icon(Icons.cancel),
-                              onPressed: () =>
-                                  _avatarNameController?.clear(),
+                              onPressed: () => _avatarNameController?.clear(),
                             ),
                           ),
                           focusNode: _focusNode,
@@ -202,23 +189,21 @@ class _RegisterPageState extends State<RegisterPage> {
                       style：テキストスタイル
                       underline：ドロップダウンボタンの下線
                       */
-                    DropdownButton(
-                      items: choices.map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      value: avatarType,
-                      onChanged: (String? value) {
-                        setState(() {
-                          avatarType = value!;
-                        });
-                      },
-                    ),
-
-
-
+                      DropdownButton(
+                        items: choices
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        value: avatarType,
+                        onChanged: (String? value) {
+                          setState(() {
+                            avatarType = value!;
+                          });
+                        },
+                      ),
 
                       // Container(
                       //     margin: const EdgeInsets.only(top: 16),
@@ -365,11 +350,11 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void navigateMain() async {
-      await Navigator.pushNamedAndRemoveUntil(
-        context,
-        "/home",
-        (route) => false,
-      );
+    await Navigator.pushNamedAndRemoveUntil(
+      context,
+      "/home",
+      (route) => false,
+    );
   }
 
   // void _selectImage() async {
@@ -421,7 +406,4 @@ class _RegisterPageState extends State<RegisterPage> {
   //     ),
   //   );
   // }
-
-
 }
-
