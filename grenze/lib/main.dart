@@ -3,7 +3,7 @@ import "myself.dart";
 import "register.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:flutter/services.dart";
-
+import 'dart:async';
 String? userId;
 
 void main() async{
@@ -37,6 +37,7 @@ class _MainPageState extends State<MainPage> {
   final _pageViewController = PageController();
   int _selectedIndex = 0;
   // String? userId;
+  dynamic _now, _year, _month, _day, _hour, _minute, _second;
 
   
 
@@ -45,7 +46,25 @@ class _MainPageState extends State<MainPage> {
     super.initState();
     // initTest();
     _getPrefItems();
+    // _timeLog();
+    Timer.periodic(const Duration(seconds: 1), _timeLog);
+    // print("timer");
   }
+
+  void _timeLog(Timer timer) {
+    setState(() {
+      _now = DateTime.now();
+      _year = _now.year;
+      _month = _now.month;
+      _day = _now.day;
+      _hour = _now.hour;
+      _minute = _now.minute;
+      _second = _now.second;
+    });
+    print(_now);
+    print("$_year年$_month月$_day日 $_hour時$_minute分$_second秒");
+  }
+
 
   void initTest() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
