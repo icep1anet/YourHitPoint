@@ -124,7 +124,7 @@ class _MyselfPageState extends State<MyselfPage> {
                   const SizedBox(height: 30),
                   Row(children: [
                     const SizedBox(width: 20),
-                    _currentmyAvatar(null),
+                    _currentmyAvatar("assets/images/illust_normal.jpg"),
                     // Padding(
                     //   padding:
                     //       const EdgeInsets.only(left: 20, right: 8, top: 16),
