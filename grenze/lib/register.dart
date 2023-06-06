@@ -298,26 +298,15 @@ class _RegisterPageState extends State<RegisterPage> {
     setState(() {
       _registering = true;
     });
-    // FirebaseStorage storage = FirebaseStorage.instance;
+
     try {
-      // final storageRef = storage.ref("UL/profile_$userId.png");
-      // if (pickerFile != null) {
-      //   //purFileだとうまくできなかったのでputData
-      //   await storageRef.putData(await pickerFile!.readAsBytes());
-      //   imageUrl = await storageRef.getDownloadURL();
-      // }
+      
 
-      // await FirebaseChatCore.instance.createUserInFirestore(
-      //   types.User(
-      //     firstName: _userNameController!.text,
-      //     id: userId!,
-      //     // imageUrl: imageUrl,
-      //     lastName: _avatarNameController!.text,
-      //   ),
-      // );
 
-      // if (!mounted) return;
-      // Navigator.of(context).pop();
+
+
+      if (!mounted) return;
+
 
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString("userId", "gokiburii");

@@ -4,9 +4,10 @@ import "myself.dart";
 import "register.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:flutter/services.dart";
-import 'dart:async';
+import "dart:async";
 import "package:fl_chart/fl_chart.dart";
-import 'package:http/http.dart' as http;
+import "package:http/http.dart" as http;
+import "friend.dart";
 
 String? userId;
 
@@ -153,19 +154,21 @@ class _MainPageState extends State<MainPage> {
 
   Future<void> fetchFirebaseData() async {
     print("startttttt");
-    var url = Uri.parse(
-        'https://o2nr395oib.execute-api.ap-northeast-1.amazonaws.com/default/get_HP_data');
-    print("1");
+    // var url = Uri.parse(
+    //     "https://o2nr395oib.execute-api.ap-northeast-1.amazonaws.com/default/get_HP_data");
+    var url =
+      Uri.https("o2nr395oib.execute-api.ap-northeast-1.amazonaws.com", "/default/get_HP_data", {"userName": "a", "avatarName": "b", "avatarType": "c"});
     var response = await http.get(url);
-    print("2");
-
+    print(response.body);
     if (response.statusCode == 200) {
       // リクエストが成功した場合、レスポンスの内容を取得して表示します
       print(response.body);
+  
       var responseJson = jsonDecode(response.body);
+      print(responseJson);
     } else {
       // リクエストが失敗した場合、エラーメッセージを表示します
-      print('Request failed with status: ${response.statusCode}');
+      print("Request failed with status: ${response.statusCode}");
     }
   }
 
@@ -224,7 +227,7 @@ class _MainPageState extends State<MainPage> {
               spots: spots,
               currentHP: currentHP,
             ),
-            const Text("b"),
+            FriendPage(),
           ],
           onPageChanged: (index) {
             setState(() {
