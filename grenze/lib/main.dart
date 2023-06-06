@@ -8,6 +8,7 @@ import "dart:async";
 import "package:fl_chart/fl_chart.dart";
 import "package:http/http.dart" as http;
 import "friend.dart";
+import 'package:logger/logger.dart';
 
 String? userId;
 
@@ -42,17 +43,17 @@ class _MainPageState extends State<MainPage> {
   final _pageViewController = PageController();
   int _selectedIndex = 0;
   // String? userId;
-  dynamic _now, _year, _month, _day, _hour, _minute, _second;
+  // dynamic _now, _year, _month, _day, _hour, _minute, _second;
   List<FlSpot> spots = [
-    FlSpot(0, 98),
-    FlSpot(1, 92),
-    FlSpot(2, 79),
-    FlSpot(2.6, 40),
-    FlSpot(3, 68),
-    FlSpot(4, 62),
-    FlSpot(4.3, 80),
-    FlSpot(5, 49),
-    FlSpot(6, 35),
+    const FlSpot(0, 98),
+    const FlSpot(1, 92),
+    const FlSpot(2, 79),
+    const FlSpot(2.6, 40),
+    const FlSpot(3, 68),
+    const FlSpot(4, 62),
+    const FlSpot(4.3, 80),
+    const FlSpot(5, 49),
+    const FlSpot(6, 35),
     // FlSpot(7, 29),
     // FlSpot(8, 19),
     // FlSpot(9, 9),
@@ -62,10 +63,11 @@ class _MainPageState extends State<MainPage> {
   String? avatarType;
   int currentHP = 0;
   String? userName;
-  int? past_maxRemainHP;
-  int? past_minRemainHP;
-  int HPnumber = 0;
-  List HPlist = [];
+  int? recordHighHP;
+  int? recordLowHP;
+  int hpNumber = 0;
+  List hpList = [];
+  var logger = Logger();
 
   @override
   void initState() {
@@ -73,7 +75,7 @@ class _MainPageState extends State<MainPage> {
     // initTest();
     _getPrefItems();
     // _timeLog();
-    fetchFirebaseData();
+    // fetchFirebaseData();
     changeHP();
     Timer.periodic(const Duration(seconds: 30), (timer) {
       zeroHP();
@@ -84,33 +86,33 @@ class _MainPageState extends State<MainPage> {
       // fetchFirebaseData();
     });
 
-    // print("timer");
+    // logger.d("timer");
   }
 
   void zeroHP() {
     if (mounted) {
       setState(() {
-        print("reset!!!!!!!");
-        HPnumber = 0;
+        logger.d("reset!!!!!!!");
+        hpNumber = 0;
       });
     }
   }
 
-  void _timeLog() {
-    if (mounted) {
-      setState(() {
-        _now = DateTime.now();
-        _year = _now.year;
-        _month = _now.month;
-        _day = _now.day;
-        _hour = _now.hour;
-        _minute = _now.minute;
-        _second = _now.second;
-      });
-      print(_now);
-      print("$_year年$_month月$_day日 $_hour時$_minute分$_second秒");
-    }
-  }
+  // void _timeLog() {
+  //   if (mounted) {
+  //     setState(() {
+  //       _now = DateTime.now();
+  //       _year = _now.year;
+  //       _month = _now.month;
+  //       _day = _now.day;
+  //       _hour = _now.hour;
+  //       _minute = _now.minute;
+  //       _second = _now.second;
+  //     });
+  //     logger.d(_now);
+  //     logger.d("$_year年$_month月$_day日 $_hour時$_minute分$_second秒");
+  //   }
+  // }
 
   void initrem() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -141,7 +143,7 @@ class _MainPageState extends State<MainPage> {
     String? userName = prefs.getString("userName");
     // String? avatarName = prefs.getString("avatarName");
     // String? avatarType = prefs.getString("avatarType");
-    if (userName != null) print("userName:" + userName);
+    if (userName != null) logger.d("userName:$userName");
   }
 
   void _onItemTapped(int index) {
@@ -153,33 +155,33 @@ class _MainPageState extends State<MainPage> {
   }
 
   Future<void> fetchFirebaseData() async {
-    print("startttttt");
+    logger.d("startttttt");
     // var url = Uri.parse(
     //     "https://o2nr395oib.execute-api.ap-northeast-1.amazonaws.com/default/get_HP_data");
     var url =
       Uri.https("o2nr395oib.execute-api.ap-northeast-1.amazonaws.com", "/default/get_HP_data", {"userName": "a", "avatarName": "b", "avatarType": "c"});
     var response = await http.get(url);
-    print(response.body);
+    logger.d(response.body);
     if (response.statusCode == 200) {
       // リクエストが成功した場合、レスポンスの内容を取得して表示します
-      print(response.body);
+      logger.d(response.body);
   
       var responseJson = jsonDecode(response.body);
-      print(responseJson);
+      logger.d(responseJson);
     } else {
       // リクエストが失敗した場合、エラーメッセージを表示します
-      print("Request failed with status: ${response.statusCode}");
+      logger.d("Request failed with status: ${response.statusCode}");
     }
   }
 
   void changeHP() {
     if (mounted) {
       setState(() {
-        currentHP = HPnumber;
+        currentHP = hpNumber;
         // currentHP = HPlist[HPnumber]["y"];
       });
-      if (HPnumber < 14) {
-        HPnumber += 1;
+      if (hpNumber < 14) {
+        hpNumber += 1;
       } else {}
     }
   }
@@ -187,7 +189,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     if (userId == null) {
-      // print("null");
+      // logger.d("null");
       return Scaffold(
           appBar: AppBar(
             //オーバーレイが明るいカラースキームになります。
@@ -227,7 +229,7 @@ class _MainPageState extends State<MainPage> {
               spots: spots,
               currentHP: currentHP,
             ),
-            FriendPage(),
+            const FriendPage(),
           ],
           onPageChanged: (index) {
             setState(() {

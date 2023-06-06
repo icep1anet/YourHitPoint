@@ -1,19 +1,23 @@
 import "package:flutter/material.dart";
-import "package:fl_chart/fl_chart.dart";
-import "register.dart";
+// import "package:fl_chart/fl_chart.dart";
+// import "register.dart";
 // import "package:device_info_plus/device_info_plus.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "main.dart";
+import 'package:logger/logger.dart';
 
 class FriendPage extends StatefulWidget {
+  const FriendPage({Key? key}) : super(key: key);
   @override
   State<FriendPage> createState() => _FriendPageState();
 }
 
 class _FriendPageState extends State<FriendPage> {
-  // FriendPage({Key? key}) : super(key: key);
+  // _FriendPageState({Key? key}) : super(key: key);
 
   TextEditingController? _userIdController;
+  var logger = Logger();
+
 
   @override
   void initState() {
@@ -21,13 +25,13 @@ class _FriendPageState extends State<FriendPage> {
     _userIdController = TextEditingController(text: "aaa");
   }
 
-  void change_userId() async {
+  void changeUserId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("userId", _userIdController!.text);
     setState(() {
       userId = prefs.getString("userId");
     });
-    print(userId);
+    logger.d(userId);
   }
 
   @override
@@ -61,7 +65,7 @@ class _FriendPageState extends State<FriendPage> {
           ),
           TextButton(
             onPressed: () {
-              change_userId();
+              changeUserId();
             },
             child: const Text("Change userId"),
           ),

@@ -7,6 +7,7 @@ import "package:flutter/services.dart";
 // import "package:qr_flutter/qr_flutter.dart";
 import "main.dart";
 import "package:shared_preferences/shared_preferences.dart";
+import 'package:logger/logger.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -30,6 +31,7 @@ class _RegisterPageState extends State<RegisterPage> {
   bool? hasData;
   List<String> choices = ["猫", "犬", "鶴", "鴨", "キジ"];
   String avatarType = "猫";
+  var logger = Logger();
 
   @override
   void initState() {
@@ -65,9 +67,9 @@ class _RegisterPageState extends State<RegisterPage> {
       userId = prefs.getString("userId");
     });
     if (userId == null) {
-      print("no");
+      logger.d("no");
     } else {
-      print("yes");
+      logger.d("yes");
     }
   }
 
@@ -79,9 +81,9 @@ class _RegisterPageState extends State<RegisterPage> {
   //     "avatarName": _avatarNameController!.text,
   //     "avatarType": avatarType,
   //   }).then((value) {
-  //     print("User added successfully!");
+  //     logger.d("User added successfully!");
   //   }).catchError((error) {
-  //     print("Failed to add user: $error");
+  //     logger.d("Failed to add user: $error");
   //   });
   // }
 
@@ -300,7 +302,7 @@ class _RegisterPageState extends State<RegisterPage> {
     });
 
     try {
-      
+
 
 
 

@@ -4,6 +4,7 @@ import "register.dart";
 // import "package:device_info_plus/device_info_plus.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "main.dart";
+import 'package:logger/logger.dart';
 
 class MyselfPage extends StatefulWidget {
   // MyselfPage({Key? key}) : super(key: key);
@@ -21,6 +22,8 @@ class _MyselfPageState extends State<MyselfPage> {
   Map test = {"x": 3, "y": 4};
   double kon = 3;
   double point = 0;
+  var logger = Logger();
+
 
   // final List<FlSpot> spots;
   // List<FlSpot> spots = const [
@@ -42,7 +45,7 @@ class _MyselfPageState extends State<MyselfPage> {
   void initTest() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove("userId");
-    print("delete");
+    logger.d("delete");
   }
 
   @override
