@@ -4,8 +4,9 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttericon/iconic_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'wave_view.dart';
+
 import 'main.dart';
+import 'wave_view.dart';
 
 class MyselfPage extends StatefulWidget {
   const MyselfPage({Key? key}) : super(key: key);
@@ -53,43 +54,44 @@ class _MyselfPageState extends State<MyselfPage> {
         //   ],
         // ),
         body: NestedScrollView(
-      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-        return <Widget>[
-          SliverAppBar(
-            // automaticallyImplyLeading: false,
-            expandedHeight: 300.0,
-            floating: true,
-            pinned: true,
-            stretch: true,
-            // primary: false,
-            collapsedHeight: 100,
-            backgroundColor: Theme.of(context).focusColor,
-            // const Color(0xff00a5bf),
-            toolbarHeight: 100,
-            flexibleSpace: FlexibleSpaceBar(
-                // stretchModes: []
-                centerTitle: true,
-                collapseMode: CollapseMode.parallax,
-                title: Text("My Hit Point",
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                // automaticallyImplyLeading: false,
+                expandedHeight: 300.0,
+                floating: true,
+                pinned: true,
+                stretch: true,
+                // primary: false,
+                collapsedHeight: 100,
+                backgroundColor: Theme.of(context).focusColor,
+                // const Color(0xff00a5bf),
+                toolbarHeight: 100,
+                flexibleSpace: FlexibleSpaceBar(
+                  // stretchModes: []
+                  centerTitle: true,
+                  collapseMode: CollapseMode.parallax,
+                  title: Text("My Hit Point",
                     style: GoogleFonts.bebasNeue(
-                        textStyle: Theme.of(context).textTheme.headlineMedium,
-                        fontSize: 50,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).cardColor)),
-                background: Image.asset(
-                  "assets/images/heartshock2.jpg",
-                  fit: BoxFit.cover,
-                )),
-            actions: [
-              IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.settings_applications))
-            ],
-          ),
-        ];
-      },
-      body: SingleChildScrollView(
-          child: Container(
+                      textStyle: Theme.of(context).textTheme.headlineMedium,
+                      fontSize: 50,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).cardColor)),
+                  background: Image.asset(
+                    "assets/images/heartshock2.jpg",
+                    fit: BoxFit.cover,
+                  )),
+                actions: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.settings_applications)
+                  )
+                ],
+              ),
+            ];
+          },
+          body: SingleChildScrollView(
+            child: Container(
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: <Widget>[
@@ -113,284 +115,283 @@ class _MyselfPageState extends State<MyselfPage> {
                     //     color: Colors.black,
                     //   ),
                     // ),
-                    child: Text(
-                      "アバター名",
-                      // style: GoogleFonts.orelegaOne(
-                      style: GoogleFonts.roboto(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
-                        color: Theme.of(context).shadowColor,
+                  child: Text(
+                    "アバター名",
+                    // style: GoogleFonts.orelegaOne(
+                    style: GoogleFonts.roboto(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                      color: Theme.of(context).shadowColor,
+                    ),
+                  ),
+                  ),
+                const SizedBox(height: 30),
+                Row(children: [
+                  const SizedBox(width: 20),
+                  // _currentmyAvatar(null),
+                  _currentmyAvatar("assets/images/illust_normal.jpg"),
+                  // Padding(
+                  //   padding:
+                  //       const EdgeInsets.only(left: 20, right: 8, top: 16),
+                  //   child: Container(
+                  //     width: 60,
+                  //     height: 160,
+                  //     decoration: BoxDecoration(
+                  //       //ここがhpの上部分
+                  //       color: HexColor('#E8EDFE'),
+                  //       // color: HexColor("#0087aa"),
+                  //       borderRadius: const BorderRadius.only(
+                  //         topLeft: Radius.circular(80.0),
+                  //         bottomLeft: Radius.circular(80.0),
+                  //         bottomRight: Radius.circular(80.0),
+                  //         topRight: Radius.circular(80.0)),
+                  //       boxShadow: <BoxShadow>[
+                  //         BoxShadow(
+                  //           color: const Color(0xFF3A5160).withOpacity(0.4),
+                  //           offset: const Offset(2, 2),
+                  //           blurRadius: 4),
+                  //       ],
+                  //     ),
+                  //     child: WaveView(
+                  //       percentageValue: 60.0,
+                  //       //black
+                  //       // fontcolor: Theme.of(context).shadowColor,
+                  //       //white
+                  //       fontcolor: Theme.of(context).cardColor,
+                  //       //red
+                  //       // fontcolor: Theme.of(context).shadowColor,
+                  //       //red
+                  //       // barcolor: Theme.of(context).primaryColor,
+                  //       //yellow
+                  //       // barcolor: Theme.of(context).dividerColor
+                  //       //light green
+                  //       // barcolor: Theme.of(context).splashColor,
+                  //       //green
+                  //       barcolor: Theme.of(context).hoverColor,
+                  //       //真ん中
+                  //       // fontposition: 15
+                  //       //中央下
+                  //       fontposition: 48.5,
+                  //     ),
+                  //   ),
+                  // ),
+                ]),
+                const SizedBox(height: 30),
+                Container(
+                  alignment: Alignment.center,
+                  width: 200,
+                  decoration: BoxDecoration(
+                    //なんか合わない
+                    // color: Color.fromARGB(255, 209, 209, 209),
+
+                    border: Border(
+                      bottom: BorderSide(color: Theme.of(context).focusColor
+                          // Color.fromARGB(255, 24, 168, 190)
+                          ),
+                    ),
+                  ),
+                  // child: Text(
+                  //   "statement",
+                  //   // style: GoogleFonts.orelegaOne(
+                  //   style: GoogleFonts.roboto(
+                  //     fontWeight: FontWeight.bold,
+                  //     fontSize: 30,
+                  //     color: Colors.black,
+                  //   ),
+                  // ),
+                  child: Text(
+                    "現在の状態",
+                    // style: GoogleFonts.orelegaOne(
+                    style: GoogleFonts.roboto(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                      color: Theme.of(context).shadowColor,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  width: 300,
+                  // width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Theme.of(context).focusColor, width: 5),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  padding: const EdgeInsets.all(10),
+                  child: IntrinsicWidth(
+                    child: Column(children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text("現在のHP",
+                              style: GoogleFonts.roboto(
+                                  fontWeight: FontWeight.w500, fontSize: 20)
+                              // Theme.of(context).textTheme.headlineSmall
+                              ),
+                          Text("94",
+                              style: GoogleFonts.sourceCodePro(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).hintColor)),
+                          Transform.rotate(
+                              angle: 270 * pi / 180,
+                              child: const Icon(
+                                Icons.battery_4_bar,
+                                size: 20,
+                              )),
+                        ],
+                      ),
+                      // const SizedBox(width: 20),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("推定活動限界",
+                                style: GoogleFonts.roboto(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 20)),
+                            Text("23:43",
+                                style: GoogleFonts.sourceCodePro(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).hintColor)),
+                            const Icon(
+                              Iconic.moon_inv,
+                              size: 15,
+                            )
+                          ]),
+                    ]),
+                  )),
+                const SizedBox(height: 40),
+                Container(
+                    width: 200,
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                                color: Theme.of(context).focusColor))),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text("HP グラフ",
+                          style: GoogleFonts.roboto(
+                              fontWeight: FontWeight.bold, fontSize: 30)),
+                    )),
+                const SizedBox(height: 20),
+                Container(
+                  padding: const EdgeInsets.only(right: 20),
+                  height: 200,
+                  child: LineChart(
+                    LineChartData(
+                      minX: 0,
+                      maxX: 6,
+                      backgroundColor: const Color(0xffd0e3ce),
+                      lineBarsData: [
+                        LineChartBarData(
+                          isCurved: true,
+                          color: Colors.red[400],
+                          barWidth: 3,
+                          dotData: FlDotData(show: true),
+                          spots: spots,
+                          dashArray: [10, 6],
+                        )
+                      ],
+                      titlesData: FlTitlesData(
+                        rightTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false)),
+                        topTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false)),
+                        bottomTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            interval: 1,
+                            getTitlesWidget: (value, meta) {
+                              return bottomGraphWidgets(
+                                value,
+                                meta,
+                                // constraints.maxWidth,
+                              );
+                            },
+                            reservedSize: 30,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 30),
-                  Row(children: [
-                    const SizedBox(width: 20),
-                    _currentmyAvatar("assets/images/illust_normal.jpg"),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(left: 20, right: 8, top: 16),
-                      child: Container(
-                        width: 60,
-                        height: 160,
-                        decoration: BoxDecoration(
-                          //ここがhpの上部分
-                          color: HexColor('#E8EDFE'),
-                          // color: HexColor("#0087aa"),
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(80.0),
-                              bottomLeft: Radius.circular(80.0),
-                              bottomRight: Radius.circular(80.0),
-                              topRight: Radius.circular(80.0)),
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                                color: const Color(0xFF3A5160).withOpacity(0.4),
-                                offset: const Offset(2, 2),
-                                blurRadius: 4),
-                          ],
-                        ),
-                        child: WaveView(
-                          percentageValue: 60.0,
-                          //black
-                          // fontcolor: Theme.of(context).shadowColor,
-                          //white
-                          fontcolor: Theme.of(context).cardColor,
-                          //red
-                          // fontcolor: Theme.of(context).shadowColor,
-                          //red
-                          // barcolor: Theme.of(context).primaryColor,
-                          //yellow
-                          // barcolor: Theme.of(context).dividerColor
-                          //light green
-                          // barcolor: Theme.of(context).splashColor,
-                          //green
-                          barcolor: Theme.of(context).hoverColor,
-                          //真ん中
-                          // fontposition: 15
-                          //中央下
-                          fontposition: 48.5,
-                        ),
-                      ),
-                    ),
-                  ]),
-                  const SizedBox(height: 30),
-                  Container(
-                    alignment: Alignment.center,
+                ),
+                const SizedBox(height: 10),
+                Container(
                     width: 200,
                     decoration: BoxDecoration(
-                      //なんか合わない
-                      // color: Color.fromARGB(255, 209, 209, 209),
-
-                      border: Border(
-                        bottom: BorderSide(color: Theme.of(context).focusColor
-                            // Color.fromARGB(255, 24, 168, 190)
-                            ),
-                      ),
-                    ),
-                    // child: Text(
-                    //   "statement",
-                    //   // style: GoogleFonts.orelegaOne(
-                    //   style: GoogleFonts.roboto(
-                    //     fontWeight: FontWeight.bold,
-                    //     fontSize: 30,
-                    //     color: Colors.black,
-                    //   ),
-                    // ),
-                    child: Text(
-                      "現在の状態",
-                      // style: GoogleFonts.orelegaOne(
-                      style: GoogleFonts.roboto(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
-                        color: Theme.of(context).shadowColor,
-                      ),
-                    ),
+                        border: Border(
+                            bottom: BorderSide(
+                                color: Theme.of(context).focusColor,
+                                width: 1.5))),
+                    child: Align(
+                      alignment: Alignment.center,
+                      // child: Text("HP record",
+                      //     // style: GoogleFonts.orelegaOne(
+                      //     style: GoogleFonts.roboto(
+                      //         fontWeight: FontWeight.bold,
+                      //         fontSize: 30,
+                      //         color: Colors.black)),
+                      child: Text("HP 記録",
+                          // style: GoogleFonts.orelegaOne(
+                          style: GoogleFonts.roboto(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 30,
+                              color: Colors.black)),
+                    )),
+                const SizedBox(height: 10),
+                Container(
+                  width: 300,
+                  // width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Theme.of(context).focusColor, width: 5),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  const SizedBox(height: 20),
-                  Container(
-                      width: 300,
-                      // width: double.infinity,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Theme.of(context).focusColor, width: 5),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      padding: const EdgeInsets.all(10),
-                      child: IntrinsicWidth(
-                        child: Column(children: [
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text("現在のHP",
-                                  style: GoogleFonts.roboto(
-                                      fontWeight: FontWeight.w500, fontSize: 20)
-                                  // Theme.of(context).textTheme.headlineSmall
-                                  ),
-                              Text("94",
-                                  style: GoogleFonts.sourceCodePro(
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).hintColor)
-                                  ),
-
-                              Transform.rotate(
-                                  angle: 270 * pi / 180,
-                                  child: const Icon(
-                                    Icons.battery_4_bar,
-                                    size: 20,
-                                  )),
-                            ],
-                          ),
-                          // const SizedBox(width: 20),
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                      "推定活動限界",
-                                        style: GoogleFonts.roboto(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 20)),
-
-                                Text("23:43",
-                                    style: GoogleFonts.sourceCodePro(
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.bold,
-                                        color: Theme.of(context).hintColor)),
-                                const Icon(
-                                  Iconic.moon_inv,
-                                  size: 15,
-                                )
-                              ]),
-                        ]),
-                      )),
-                  const SizedBox(height: 40),
-                  Container(
-                      width: 200,
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(
-                                  color: Theme.of(context).focusColor))),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text("HP グラフ",
-                            style: GoogleFonts.roboto(
-                                fontWeight: FontWeight.bold, fontSize: 30)),
-                      )),
-                  const SizedBox(height: 20),
-                  Container(
-                    padding: const EdgeInsets.only(right: 20),
-                    height: 200,
-                    child: LineChart(
-                      LineChartData(
-                        minX: 0,
-                        maxX: 6,
-                        backgroundColor: const Color(0xffd0e3ce),
-                        lineBarsData: [
-                          LineChartBarData(
-                            isCurved: true,
-                            color: Colors.red[400],
-                            barWidth: 3,
-                            dotData: FlDotData(show: true),
-                            spots: spots,
-                            dashArray: [10, 6],
-                          )
-                        ],
-                        titlesData: FlTitlesData(
-                          rightTitles: AxisTitles(
-                              sideTitles: SideTitles(showTitles: false)),
-                          topTitles: AxisTitles(
-                              sideTitles: SideTitles(showTitles: false)),
-                          bottomTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              interval: 1,
-                              getTitlesWidget: (value, meta) {
-                                return bottomGraphWidgets(
-                                  value,
-                                  meta,
-                                  // constraints.maxWidth,
-                                );
-                              },
-                              reservedSize: 30,
-                            ),
-                          ),
-                        ),
-                      ),
+                  padding: const EdgeInsets.all(10),
+                  child: Row(children: [
+                    const SizedBox(
+                      //english
+                      width: 10,
+                      //日本語
+                      // width: 30,
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
-                      width: 200,
-                      decoration: BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(
-                                  color: Theme.of(context).focusColor,
-                                  width: 1.5))),
-                      child: Align(
-                        alignment: Alignment.center,
-                        // child: Text("HP record",
-                        //     // style: GoogleFonts.orelegaOne(
-                        //     style: GoogleFonts.roboto(
-                        //         fontWeight: FontWeight.bold,
-                        //         fontSize: 30,
-                        //         color: Colors.black)),
-                        child: Text("HP 記録",
-                            // style: GoogleFonts.orelegaOne(
+                    Column(
+                      children: [
+                        Text("過去最高 HP",
                             style: GoogleFonts.roboto(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 30,
-                                color: Colors.black)),
-                      )),
-                  const SizedBox(height: 10),
-                  Container(
-                    width: 300,
-                    // width: double.infinity,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: Theme.of(context).focusColor, width: 5),
-                      borderRadius: BorderRadius.circular(8),
+                                fontWeight: FontWeight.w500, fontSize: 23)),
+                        const SizedBox(height: 7),
+                        Text("過去最低 HP",
+                            style: GoogleFonts.roboto(
+                                fontWeight: FontWeight.w500, fontSize: 23)),
+                      ],
                     ),
-                    padding: const EdgeInsets.all(10),
-                    child: Row(children: [
-                      const SizedBox(
-                        //english
-                        width: 10,
-                        //日本語
-                        // width: 30,
-                      ),
-                      Column(
-                        children: [
-                          Text("過去最高 HP",
-                              style: GoogleFonts.roboto(
-                                  fontWeight: FontWeight.w500, fontSize: 23)),
-                          const SizedBox(height: 7),
-                          Text("過去最低 HP",
-                              style: GoogleFonts.roboto(
-                                  fontWeight: FontWeight.w500, fontSize: 23)),
-                        ],
-                      ),
-                      const SizedBox(width: 30),
-                      Column(children: [
-                        Text("110",
-                            style: GoogleFonts.sourceCodePro(
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).hintColor)),
-                        // const SizedBox(height: 10),
-                        Text("-10",
-                            style: GoogleFonts.sourceCodePro(
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).hintColor)),
-                      ])
-                    ]),
-                  )
-                ],
-              ))),
-    ));
+                    const SizedBox(width: 30),
+                    Column(children: [
+                      Text("110",
+                          style: GoogleFonts.sourceCodePro(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).hintColor)),
+                      // const SizedBox(height: 10),
+                      Text("-10",
+                          style: GoogleFonts.sourceCodePro(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).hintColor)),
+                    ])
+                  ]),
+                )
+              ],
+            )
+          )
+        ),
+      )
+    );
   }
 
   Widget _currentmyAvatar(String? imgUrl) {
