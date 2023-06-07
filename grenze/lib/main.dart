@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: const MainPage(),
+      //画面遷移するときのルート追加
       routes: {
         "/home": (context) => const MainPage(),
       },
@@ -69,6 +70,7 @@ class _MainPageState extends State<MainPage> {
   List hpList = [];
   var logger = Logger();
 
+  //ページ起動時に呼ばれる初期化関数
   @override
   void initState() {
     super.initState();
@@ -89,6 +91,7 @@ class _MainPageState extends State<MainPage> {
     // logger.d("timer");
   }
 
+  //debug
   void zeroHP() {
     if (mounted) {
       setState(() {
@@ -114,6 +117,7 @@ class _MainPageState extends State<MainPage> {
   //   }
   // }
 
+  //debug
   void initrem() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove("userId");
@@ -122,6 +126,7 @@ class _MainPageState extends State<MainPage> {
     // }
   }
 
+  //registerページに画面遷移
   void moveToRegister() async {
     await Navigator.of(context).push(
       MaterialPageRoute(
@@ -135,6 +140,7 @@ class _MainPageState extends State<MainPage> {
     // });
   }
 
+  //ローカルdbからuserIdを取ってくる&debug
   void _getPrefItems() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -146,6 +152,7 @@ class _MainPageState extends State<MainPage> {
     if (userName != null) logger.d("userName:$userName");
   }
 
+  //ページ移動系
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -154,26 +161,28 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
-  Future<void> fetchFirebaseData() async {
-    logger.d("startttttt");
-    // var url = Uri.parse(
-    //     "https://o2nr395oib.execute-api.ap-northeast-1.amazonaws.com/default/get_HP_data");
-    var url =
-      Uri.https("o2nr395oib.execute-api.ap-northeast-1.amazonaws.com", "/default/get_HP_data", {"userName": "a", "avatarName": "b", "avatarType": "c"});
-    var response = await http.get(url);
-    logger.d(response.body);
-    if (response.statusCode == 200) {
-      // リクエストが成功した場合、レスポンスの内容を取得して表示します
-      logger.d(response.body);
-  
-      var responseJson = jsonDecode(response.body);
-      logger.d(responseJson);
-    } else {
-      // リクエストが失敗した場合、エラーメッセージを表示します
-      logger.d("Request failed with status: ${response.statusCode}");
-    }
-  }
+  // //responseを送ってfirebaseにデータ登録する
+  // Future<void> fetchFirebaseData() async {
+  //   logger.d("startttttt");
+  //   var url = Uri.https(
+  //       "o2nr395oib.execute-api.ap-northeast-1.amazonaws.com",
+  //       "/default/get_HP_data",
+  //       {"userName": "a", "avatarName": "b", "avatarType": "c"});
+  //   var response = await http.get(url);
+  //   logger.d(response.body);
+  //   if (response.statusCode == 200) {
+  //     // リクエストが成功した場合、レスポンスの内容を取得して表示します
+  //     logger.d(response.body);
 
+  //     var responseJson = jsonDecode(response.body);
+  //     logger.d(responseJson);
+  //   } else {
+  //     // リクエストが失敗した場合、エラーメッセージを表示します
+  //     logger.d("Request failed with status: ${response.statusCode}");
+  //   }
+  // }
+
+  //現在のHPを変える
   void changeHP() {
     if (mounted) {
       setState(() {

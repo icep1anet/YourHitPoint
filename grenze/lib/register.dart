@@ -8,6 +8,8 @@ import "package:flutter/services.dart";
 import "main.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import 'package:logger/logger.dart';
+import "dart:convert";
+import "package:http/http.dart" as http;
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -32,7 +34,9 @@ class _RegisterPageState extends State<RegisterPage> {
   List<String> choices = ["猫", "犬", "鶴", "鴨", "キジ"];
   String avatarType = "猫";
   var logger = Logger();
+  String? userId;
 
+  //ページ起動時に呼ばれる初期化関数
   @override
   void initState() {
     super.initState();
@@ -251,13 +255,10 @@ class _RegisterPageState extends State<RegisterPage> {
                         onPressed: () {
                           // firstNameとlastNameは必須で入力しないと登録できないようにする
                           if (_registering == false &&
-                              _userNameController?.text != "" &&
-                              _avatarNameController?.text != "") {
-                            _register();
-                            navigateMain();
+                              _userNameController!.text != "" &&
+                              _avatarNameController!.text != "") {
+                            registerFirebase();
                           }
-                          // _register();
-                          // navigateMain();
                         },
                         child: hasData != null
                             ? const Text("Change Profile")
@@ -295,20 +296,45 @@ class _RegisterPageState extends State<RegisterPage> {
   //   }
   // }
 
-  void _register() async {
+  //responseを送ってfirebaseにデータ登録する
+  Future<void> registerFirebase() async {
     FocusScope.of(context).unfocus();
     setState(() {
       _registering = true;
     });
-
+    logger.d("startttttt");
+    // var url =
+    //   Uri.https("o2nr395oib.execute-api.ap-northeast-1.amazonaws.com", "/default/get_HP_data",
+    var url = Uri.https("vignp7m26e.execute-api.ap-northeast-1.amazonaws.com",
+        "/default/register_firebase_yourHP", {
+      "userName": _userNameController!.text,
+      "avatarName": _avatarNameController!.text,
+      "avatarType": avatarType
+    });
     try {
-      if (!mounted) return;
+      var response = await http.get(url);
+      logger.d(response.body);
+      if (response.statusCode == 200) {
+        // リクエストが成功した場合、レスポンスの内容を取得して表示します
+        // logger.d(response.body);
 
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString("userId", "gokiburii");
-      prefs.setString("userName", _userNameController!.text);
-      prefs.setString("avatarName", _avatarNameController!.text);
-      prefs.setString("avatarType", avatarType);
+        var responseMap = jsonDecode(response.body);
+        userId = responseMap["userId"];
+        logger.d(userId);
+        // if (!mounted) return;
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString("userId", userId!);
+        prefs.setString("userName", _userNameController!.text);
+        prefs.setString("avatarName", _avatarNameController!.text);
+        prefs.setString("avatarType", avatarType);
+        navigateMain();
+      } else {
+        // リクエストが失敗した場合、エラーメッセージを表示します
+        logger.d("Request failed with status: ${response.statusCode}");
+        setState(() {
+          _registering = false;
+        });
+      }
     } catch (e) {
       setState(() {
         _registering = false;
@@ -332,6 +358,43 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       );
     }
+  }
+
+  void _register() async {
+    FocusScope.of(context).unfocus();
+    setState(() {
+      _registering = true;
+    });
+
+    if (!mounted) return;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("userId", userId!);
+    prefs.setString("userName", _userNameController!.text);
+    prefs.setString("avatarName", _avatarNameController!.text);
+    prefs.setString("avatarType", avatarType);
+    // catch (e) {
+    //   setState(() {
+    //     _registering = false;
+    //   });
+
+    //   await showDialog(
+    //     context: context,
+    //     builder: (context) => AlertDialog(
+    //       actions: [
+    //         TextButton(
+    //           onPressed: () {
+    //             Navigator.of(context).pop();
+    //           },
+    //           child: const Text("OK"),
+    //         ),
+    //       ],
+    //       content: Text(
+    //         e.toString(),
+    //       ),
+    //       title: const Text("Error"),
+    //     ),
+    //   );
+    // }
   }
 
   void navigateMain() async {
