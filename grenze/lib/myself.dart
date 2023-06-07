@@ -1,8 +1,17 @@
-import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
+import "package:flutter/material.dart";
+import "package:fl_chart/fl_chart.dart";
+import "register.dart";
+// import "package:device_info_plus/device_info_plus.dart";
+import "package:shared_preferences/shared_preferences.dart";
+import "main.dart";
+import 'package:logger/logger.dart';
 
 class MyselfPage extends StatefulWidget {
-  const MyselfPage({Key? key}) : super(key: key);
+  // MyselfPage({Key? key}) : super(key: key);
+  final List<FlSpot> spots;
+  final int currentHP;
+  const MyselfPage({required this.spots, required this.currentHP, Key? key})
+      : super(key: key);
   // 使用するStateを指定
   @override
   State createState() => _MyselfPageState();
@@ -13,21 +22,32 @@ class _MyselfPageState extends State<MyselfPage> {
   Map test = {"x": 3, "y": 4};
   double kon = 3;
   double point = 0;
-  List<FlSpot> spots = const [
-    FlSpot(0, 98),
-    FlSpot(1, 92),
-    FlSpot(2, 79),
-    FlSpot(2.6, 40),
-    FlSpot(3, 68),
-    FlSpot(4, 62),
-    FlSpot(4.3, 80),
-    FlSpot(5, 49),
-    FlSpot(6, 35),
-    // FlSpot(7, 29),
-    // FlSpot(8, 19),
-    // FlSpot(9, 9),
-    // FlSpot(10, 0),
-  ];
+  var logger = Logger();
+
+
+  // final List<FlSpot> spots;
+  // List<FlSpot> spots = const [
+  //   FlSpot(0, 98),
+  //   FlSpot(1, 92),
+  //   FlSpot(2, 79),
+  //   FlSpot(2.6, 40),
+  //   FlSpot(3, 68),
+  //   FlSpot(4, 62),
+  //   FlSpot(4.3, 80),
+  //   FlSpot(5, 49),
+  //   FlSpot(6, 35),
+  //   // FlSpot(7, 29),
+  //   // FlSpot(8, 19),
+  //   // FlSpot(9, 9),
+  //   // FlSpot(10, 0),
+  // ];
+
+  void initTest() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove("userId");
+    logger.d("delete");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +55,21 @@ class _MyselfPageState extends State<MyselfPage> {
           centerTitle: true,
           title: const Text("Myself"),
           actions: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.settings))
+            IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      fullscreenDialog: true,
+                      builder: (context) => const RegisterPage(),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.settings)),
+            IconButton(
+                onPressed: () {
+                  initTest();
+                },
+                icon: const Icon(Icons.add)),
           ],
         ),
         body: SingleChildScrollView(
@@ -46,6 +80,7 @@ class _MyselfPageState extends State<MyselfPage> {
                   const SizedBox(
                     height: 60,
                   ),
+                  if (userId != null) Text(userId!),
                   // TextButton(
                   //   onPressed: () {
                   //     setState(() {
@@ -53,7 +88,7 @@ class _MyselfPageState extends State<MyselfPage> {
                   //       point++;
                   //     });
                   //   },
-                  //   child: const Text('押せるよ'),
+                  //   child: const Text("押せるよ"),
                   // ),
                   _currentmyAvatar(null),
                   const SizedBox(height: 30),
@@ -69,7 +104,7 @@ class _MyselfPageState extends State<MyselfPage> {
                     padding: const EdgeInsets.all(10),
                     child: Column(
                       children: [
-                        Text("現在のHP : 100",
+                        Text("現在のHP : ${widget.currentHP}",
                             style: Theme.of(context).textTheme.headlineSmall),
                         const SizedBox(height: 10),
                         Text("推定活動限界 : 04 : 28",
@@ -100,7 +135,7 @@ class _MyselfPageState extends State<MyselfPage> {
                             color: Colors.red[400],
                             barWidth: 3,
                             dotData: FlDotData(show: true),
-                            spots: spots,
+                            spots: widget.spots,
                             dashArray: [10, 6],
                           )
                         ],
@@ -186,30 +221,30 @@ class _MyselfPageState extends State<MyselfPage> {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
       color: Colors.pink,
-      fontFamily: 'Digital',
+      fontFamily: "Digital",
     );
     String text;
     switch (value.toInt()) {
       case 0:
-        text = '00:00';
+        text = "00:00";
         break;
       case 1:
-        text = '04:00';
+        text = "04:00";
         break;
       case 2:
-        text = '08:00';
+        text = "08:00";
         break;
       case 3:
-        text = '12:00';
+        text = "12:00";
         break;
       case 4:
-        text = '16:00';
+        text = "16:00";
         break;
       case 5:
-        text = '20:00';
+        text = "20:00";
         break;
       case 6:
-        text = '23:59';
+        text = "23:59";
         break;
       default:
         return Container();
