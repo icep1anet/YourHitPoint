@@ -302,13 +302,7 @@ class _RegisterPageState extends State<RegisterPage> {
     });
 
     try {
-
-
-
-
-
       if (!mounted) return;
-
 
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString("userId", "gokiburii");
