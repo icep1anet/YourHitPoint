@@ -4,6 +4,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttericon/iconic_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'wave_view.dart';
+import 'main.dart';
 
 class MyselfPage extends StatefulWidget {
   const MyselfPage({Key? key}) : super(key: key);
@@ -125,51 +127,51 @@ class _MyselfPageState extends State<MyselfPage> {
                   Row(children: [
                     const SizedBox(width: 20),
                     _currentmyAvatar("assets/images/illust_normal.jpg"),
-                    // Padding(
-                    //   padding:
-                    //       const EdgeInsets.only(left: 20, right: 8, top: 16),
-                    //   child: Container(
-                    //     width: 60,
-                    //     height: 160,
-                    //     decoration: BoxDecoration(
-                    //       //ここがhpの上部分
-                    //       color: HexColor('#E8EDFE'),
-                    //       // color: HexColor("#0087aa"),
-                    //       borderRadius: const BorderRadius.only(
-                    //           topLeft: Radius.circular(80.0),
-                    //           bottomLeft: Radius.circular(80.0),
-                    //           bottomRight: Radius.circular(80.0),
-                    //           topRight: Radius.circular(80.0)),
-                    //       boxShadow: <BoxShadow>[
-                    //         BoxShadow(
-                    //             color: const Color(0xFF3A5160).withOpacity(0.4),
-                    //             offset: const Offset(2, 2),
-                    //             blurRadius: 4),
-                    //       ],
-                    //     ),
-                    //     child: WaveView(
-                    //       percentageValue: 60.0,
-                    //       //black
-                    //       // fontcolor: Theme.of(context).shadowColor,
-                    //       //white
-                    //       fontcolor: Theme.of(context).cardColor,
-                    //       //red
-                    //       // fontcolor: Theme.of(context).shadowColor,
-                    //       //red
-                    //       // barcolor: Theme.of(context).primaryColor,
-                    //       //yellow
-                    //       // barcolor: Theme.of(context).dividerColor
-                    //       //light green
-                    //       // barcolor: Theme.of(context).splashColor,
-                    //       //green
-                    //       barcolor: Theme.of(context).hoverColor,
-                    //       //真ん中
-                    //       // fontposition: 15
-                    //       //中央下
-                    //       fontposition: 48.5,
-                    //     ),
-                    //   ),
-                    // ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 20, right: 8, top: 16),
+                      child: Container(
+                        width: 60,
+                        height: 160,
+                        decoration: BoxDecoration(
+                          //ここがhpの上部分
+                          color: HexColor('#E8EDFE'),
+                          // color: HexColor("#0087aa"),
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(80.0),
+                              bottomLeft: Radius.circular(80.0),
+                              bottomRight: Radius.circular(80.0),
+                              topRight: Radius.circular(80.0)),
+                          boxShadow: <BoxShadow>[
+                            BoxShadow(
+                                color: const Color(0xFF3A5160).withOpacity(0.4),
+                                offset: const Offset(2, 2),
+                                blurRadius: 4),
+                          ],
+                        ),
+                        child: WaveView(
+                          percentageValue: 60.0,
+                          //black
+                          // fontcolor: Theme.of(context).shadowColor,
+                          //white
+                          fontcolor: Theme.of(context).cardColor,
+                          //red
+                          // fontcolor: Theme.of(context).shadowColor,
+                          //red
+                          // barcolor: Theme.of(context).primaryColor,
+                          //yellow
+                          // barcolor: Theme.of(context).dividerColor
+                          //light green
+                          // barcolor: Theme.of(context).splashColor,
+                          //green
+                          barcolor: Theme.of(context).hoverColor,
+                          //真ん中
+                          // fontposition: 15
+                          //中央下
+                          fontposition: 48.5,
+                        ),
+                      ),
+                    ),
                   ]),
                   const SizedBox(height: 30),
                   Container(
@@ -401,7 +403,7 @@ class _MyselfPageState extends State<MyselfPage> {
       ),
       child: CircleAvatar(
         backgroundColor: hasImage ? Colors.transparent : color,
-        backgroundImage: hasImage ? NetworkImage(imgUrl) : null,
+        backgroundImage: hasImage ? AssetImage(imgUrl) : null,
         radius: 100,
         child: !hasImage
             ? Text("Avatar image",
