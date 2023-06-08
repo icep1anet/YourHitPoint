@@ -4,6 +4,10 @@ import "myself.dart";
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 // import "design.dart";
 // import "asset_manifest.dart";
+import 'package:fl_chart/fl_chart.dart';
+import 'package:logger/logger.dart';
+import 'package:http/http.dart' as http;
+import "dart:convert";
 
 void main() {
   runApp(const MyApp());
@@ -44,6 +48,33 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   final _pageViewController = PageController();
   int _selectedIndex = 0;
+  // String? userId;
+  // dynamic _now, _year, _month, _day, _hour, _minute, _second;
+  List<FlSpot> spots = [
+    const FlSpot(0, 98),
+    const FlSpot(1, 92),
+    const FlSpot(2, 79),
+    const FlSpot(2.6, 40),
+    const FlSpot(3, 68),
+    const FlSpot(4, 62),
+    const FlSpot(4.3, 80),
+    const FlSpot(5, 49),
+    const FlSpot(6, 35),
+    // FlSpot(7, 29),
+    // FlSpot(8, 19),
+    // FlSpot(9, 9),
+    const FlSpot(10, 0),
+    const FlSpot(23.3, 10),
+  ];
+  String? avatarName;
+  String? avatarType;
+  int currentHP = 0;
+  String? userName;
+  int? recordHighHP;
+  int? recordLowHP;
+  int hpNumber = 0;
+  List hpList = [];
+  var logger = Logger();
 
   void _onItemTapped(int index) {
     setState(() {
@@ -51,6 +82,40 @@ class _MainPageState extends State<MainPage> {
       _pageViewController.animateToPage(index,
           duration: const Duration(milliseconds: 100), curve: Curves.easeOut);
     });
+  }
+
+  // //responseを送ってfirebaseにデータ登録する
+  Future<void> fetchFirebaseData() async {
+    logger.d("startttttt");
+    var url = Uri.https(
+        "o2nr395oib.execute-api.ap-northeast-1.amazonaws.com",
+        "/default/get_HP_data",
+        {"userName": "a", "avatarName": "b", "avatarType": "c"});
+    var response = await http.get(url);
+    logger.d(response.body);
+    if (response.statusCode == 200) {
+      // リクエストが成功した場合、レスポンスの内容を取得して表示します
+      logger.d(response.body);
+
+      var responseJson = jsonDecode(response.body);
+      logger.d(responseJson);
+    } else {
+      // リクエストが失敗した場合、エラーメッセージを表示します
+      logger.d("Request failed with status: ${response.statusCode}");
+    }
+  }
+
+  //現在のHPを変える
+  void changeHP() {
+    if (mounted) {
+      setState(() {
+        currentHP = hpNumber;
+        // currentHP = HPlist[HPnumber]["y"];
+      });
+      if (hpNumber < 14) {
+        hpNumber += 1;
+      } else {}
+    }
   }
 
   @override

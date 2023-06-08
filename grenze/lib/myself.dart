@@ -430,24 +430,43 @@ class _MyselfPageState extends State<MyselfPage> {
       case 0:
         text = '00:00';
         break;
-      case 1:
-        text = '04:00';
-        break;
-      case 2:
-        text = '08:00';
-        break;
-      case 3:
-        text = '12:00';
-        break;
       case 4:
-        text = '16:00';
+        text = "04:00";
         break;
-      case 5:
-        text = '20:00';
+      case 8:
+        text = "08:00";
         break;
-      case 6:
-        text = '23:59';
+      case 12:
+        text = "12:00";
         break;
+      case 16:
+        text = "16:00";
+        break;
+      case 20:
+        text = "20:00";
+        break;
+      case 24:
+        text = "00:00";
+        break;
+      case 28:
+        text = "04:00";
+        break;
+      case 32:
+        text = "08:00";
+        break;
+      case 36:
+        text = "12:00";
+        break;
+      case 40:
+        text = "16:00";
+        break;
+      case 44:
+        text = "20:00";
+        break;
+      case 48:
+        text = "00:00";
+        break;
+      
       default:
         return Container();
     }
