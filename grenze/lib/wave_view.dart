@@ -10,9 +10,13 @@ class WaveView extends StatefulWidget {
   final Color barcolor;
   final double fontposition;
 
-  const WaveView({Key? key, this.percentageValue = 100.0, 
-                  this.fontcolor = Colors.white, this.barcolor = const Color(0xFF32cd32),
-                  this.fontposition = 48.5}) : super(key: key);
+  const WaveView(
+      {Key? key,
+      this.percentageValue = 100.0,
+      this.fontcolor = Colors.white,
+      this.barcolor = const Color(0xFF32cd32),
+      this.fontposition = 48.5})
+      : super(key: key);
   @override
   WaveViewState createState() => WaveViewState();
 }
@@ -28,14 +32,24 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
   @override
   void initState() {
     animationController = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
+        duration: const Duration(milliseconds: 7500), vsync: this);
     waveAnimationController = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
+        duration: const Duration(milliseconds: 7500), vsync: this);
     animationController!.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         animationController?.reverse();
+
+        //test
+        // animationController!.stop();
+        // waveAnimationController!.stop();
+        // _startDelay2();
       } else if (status == AnimationStatus.dismissed) {
         animationController?.forward();
+
+        //test
+        // animationController!.stop();
+        // waveAnimationController!.stop();
+        // _startDelay();
       }
     });
     waveAnimationController!.addListener(() {
@@ -77,6 +91,21 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
     waveAnimationController?.dispose();
     super.dispose();
   }
+
+  // void _startDelay() async {
+  //   print("1111111");
+  //   await Future.delayed(const Duration(seconds: 5));
+  //   animationController?.forward();
+  //   waveAnimationController!.repeat();
+  // }
+
+  // void _startDelay2() async {
+  //   print("222222");
+  //   await Future.delayed(const Duration(seconds: 5));
+  //   animationController?.reverse();
+  //   // animationController?.reverse();
+  //   waveAnimationController!.repeat();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -148,13 +177,12 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                       widget.percentageValue.round().toString(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w500,
-                        fontSize: 24,
-                        letterSpacing: 0.0,
-                        //引数
-                        color: widget.fontcolor
-                      ),
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 24,
+                          letterSpacing: 0.0,
+                          //引数
+                          color: widget.fontcolor),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 3.0),
@@ -162,13 +190,12 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                         '%',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontFamily: 'Roboto',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                          letterSpacing: 0.0,
-                          //引数
-                          color: widget.fontcolor
-                        ),
+                            fontFamily: 'Roboto',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            letterSpacing: 0.0,
+                            //引数
+                            color: widget.fontcolor),
                       ),
                     ),
                   ],

@@ -5,7 +5,7 @@ import "package:flutter/services.dart";
 // import "dart:io";
 // import "util.dart";
 // import "package:qr_flutter/qr_flutter.dart";
-import "main.dart";
+// import "main.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import 'package:logger/logger.dart';
 import "dart:convert";
@@ -360,18 +360,18 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  void _register() async {
-    FocusScope.of(context).unfocus();
-    setState(() {
-      _registering = true;
-    });
+  // void _register() async {
+  //   FocusScope.of(context).unfocus();
+  //   setState(() {
+  //     _registering = true;
+  //   });
 
-    if (!mounted) return;
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("userId", userId!);
-    prefs.setString("userName", _userNameController!.text);
-    prefs.setString("avatarName", _avatarNameController!.text);
-    prefs.setString("avatarType", avatarType);
+  //   if (!mounted) return;
+  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   prefs.setString("userId", userId!);
+  //   prefs.setString("userName", _userNameController!.text);
+  //   prefs.setString("avatarName", _avatarNameController!.text);
+  //   prefs.setString("avatarType", avatarType);
     // catch (e) {
     //   setState(() {
     //     _registering = false;
@@ -395,7 +395,7 @@ class _RegisterPageState extends State<RegisterPage> {
     //     ),
     //   );
     // }
-  }
+  // }
 
   void navigateMain() async {
     await Navigator.pushNamedAndRemoveUntil(
