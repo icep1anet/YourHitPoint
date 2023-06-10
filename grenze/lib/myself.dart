@@ -100,7 +100,7 @@ class _MyselfPageState extends State<MyselfPage> {
                   //   },
                   //   child: const Text("押せるよ"),
                   // ),
-                  _currentmyAvatar(null),
+                  // _currentmyAvatar(null),
                   const SizedBox(height: 30),
                   Container(
                     alignment: Alignment.center,
