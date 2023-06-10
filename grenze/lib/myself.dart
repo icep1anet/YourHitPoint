@@ -17,12 +17,16 @@ class MyselfPage extends StatefulWidget {
   final int recordHighHP;
   final int recordLowHP;
   final Color barColor;
+  final Color fontColor;
+  final double fontPosition;
   const MyselfPage(
       {required this.spots,
       required this.currentHP,
       required this.recordHighHP,
       required this.recordLowHP,
       required this.barColor,
+      required this.fontColor,
+      required this.fontPosition,
       Key? key})
       : super(key: key);
   // 使用するStateを指定
@@ -114,7 +118,7 @@ class _MyselfPageState extends State<MyselfPage> {
                     // child: Text(
                     //   "Avatar name",
                     //   // style: GoogleFonts.orelegaOne(
-                    //   style: GoogleFonts.roboto(
+                    //   style: GoogleFonts.bizUDGothic(
                     //     fontWeight: FontWeight.bold,
                     //     fontSize: 30,
                     //     color: Colors.black,
@@ -123,7 +127,7 @@ class _MyselfPageState extends State<MyselfPage> {
                     child: Text(
                       "アバター名",
                       // style: GoogleFonts.orelegaOne(
-                      style: GoogleFonts.roboto(
+                      style: GoogleFonts.bizUDGothic(
                         fontWeight: FontWeight.bold,
                         fontSize: 30,
                         color: Theme.of(context).shadowColor,
@@ -153,7 +157,7 @@ class _MyselfPageState extends State<MyselfPage> {
                     // child: Text(
                     //   "statement",
                     //   // style: GoogleFonts.orelegaOne(
-                    //   style: GoogleFonts.roboto(
+                    //   style: GoogleFonts.bizUDGothic(
                     //     fontWeight: FontWeight.bold,
                     //     fontSize: 30,
                     //     color: Colors.black,
@@ -197,7 +201,7 @@ class _MyselfPageState extends State<MyselfPage> {
                       child: Align(
                         alignment: Alignment.center,
                         child: Text("HP グラフ",
-                            style: GoogleFonts.roboto(
+                            style: GoogleFonts.bizUDGothic(
                                 fontWeight: FontWeight.bold, fontSize: 30)),
                       )),
                   const SizedBox(height: 20),
@@ -218,13 +222,13 @@ class _MyselfPageState extends State<MyselfPage> {
                         alignment: Alignment.center,
                         // child: Text("HP record",
                         //     // style: GoogleFonts.orelegaOne(
-                        //     style: GoogleFonts.roboto(
+                        //     style: GoogleFonts.bizUDGothic(
                         //         fontWeight: FontWeight.bold,
                         //         fontSize: 30,
                         //         color: Colors.black)),
                         child: Text("HP 記録",
                             // style: GoogleFonts.orelegaOne(
-                            style: GoogleFonts.roboto(
+                            style: GoogleFonts.bizUDGothic(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 30,
                                 color: Colors.black)),
@@ -251,7 +255,7 @@ class _MyselfPageState extends State<MyselfPage> {
         child: !hasImage
             ? Text("Avatar image",
                 // style: GoogleFonts.orelegaOne(
-                style: GoogleFonts.roboto(
+                style: GoogleFonts.bizUDGothic(
                   color: const Color(0xff1e90ff),
                   fontWeight: FontWeight.bold,
                   fontSize: 26,
@@ -290,11 +294,11 @@ class RecordWidget extends StatelessWidget {
         Column(
           children: [
             Text("過去最高 HP",
-                style: GoogleFonts.roboto(
+                style: GoogleFonts.bizUDGothic(
                     fontWeight: FontWeight.w500, fontSize: 23)),
             const SizedBox(height: 7),
             Text("過去最低 HP",
-                style: GoogleFonts.roboto(
+                style: GoogleFonts.bizUDGothic(
                     fontWeight: FontWeight.w500, fontSize: 23)),
           ],
         ),
@@ -355,14 +359,15 @@ class WaveViewWidget extends StatelessWidget {
           //black
           // fontcolor: Theme.of(context).shadowColor,
           //white
-          fontcolor: Theme.of(context).cardColor,
+          fontcolor: widget.fontColor,
           //red
           // fontcolor: Theme.of(context).shadowColor,
           barcolor: widget.barColor,
           //真ん中
-          // fontposition: 15
+          // fontposition: 0,
           //中央下
-          fontposition: 48.5,
+          fontposition: widget.fontPosition,
+          // fontposition: 48.5,
         ),
       ),
     );
@@ -484,7 +489,7 @@ class LimitTimeWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Text("推定活動限界",
-          style: GoogleFonts.roboto(fontWeight: FontWeight.w500, fontSize: 20)),
+          style: GoogleFonts.bizUDGothic(fontWeight: FontWeight.w500, fontSize: 20)),
       Text("23:43",
           style: GoogleFonts.sourceCodePro(
               fontSize: 30,
@@ -513,7 +518,7 @@ class HPWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text("現在のHP",
-            style: GoogleFonts.roboto(fontWeight: FontWeight.w500, fontSize: 20)
+            style: GoogleFonts.bizUDGothic(fontWeight: FontWeight.w500, fontSize: 20)
             // Theme.of(context).textTheme.headlineSmall
             ),
         Text(widget.currentHP.toString(),

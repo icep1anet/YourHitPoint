@@ -16,8 +16,11 @@ import "package:google_fonts/google_fonts.dart";
 import "package:csv/csv.dart";
 import "package:path_provider/path_provider.dart";
 import "dart:io";
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 
 String? userId;
+const locale = Locale("ja", "JP");
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,6 +51,15 @@ class MyApp extends StatelessWidget {
       routes: {
         "/home": (context) => const MainPage(),
       },
+      locale: locale,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        locale,
+      ],
     );
   }
 }
@@ -82,11 +94,11 @@ class _MainPageState extends State<MainPage> {
   ];
   String? avatarName;
   String? avatarType;
-  int currentHP = 0;
+  int currentHP = 100;
   String? userName;
   int recordHighHP = 0;
   int recordLowHP = 0;
-  int hpNumber = 0;
+  int hpNumber = 100;
   List hpList = [];
   var logger = Logger();
   List<Map<String, dynamic>> dataList = [
@@ -96,6 +108,8 @@ class _MainPageState extends State<MainPage> {
   ];
   String? imgUrl;
   Color barColor = const Color(0xFF32cd32);
+  Color fontColor = Colors.white;
+  double fontPosition = 60;
 
   // データをCSVファイルに保存する関数
   Future<void> saveDataToCsv(List<Map<String, dynamic>> data) async {
@@ -129,7 +143,7 @@ class _MainPageState extends State<MainPage> {
     Timer.periodic(const Duration(seconds: 30), (timer) {
       zeroHP();
     });
-    Timer.periodic(const Duration(seconds: 1), (timer) {
+    Timer.periodic(const Duration(milliseconds: 100), (timer) {
       changeHP();
       // _timeLog();
       // fetchFirebaseData();
@@ -152,7 +166,7 @@ class _MainPageState extends State<MainPage> {
     if (mounted) {
       setState(() {
         logger.d("reset!!!!!!!");
-        hpNumber = 0;
+        hpNumber = 120;
       });
     }
   }
@@ -248,16 +262,27 @@ class _MainPageState extends State<MainPage> {
       });
       if (80 < currentHP ) {
         barColor = const Color(0xFF32cd32);
-      } else if (30 < currentHP && currentHP <= 80) {
+        fontColor = Colors.white;
+        fontPosition = 60;
+      }else if (40 < currentHP && currentHP <= 80) {
         barColor = const Color(0xff00ff7f);
+        fontColor = Colors.white;
+        fontPosition = 60;
+      } else if (30 < currentHP && currentHP <= 40) {
+        barColor = const Color(0xff00ff7f);
+        fontColor = Colors.black;
+        fontPosition = 0;
       } else if (0 < currentHP && currentHP <= 30) {
         barColor = const Color(0xffffd700);
+        fontColor = Colors.black;
+        fontPosition = 0;
       } else {
         barColor = const Color(0xffdc143c);
-
+        fontColor = Colors.black;
+        fontPosition = 0;
       }
-      if (hpNumber < 140) {
-        hpNumber += 10;
+      if (hpNumber < 1400) {
+        hpNumber -= 1;
       } else {}
     }
   }
@@ -307,6 +332,8 @@ class _MainPageState extends State<MainPage> {
               recordHighHP: recordHighHP,
               recordLowHP: recordLowHP,
               barColor: barColor,
+              fontColor: fontColor,
+              fontPosition: fontPosition,
             ),
             const FriendPage(),
           ],

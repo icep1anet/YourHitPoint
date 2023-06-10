@@ -40,16 +40,16 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
         animationController?.reverse();
 
         //test
-        animationController!.stop();
-        waveAnimationController!.stop();
-        _startDelay2();
+        // animationController!.stop();
+        // waveAnimationController!.stop();
+        // _startDelay2();
       } else if (status == AnimationStatus.dismissed) {
         animationController?.forward();
 
         //test
-        animationController!.stop();
-        waveAnimationController!.stop();
-        _startDelay();
+        // animationController!.stop();
+        // waveAnimationController!.stop();
+        // _startDelay();
       }
     });
     waveAnimationController!.addListener(() {
