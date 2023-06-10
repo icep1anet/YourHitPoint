@@ -62,30 +62,36 @@ class _MainPageState extends State<MainPage> {
   // String? userId;
   // dynamic _now, _year, _month, _day, _hour, _minute, _second;
   List<FlSpot> spots = [
-    const FlSpot(0, 98),
-    const FlSpot(1, 92),
-    const FlSpot(2, 79),
-    const FlSpot(2.6, 40),
-    const FlSpot(3, 68),
-    const FlSpot(4, 62),
-    const FlSpot(4.3, 80),
-    const FlSpot(5, 49),
-    const FlSpot(6, 35),
+    // const FlSpot(0, 98),
+    // const FlSpot(1, 92),
+    // const FlSpot(2, 79),
+    // const FlSpot(2.6, 40),
+    // const FlSpot(3, 68),
+    // const FlSpot(4, 62),
+    // const FlSpot(4.3, 80),
+    // const FlSpot(5, 49),
+    // const FlSpot(6, 35),
     // FlSpot(7, 29),
     // FlSpot(8, 19),
     // FlSpot(9, 9),
-    const FlSpot(10, 0),
-    const FlSpot(23.3, 10),
+    // const FlSpot(10, 0),
+    // const FlSpot(23.3, 10),
   ];
   String? avatarName;
   String? avatarType;
   int currentHP = 0;
   String? userName;
-  int? recordHighHP;
-  int? recordLowHP;
+  int recordHighHP = 0;
+  int recordLowHP = 0;
   int hpNumber = 0;
   List hpList = [];
   var logger = Logger();
+  List<Map<String, dynamic>> dataList = [
+    {'x': 1.0, 'y': 2.0},
+    {'x': 3.0, 'y': 4.0},
+    {'x': 5.0, 'y': 6.0},
+  ];
+  String? imgUrl;
 
   //ページ起動時に呼ばれる初期化関数
   @override
@@ -104,8 +110,17 @@ class _MainPageState extends State<MainPage> {
       // _timeLog();
       // fetchFirebaseData();
     });
-
+    spots = createFlSpotList(dataList);
     // logger.d("timer");
+  }
+
+  // データリストからFlSpotのリストを作成する関数
+  List<FlSpot> createFlSpotList(List<Map<String, dynamic>> dataList) {
+    return dataList.map((map) {
+      double x = map['x'];
+      double y = map['y'];
+      return FlSpot(x, y);
+    }).toList();
   }
 
   //debug
@@ -254,6 +269,8 @@ class _MainPageState extends State<MainPage> {
             MyselfPage(
               spots: spots,
               currentHP: currentHP,
+              recordHighHP: recordHighHP,
+              recordLowHP: recordLowHP,
             ),
             const FriendPage(),
           ],

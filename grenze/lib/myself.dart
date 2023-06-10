@@ -5,7 +5,7 @@ import 'package:fluttericon/iconic_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'main.dart';
 import 'wave_view.dart';
-// import "register.dart";
+import "register.dart";
 // import "package:device_info_plus/device_info_plus.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import 'package:logger/logger.dart';
@@ -14,7 +14,9 @@ class MyselfPage extends StatefulWidget {
   // MyselfPage({Key? key}) : super(key: key);
   final List<FlSpot> spots;
   final int currentHP;
-  const MyselfPage({required this.spots, required this.currentHP, Key? key})
+  final int recordHighHP;
+  final int recordLowHP;
+  const MyselfPage({required this.spots, required this.currentHP, required this.recordHighHP, required this.recordLowHP, Key? key})
       : super(key: key);
   // 使用するStateを指定
   @override
@@ -99,7 +101,14 @@ class _MyselfPageState extends State<MyselfPage> {
                 )),
             actions: [
               IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                                        Navigator.of(context).push(
+                      MaterialPageRoute(
+                        fullscreenDialog: true,
+                        builder: (context) => const RegisterPage(),
+                      ),
+                    );
+                  },
                   icon: const Icon(Icons.settings_applications))
             ],
           ),
@@ -180,7 +189,7 @@ class _MyselfPageState extends State<MyselfPage> {
                           ],
                         ),
                         child: WaveView(
-                          percentageValue: 60.0,
+                          percentageValue: widget.currentHP.toDouble(),
                           //black
                           // fontcolor: Theme.of(context).shadowColor,
                           //white
@@ -257,7 +266,7 @@ class _MyselfPageState extends State<MyselfPage> {
                                       fontWeight: FontWeight.w500, fontSize: 20)
                                   // Theme.of(context).textTheme.headlineSmall
                                   ),
-                              Text("94",
+                              Text(widget.currentHP.toString(),
                                   style: GoogleFonts.sourceCodePro(
                                       fontSize: 30,
                                       fontWeight: FontWeight.bold,
@@ -399,13 +408,13 @@ class _MyselfPageState extends State<MyselfPage> {
                       ),
                       const SizedBox(width: 30),
                       Column(children: [
-                        Text("110",
+                        Text(widget.recordHighHP.toString(),
                             style: GoogleFonts.sourceCodePro(
                                 fontSize: 30,
                                 fontWeight: FontWeight.bold,
                                 color: Theme.of(context).hintColor)),
                         // const SizedBox(height: 10),
-                        Text("-10",
+                        Text(widget.recordLowHP.toString(),
                             style: GoogleFonts.sourceCodePro(
                                 fontSize: 30,
                                 fontWeight: FontWeight.bold,

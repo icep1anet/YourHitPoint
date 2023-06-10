@@ -32,24 +32,24 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
   @override
   void initState() {
     animationController = AnimationController(
-        duration: const Duration(milliseconds: 7500), vsync: this);
+        duration: const Duration(milliseconds: 2000), vsync: this);
     waveAnimationController = AnimationController(
-        duration: const Duration(milliseconds: 7500), vsync: this);
+        duration: const Duration(milliseconds: 2000), vsync: this);
     animationController!.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         animationController?.reverse();
 
         //test
-        // animationController!.stop();
-        // waveAnimationController!.stop();
-        // _startDelay2();
+        animationController!.stop();
+        waveAnimationController!.stop();
+        _startDelay2();
       } else if (status == AnimationStatus.dismissed) {
         animationController?.forward();
 
         //test
-        // animationController!.stop();
-        // waveAnimationController!.stop();
-        // _startDelay();
+        animationController!.stop();
+        waveAnimationController!.stop();
+        _startDelay();
       }
     });
     waveAnimationController!.addListener(() {
@@ -92,20 +92,18 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  // void _startDelay() async {
-  //   print("1111111");
-  //   await Future.delayed(const Duration(seconds: 5));
-  //   animationController?.forward();
-  //   waveAnimationController!.repeat();
-  // }
+  void _startDelay() async {
+    await Future.delayed(const Duration(seconds: 5));
+    animationController?.forward();
+    waveAnimationController!.repeat();
+  }
 
-  // void _startDelay2() async {
-  //   print("222222");
-  //   await Future.delayed(const Duration(seconds: 5));
-  //   animationController?.reverse();
-  //   // animationController?.reverse();
-  //   waveAnimationController!.repeat();
-  // }
+  void _startDelay2() async {
+    await Future.delayed(const Duration(seconds: 5));
+    animationController?.reverse();
+    // animationController?.reverse();
+    waveAnimationController!.repeat();
+  }
 
   @override
   Widget build(BuildContext context) {
