@@ -18,7 +18,6 @@ class _FriendPageState extends State<FriendPage> {
   TextEditingController? _userIdController;
   var logger = Logger();
 
-
   @override
   void initState() {
     super.initState();
@@ -44,7 +43,7 @@ class _FriendPageState extends State<FriendPage> {
         children: [
           TextField(
             autocorrect: false,
-            autofocus: true,
+            autofocus: false,
             controller: _userIdController,
             decoration: InputDecoration(
               border: const OutlineInputBorder(
