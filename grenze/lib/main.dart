@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
         splashColor: const Color(0xff00ff7f),
         dividerColor: const Color(0xffffd700),
       ),
-      home: const MainPage(),
+      home: const RegisterPage(),
       //画面遷移するときのルート追加
       routes: {
         "/home": (context) => const MainPage(),
