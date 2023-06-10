@@ -1,14 +1,14 @@
-import 'dart:math';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
-import 'package:fluttericon/iconic_icons.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'main.dart';
-import 'wave_view.dart';
+import "dart:math";
+import "package:fl_chart/fl_chart.dart";
+import "package:flutter/material.dart";
+import "package:fluttericon/iconic_icons.dart";
+import "package:google_fonts/google_fonts.dart";
+import "main.dart";
+import "wave_view.dart";
 import "register.dart";
 // import "package:device_info_plus/device_info_plus.dart";
 import "package:shared_preferences/shared_preferences.dart";
-import 'package:logger/logger.dart';
+import "package:logger/logger.dart";
 
 class MyselfPage extends StatefulWidget {
   // MyselfPage({Key? key}) : super(key: key);
@@ -16,11 +16,13 @@ class MyselfPage extends StatefulWidget {
   final int currentHP;
   final int recordHighHP;
   final int recordLowHP;
+  final Color barColor;
   const MyselfPage(
       {required this.spots,
       required this.currentHP,
       required this.recordHighHP,
       required this.recordLowHP,
+      required this.barColor,
       Key? key})
       : super(key: key);
   // 使用するStateを指定
@@ -100,7 +102,6 @@ class _MyselfPageState extends State<MyselfPage> {
                   //   },
                   //   child: const Text("押せるよ"),
                   // ),
-                  _currentmyAvatar(null),
                   const SizedBox(height: 30),
                   Container(
                     alignment: Alignment.center,
@@ -320,9 +321,11 @@ class WaveViewWidget extends StatelessWidget {
   const WaveViewWidget({
     super.key,
     required this.widget,
+    // required this.barColor
   });
 
   final MyselfPage widget;
+  // final int barColor; 
 
   @override
   Widget build(BuildContext context) {
@@ -333,7 +336,7 @@ class WaveViewWidget extends StatelessWidget {
         height: 160,
         decoration: BoxDecoration(
           //ここがhpの上部分
-          color: HexColor('#E8EDFE'),
+          color: HexColor("#E8EDFE"),
           // color: HexColor("#0087aa"),
           borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(80.0),
@@ -355,14 +358,7 @@ class WaveViewWidget extends StatelessWidget {
           fontcolor: Theme.of(context).cardColor,
           //red
           // fontcolor: Theme.of(context).shadowColor,
-          //red
-          // barcolor: Theme.of(context).primaryColor,
-          //yellow
-          // barcolor: Theme.of(context).dividerColor
-          //light green
-          // barcolor: Theme.of(context).splashColor,
-          //green
-          barcolor: Theme.of(context).hoverColor,
+          barcolor: widget.barColor,
           //真ん中
           // fontposition: 15
           //中央下

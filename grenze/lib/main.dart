@@ -8,11 +8,14 @@ import "dart:async";
 import "package:fl_chart/fl_chart.dart";
 import "package:http/http.dart" as http;
 import "friend.dart";
-import 'package:logger/logger.dart';
-import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+import "package:logger/logger.dart";
+import "package:salomon_bottom_bar/salomon_bottom_bar.dart";
 // import "design.dart";
 // import "asset_manifest.dart";
-import 'package:google_fonts/google_fonts.dart';
+import "package:google_fonts/google_fonts.dart";
+import "package:csv/csv.dart";
+import "package:path_provider/path_provider.dart";
+import "dart:io";
 
 String? userId;
 
@@ -87,16 +90,37 @@ class _MainPageState extends State<MainPage> {
   List hpList = [];
   var logger = Logger();
   List<Map<String, dynamic>> dataList = [
-    {'x': 1.0, 'y': 2.0},
-    {'x': 3.0, 'y': 4.0},
-    {'x': 5.0, 'y': 6.0},
+    {"x": 1.0, "y": 2.0},
+    {"x": 3.0, "y": 4.0},
+    {"x": 5.0, "y": 6.0},
   ];
   String? imgUrl;
+  Color barColor = const Color(0xFF32cd32);
+
+  // データをCSVファイルに保存する関数
+  Future<void> saveDataToCsv(List<Map<String, dynamic>> data) async {
+    // CSVフォーマットの文字列に変換
+    List<List<dynamic>> csvData = data
+        .map((map) => [map["x"], map["y"]]) // 必要なフィールドを選択
+        .toList();
+
+    String csvString = const ListToCsvConverter().convert(csvData);
+
+    // データを保存するディレクトリを取得
+    Directory directory = await getApplicationDocumentsDirectory();
+    String filePath = "${directory.path}/data.csv";
+
+    // ファイルにデータを書き込む
+    File file = File(filePath);
+    await file.writeAsString(csvString);
+    logger.d("CSVファイルが保存されました。");
+  }
 
   //ページ起動時に呼ばれる初期化関数
   @override
   void initState() {
     super.initState();
+    saveDataToCsv(dataList);
     // initTest();
     _getPrefItems();
     // _timeLog();
@@ -117,8 +141,8 @@ class _MainPageState extends State<MainPage> {
   // データリストからFlSpotのリストを作成する関数
   List<FlSpot> createFlSpotList(List<Map<String, dynamic>> dataList) {
     return dataList.map((map) {
-      double x = map['x'];
-      double y = map['y'];
+      double x = map["x"];
+      double y = map["y"];
       return FlSpot(x, y);
     }).toList();
   }
@@ -219,10 +243,21 @@ class _MainPageState extends State<MainPage> {
     if (mounted) {
       setState(() {
         currentHP = hpNumber;
+
         // currentHP = HPlist[HPnumber]["y"];
       });
-      if (hpNumber < 14) {
-        hpNumber += 1;
+      if (80 < currentHP ) {
+        barColor = const Color(0xFF32cd32);
+      } else if (30 < currentHP && currentHP <= 80) {
+        barColor = const Color(0xff00ff7f);
+      } else if (0 < currentHP && currentHP <= 30) {
+        barColor = const Color(0xffffd700);
+      } else {
+        barColor = const Color(0xffdc143c);
+
+      }
+      if (hpNumber < 140) {
+        hpNumber += 10;
       } else {}
     }
   }
@@ -271,6 +306,7 @@ class _MainPageState extends State<MainPage> {
               currentHP: currentHP,
               recordHighHP: recordHighHP,
               recordLowHP: recordLowHP,
+              barColor: barColor,
             ),
             const FriendPage(),
           ],
@@ -346,9 +382,9 @@ class HexColor extends Color {
   HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
 
   static int _getColorFromHex(String hexColor) {
-    hexColor = hexColor.toUpperCase().replaceAll('#', '');
+    hexColor = hexColor.toUpperCase().replaceAll("#", "");
     if (hexColor.length == 6) {
-      hexColor = 'FF$hexColor';
+      hexColor = "FF$hexColor";
     }
     return int.parse(hexColor, radix: 16);
   }
@@ -362,7 +398,7 @@ class HexColor extends Color {
         //   BottomNavigationBarItem(
         //     icon: Icon(Icons.person),
         //     // activeIcon: Icon(Icons.book_online),
-        //     label: 'Myself',
+        //     label: "Myself",
 
         //     tooltip: "My Page",
         //     backgroundColor: Color.fromARGB(255, 179, 206, 233),
@@ -370,7 +406,7 @@ class HexColor extends Color {
         //   BottomNavigationBarItem(
         //     icon: Icon(Icons.people),
         //     // activeIcon: Icon(Icons.school_outlined),
-        //     label: 'Friends',
+        //     label: "Friends",
         //     tooltip: "Friends Page",
         //     backgroundColor: Color.fromARGB(255, 231, 154, 195),
         //   ),

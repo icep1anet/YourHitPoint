@@ -4,7 +4,7 @@ import "package:flutter/material.dart";
 // import "package:device_info_plus/device_info_plus.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "main.dart";
-import 'package:logger/logger.dart';
+import "package:logger/logger.dart";
 
 class FriendPage extends StatefulWidget {
   const FriendPage({Key? key}) : super(key: key);
