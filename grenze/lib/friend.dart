@@ -43,7 +43,7 @@ class _FriendPageState extends State<FriendPage> {
         children: [
           TextField(
             autocorrect: false,
-            autofocus: true,
+            autofocus: false,
             controller: _userIdController,
             decoration: InputDecoration(
               border: const OutlineInputBorder(
