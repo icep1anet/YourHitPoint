@@ -42,21 +42,6 @@ class _MyselfPageState extends State<MyselfPage> {
   var logger = Logger();
 
   // final List<FlSpot> spots;
-  // List<FlSpot> spots = const [
-  //   FlSpot(0, 98),
-  //   FlSpot(1, 92),
-  //   FlSpot(2, 79),
-  //   FlSpot(2.6, 40),
-  //   FlSpot(3, 68),
-  //   FlSpot(4, 62),
-  //   FlSpot(4.3, 80),
-  //   FlSpot(5, 49),
-  //   FlSpot(6, 35),
-  //   // FlSpot(7, 29),
-  //   // FlSpot(8, 19),
-  //   // FlSpot(9, 9),
-  //   // FlSpot(10, 0),
-  // ];
 
   void initTest() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -157,7 +142,7 @@ class _MyselfPageState extends State<MyselfPage> {
                     // child: Text(
                     //   "statement",
                     //   // style: GoogleFonts.orelegaOne(
-                    //   style: GoogleFonts.bizUDGothic(
+                    //   style: GoogleFonts.roboto(
                     //     fontWeight: FontWeight.bold,
                     //     fontSize: 30,
                     //     color: Colors.black,
@@ -201,7 +186,7 @@ class _MyselfPageState extends State<MyselfPage> {
                       child: Align(
                         alignment: Alignment.center,
                         child: Text("HP グラフ",
-                            style: GoogleFonts.bizUDGothic(
+                            style: GoogleFonts.roboto(
                                 fontWeight: FontWeight.bold, fontSize: 30)),
                       )),
                   const SizedBox(height: 20),
@@ -222,13 +207,13 @@ class _MyselfPageState extends State<MyselfPage> {
                         alignment: Alignment.center,
                         // child: Text("HP record",
                         //     // style: GoogleFonts.orelegaOne(
-                        //     style: GoogleFonts.bizUDGothic(
+                        //     style: GoogleFonts.roboto(
                         //         fontWeight: FontWeight.bold,
                         //         fontSize: 30,
                         //         color: Colors.black)),
                         child: Text("HP 記録",
                             // style: GoogleFonts.orelegaOne(
-                            style: GoogleFonts.bizUDGothic(
+                            style: GoogleFonts.roboto(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 30,
                                 color: Colors.black)),
@@ -255,7 +240,7 @@ class _MyselfPageState extends State<MyselfPage> {
         child: !hasImage
             ? Text("Avatar image",
                 // style: GoogleFonts.orelegaOne(
-                style: GoogleFonts.bizUDGothic(
+                style: GoogleFonts.roboto(
                   color: const Color(0xff1e90ff),
                   fontWeight: FontWeight.bold,
                   fontSize: 26,
@@ -294,11 +279,11 @@ class RecordWidget extends StatelessWidget {
         Column(
           children: [
             Text("過去最高 HP",
-                style: GoogleFonts.bizUDGothic(
+                style: GoogleFonts.roboto(
                     fontWeight: FontWeight.w500, fontSize: 23)),
             const SizedBox(height: 7),
             Text("過去最低 HP",
-                style: GoogleFonts.bizUDGothic(
+                style: GoogleFonts.roboto(
                     fontWeight: FontWeight.w500, fontSize: 23)),
           ],
         ),
@@ -329,7 +314,7 @@ class WaveViewWidget extends StatelessWidget {
   });
 
   final MyselfPage widget;
-  // final int barColor; 
+  // final int barColor;
 
   @override
   Widget build(BuildContext context) {
@@ -381,6 +366,21 @@ class LineChartWidget extends StatelessWidget {
   });
 
   final MyselfPage widget;
+  final List<FlSpot> spots = const [
+    //   FlSpot(0, 98),
+    //   FlSpot(1, 92),
+    //   FlSpot(2, 79),
+    //   FlSpot(2.6, 40),
+    //   FlSpot(3, 68),
+    //   FlSpot(4, 62),
+    FlSpot(4.3, 80),
+    FlSpot(5, 49),
+    FlSpot(6, 35),
+    FlSpot(7, 29),
+    FlSpot(8, 19),
+    FlSpot(9, 9),
+    FlSpot(10, 0),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -395,7 +395,7 @@ class LineChartWidget extends StatelessWidget {
             color: Colors.red[400],
             barWidth: 3,
             dotData: FlDotData(show: true),
-            spots: widget.spots,
+            spots: spots,
             dashArray: [10, 6],
           )
         ],
@@ -427,7 +427,26 @@ class LineChartWidget extends StatelessWidget {
       color: Colors.pink,
       fontFamily: "Digital",
     );
-    String text;
+    String text = "";
+    // int test = value.toInt();
+    // int check = 0;
+    // for (int i = 0; i<12; i++) {
+    //   if (test == check) {
+    //     text = test.toString() + ":00";
+    //     break;
+    //   } else {
+    //     if (check == 24) {
+    //       check == 0;
+    //     }
+    //     check += 4;
+    //   }
+    // }
+
+    // if (text == "") {
+    //   return Container();
+    // }
+
+    // text = value.toInt().toString();
     switch (value.toInt()) {
       case 0:
         text = "00:00";
@@ -489,7 +508,7 @@ class LimitTimeWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Text("推定活動限界",
-          style: GoogleFonts.bizUDGothic(fontWeight: FontWeight.w500, fontSize: 20)),
+          style: GoogleFonts.roboto(fontWeight: FontWeight.w500, fontSize: 20)),
       Text("23:43",
           style: GoogleFonts.sourceCodePro(
               fontSize: 30,
@@ -518,7 +537,7 @@ class HPWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text("現在のHP",
-            style: GoogleFonts.bizUDGothic(fontWeight: FontWeight.w500, fontSize: 20)
+            style: GoogleFonts.roboto(fontWeight: FontWeight.w500, fontSize: 20)
             // Theme.of(context).textTheme.headlineSmall
             ),
         Text(widget.currentHP.toString(),

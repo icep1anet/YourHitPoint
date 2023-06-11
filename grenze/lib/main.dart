@@ -18,7 +18,6 @@ import "package:path_provider/path_provider.dart";
 import "dart:io";
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-
 String? userId;
 const locale = Locale("ja", "JP");
 
@@ -98,10 +97,10 @@ class _MainPageState extends State<MainPage> {
   String? userName;
   int recordHighHP = 0;
   int recordLowHP = 0;
-  int hpNumber = 100;
+  int hpNumber = 0;
   List hpList = [];
   var logger = Logger();
-  List<Map<String, dynamic>> dataList = [
+  List<Map> dataList = [
     {"x": 1.0, "y": 2.0},
     {"x": 3.0, "y": 4.0},
     {"x": 5.0, "y": 6.0},
@@ -134,7 +133,8 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    saveDataToCsv(dataList);
+    logger.d(spots);
+    // saveDataToCsv(dataList);
     // initTest();
     _getPrefItems();
     // _timeLog();
@@ -143,17 +143,17 @@ class _MainPageState extends State<MainPage> {
     Timer.periodic(const Duration(seconds: 30), (timer) {
       zeroHP();
     });
-    Timer.periodic(const Duration(milliseconds: 100), (timer) {
+    Timer.periodic(const Duration(milliseconds: 10000), (timer) {
       changeHP();
       // _timeLog();
       // fetchFirebaseData();
     });
-    spots = createFlSpotList(dataList);
+    // spots = createFlSpotList(dataList);
     // logger.d("timer");
   }
 
   // データリストからFlSpotのリストを作成する関数
-  List<FlSpot> createFlSpotList(List<Map<String, dynamic>> dataList) {
+  List<FlSpot> createFlSpotList(List<Map> dataList) {
     return dataList.map((map) {
       double x = map["x"];
       double y = map["y"];
@@ -234,18 +234,31 @@ class _MainPageState extends State<MainPage> {
   // //responseを送ってfirebaseにデータ登録する
   Future<void> fetchFirebaseData() async {
     logger.d("startttttt");
-    var url = Uri.https(
-        "o2nr395oib.execute-api.ap-northeast-1.amazonaws.com",
-        "/default/get_HP_data",
-        {"userName": "a", "avatarName": "b", "avatarType": "c"});
+    var url = Uri.https("o2nr395oib.execute-api.ap-northeast-1.amazonaws.com",
+        "/default/get_HP_data", {"userId": "id_abcd"});
     var response = await http.get(url);
     logger.d(response.body);
     if (response.statusCode == 200) {
       // リクエストが成功した場合、レスポンスの内容を取得して表示します
+      logger.d("成功しました！");
       logger.d(response.body);
 
-      var responseJson = jsonDecode(response.body);
-      logger.d(responseJson);
+      var responseMap = jsonDecode(response.body);
+      logger.d("past:");
+      logger.d(responseMap["past_spots"]);
+      List tes1 = responseMap["past_spots"];
+      List<Map<dynamic, dynamic>> tes2 = [];
+      for (Map a in tes1) {
+        tes2.add(a);
+      }
+      logger.d("daiichidannkai");
+      List<FlSpot> tes = createFlSpotList(tes2);
+      logger.d("dekimasitayo");
+      setState(() {
+        spots = tes;
+        logger.d("spots:");
+        logger.d(spots);
+      });
     } else {
       // リクエストが失敗した場合、エラーメッセージを表示します
       logger.d("Request failed with status: ${response.statusCode}");
@@ -255,34 +268,33 @@ class _MainPageState extends State<MainPage> {
   //現在のHPを変える
   void changeHP() {
     if (mounted) {
-      setState(() {
-        currentHP = hpNumber;
-
-        // currentHP = HPlist[HPnumber]["y"];
-      });
-      if (80 < currentHP ) {
-        barColor = const Color(0xFF32cd32);
-        fontColor = Colors.white;
-        fontPosition = 60;
-      }else if (40 < currentHP && currentHP <= 80) {
-        barColor = const Color(0xff00ff7f);
-        fontColor = Colors.white;
-        fontPosition = 60;
-      } else if (30 < currentHP && currentHP <= 40) {
-        barColor = const Color(0xff00ff7f);
-        fontColor = Colors.black;
-        fontPosition = 0;
-      } else if (0 < currentHP && currentHP <= 30) {
-        barColor = const Color(0xffffd700);
-        fontColor = Colors.black;
-        fontPosition = 0;
-      } else {
-        barColor = const Color(0xffdc143c);
-        fontColor = Colors.black;
-        fontPosition = 0;
-      }
-      if (hpNumber < 1400) {
-        hpNumber -= 1;
+      if (hpNumber < 14) {
+        setState(() {
+          // currentHP = hpNumber;
+          // currentHP = hpList[hpNumber]["y"];
+        });
+        if (80 < currentHP) {
+          barColor = const Color(0xFF32cd32);
+          fontColor = Colors.white;
+          fontPosition = 60;
+        } else if (40 < currentHP && currentHP <= 80) {
+          barColor = const Color(0xff00ff7f);
+          fontColor = Colors.white;
+          fontPosition = 60;
+        } else if (30 < currentHP && currentHP <= 40) {
+          barColor = const Color(0xff00ff7f);
+          fontColor = Colors.black;
+          fontPosition = 0;
+        } else if (0 < currentHP && currentHP <= 30) {
+          barColor = const Color(0xffffd700);
+          fontColor = Colors.black;
+          fontPosition = 0;
+        } else {
+          barColor = const Color(0xffdc143c);
+          fontColor = Colors.black;
+          fontPosition = 0;
+        }
+        hpNumber += 1;
       } else {}
     }
   }
