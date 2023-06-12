@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import 'package:fluttericon/iconic_icons.dart';
 import "package:fluttericon/octicons_icons.dart";
 // import "package:flutter_chat_types/flutter_chat_types.dart" as types;
 // import "package:image_picker/image_picker.dart";
@@ -37,7 +36,6 @@ class _RegisterPageState extends State<RegisterPage> {
   String avatarType = "猫";
   var logger = Logger();
   String? userId;
-  final _text = "avatarType";
 
   //ページ起動時に呼ばれる初期化関数
   @override
