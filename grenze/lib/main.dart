@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
         splashColor: const Color(0xff00ff7f),
         dividerColor: const Color(0xffffd700),
       ),
-      home: const RegisterPage(),
+      home: const MainPage(),
       //画面遷移するときのルート追加
       routes: {
         "/home": (context) => const MainPage(),
@@ -280,46 +280,46 @@ class _MainPageState extends State<MainPage> {
             });
           },
         ),
-        // bottomNavigationBar: SalomonBottomBar(
-        //     backgroundColor: const Color.fromARGB(255, 178, 211, 244),
-        //     currentIndex: _selectedIndex,
-        //     selectedItemColor: const Color(0xff6200ee),
-        //     unselectedItemColor: const Color(0xff757575),
-        //     onTap: _onItemTapped,
-        //     //(index) {
-        //     //   setState(() {
-        //     //     _selectedIndex = index;
-        //     //   });
-        //     // },
-        //     items: _navBarItems),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              // activeIcon: Icon(Icons.book_online),
-              label: "Myself",
-              tooltip: "My Page",
-              backgroundColor: Color.fromARGB(255, 103, 219, 234),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.people),
-              // activeIcon: Icon(Icons.school_outlined),
-              label: "Friends",
-              tooltip: "Friends Page",
-              backgroundColor: Color.fromARGB(255, 231, 154, 195),
-            ),
-          ],
-          type: BottomNavigationBarType.shifting,
-          backgroundColor: Colors.red,
-          enableFeedback: true,
-          selectedFontSize: 20,
-          selectedIconTheme: const IconThemeData(size: 30, color: Colors.green),
-          selectedItemColor: Colors.black,
-          unselectedIconTheme:
-              const IconThemeData(size: 25, color: Colors.white),
-        ),
+        bottomNavigationBar: SalomonBottomBar(
+            backgroundColor: const Color.fromARGB(255, 178, 211, 244),
+            currentIndex: _selectedIndex,
+            selectedItemColor: const Color(0xff6200ee),
+            unselectedItemColor: const Color(0xff757575),
+            onTap: _onItemTapped,
+            //(index) {
+            //   setState(() {
+            //     _selectedIndex = index;
+            //   });
+            // },
+            items: _navBarItems),
+        // bottomNavigationBar: BottomNavigationBar(
+        //   currentIndex: _selectedIndex,
+        //   onTap: _onItemTapped,
+        //   items: const <BottomNavigationBarItem>[
+        //     BottomNavigationBarItem(
+        //       icon: Icon(Icons.person),
+        //       // activeIcon: Icon(Icons.book_online),
+        //       label: "Myself",
+        //       tooltip: "My Page",
+        //       backgroundColor: Color.fromARGB(255, 103, 219, 234),
+        //     ),
+        //     BottomNavigationBarItem(
+        //       icon: Icon(Icons.people),
+        //       // activeIcon: Icon(Icons.school_outlined),
+        //       label: "Friends",
+        //       tooltip: "Friends Page",
+        //       backgroundColor: Color.fromARGB(255, 231, 154, 195),
+        //     ),
+        //   ],
+        //   type: BottomNavigationBarType.shifting,
+        //   backgroundColor: Colors.red,
+        //   enableFeedback: true,
+        //   selectedFontSize: 20,
+        //   selectedIconTheme: const IconThemeData(size: 30, color: Colors.green),
+        //   selectedItemColor: Colors.black,
+        //   unselectedIconTheme:
+        //       const IconThemeData(size: 25, color: Colors.white),
+        // ),
       );
     }
   }
