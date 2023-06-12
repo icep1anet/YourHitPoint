@@ -253,6 +253,7 @@ class _MainPageState extends State<MainPage> {
       setState(() {
         // spots = tes;
         // spots.addAll(tes);
+        imgUrl = responseMap["url"];
         spots = spots + tes;
       });
       logger.d("spotsAfter: $spots");
@@ -346,6 +347,7 @@ class _MainPageState extends State<MainPage> {
               barColor: barColor,
               fontColor: fontColor,
               fontPosition: fontPosition,
+              imgUrl: imgUrl,
             ),
             const FriendPage(),
           ],

@@ -19,6 +19,7 @@ class MyselfPage extends StatefulWidget {
   final Color barColor;
   final Color fontColor;
   final double fontPosition;
+  final String? imgUrl;
   const MyselfPage(
       {required this.spots,
       required this.currentHP,
@@ -27,6 +28,7 @@ class MyselfPage extends StatefulWidget {
       required this.barColor,
       required this.fontColor,
       required this.fontPosition,
+      required this.imgUrl,
       Key? key})
       : super(key: key);
   // 使用するStateを指定
@@ -122,8 +124,8 @@ class _MyselfPageState extends State<MyselfPage> {
                   const SizedBox(height: 30),
                   Row(children: [
                     const SizedBox(width: 20),
-                    // _currentmyAvatar(null),
-                    _currentmyAvatar("assets/images/illust_normal.jpg"),
+                    _currentmyAvatar(widget.imgUrl),
+                    // _currentmyAvatar("assets/images/illust_normal.jpg"),
                     WaveViewWidget(widget: widget),
                   ]),
                   const SizedBox(height: 30),
@@ -235,7 +237,7 @@ class _MyselfPageState extends State<MyselfPage> {
       ),
       child: CircleAvatar(
         backgroundColor: hasImage ? Colors.transparent : color,
-        backgroundImage: hasImage ? AssetImage(imgUrl) : null,
+        backgroundImage: hasImage ? NetworkImage(imgUrl) : null,
         radius: 100,
         child: !hasImage
             ? Text("Avatar image",
