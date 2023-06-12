@@ -108,8 +108,6 @@ class _MainPageState extends State<MainPage> {
   double fontPosition = 60;
   DateTime? latestDataTime;
 
-
-
   //ページ起動時に呼ばれる初期化関数
   @override
   void initState() {
@@ -212,9 +210,7 @@ class _MainPageState extends State<MainPage> {
   Future<void> fetchFirebaseData() async {
     logger.d("startttttt");
     DateTime now = DateTime.now();
-    logger.d("1");
     DateTime hoursAgo = now.add(const Duration(hours: 4) * -1);
-    logger.d("2");
     if (latestDataTime != null) {
       if (latestDataTime!.compareTo(hoursAgo) == 1) {
         hoursAgo = latestDataTime!;
@@ -241,16 +237,24 @@ class _MainPageState extends State<MainPage> {
       List<Map<dynamic, dynamic>> tes2 = [];
       for (Map a in tes1) {
         tes2.add(a);
-      }      logger.d("daiichidannkai");
+      }
+      logger.d("daiichidannkai");
       List<FlSpot> tes = createFlSpotList(tes2);
       logger.d(tes);
       logger.d("tes.length: ${tes.length}");
       logger.d("spots.length: ${spots.length}");
       if (spots.isNotEmpty) {
-        logger.d("spots is Empty");
-        spots.removeRange(0, tes.length-1);
+        logger.d("spots is not Empty");
+        spots.removeRange(0, tes.length - 1);
       }
-      spots.addAll(tes);
+      // for (int i = 0; i < tes.length; i++) {
+      //   spots.add(tes[i]);
+      // }
+      setState(() {
+        // spots = tes;
+        // spots.addAll(tes);
+        spots = spots + tes;
+      });
       logger.d("spotsAfter: $spots");
       logger.d("spotsLengthAfter: ${spots.length}");
       //latestDataTimeの更新
