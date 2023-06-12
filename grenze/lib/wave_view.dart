@@ -1,8 +1,8 @@
-// import 'dart:js';
-import 'dart:math' as math;
-// import 'package:best_flutter_ui_templates/fitness_app/fitness_app_Theme.dart';
-import 'package:flutter/material.dart';
-import 'package:vector_math/vector_math.dart' as vector;
+// import "dart:js";
+import "dart:math" as math;
+// import "package:best_flutter_ui_templates/fitness_app/fitness_app_Theme.dart";
+import "package:flutter/material.dart";
+import "package:vector_math/vector_math.dart" as vector;
 
 class WaveView extends StatefulWidget {
   final double percentageValue;
@@ -40,16 +40,16 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
         animationController?.reverse();
 
         //test
-        animationController!.stop();
-        waveAnimationController!.stop();
-        _startDelay2();
+        // animationController!.stop();
+        // waveAnimationController!.stop();
+        // _startDelay2();
       } else if (status == AnimationStatus.dismissed) {
         animationController?.forward();
 
         //test
-        animationController!.stop();
-        waveAnimationController!.stop();
-        _startDelay();
+        // animationController!.stop();
+        // waveAnimationController!.stop();
+        // _startDelay();
       }
     });
     waveAnimationController!.addListener(() {
@@ -85,12 +85,12 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
     super.initState();
   }
 
-  @override
-  void dispose() {
-    animationController?.dispose();
-    waveAnimationController?.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   animationController?.dispose();
+  //   waveAnimationController?.dispose();
+  //   super.dispose();
+  // }
 
   void _startDelay() async {
     await Future.delayed(const Duration(seconds: 5));
@@ -175,7 +175,7 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                       widget.percentageValue.round().toString(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          fontFamily: 'Roboto',
+                          fontFamily: "Roboto",
                           fontWeight: FontWeight.w500,
                           fontSize: 24,
                           letterSpacing: 0.0,
@@ -185,10 +185,10 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                     Padding(
                       padding: const EdgeInsets.only(top: 3.0),
                       child: Text(
-                        '%',
+                        "%",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                            fontFamily: 'Roboto',
+                            fontFamily: "Roboto",
                             fontWeight: FontWeight.w500,
                             fontSize: 14,
                             letterSpacing: 0.0,

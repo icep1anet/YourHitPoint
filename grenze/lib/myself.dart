@@ -1,26 +1,34 @@
-import 'dart:math';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
-import 'package:fluttericon/iconic_icons.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'main.dart';
-import 'wave_view.dart';
+import "dart:math";
+import "package:fl_chart/fl_chart.dart";
+import "package:flutter/material.dart";
+import "package:fluttericon/iconic_icons.dart";
+import "package:google_fonts/google_fonts.dart";
+import "main.dart";
+import "wave_view.dart";
 import "register.dart";
 // import "package:device_info_plus/device_info_plus.dart";
 import "package:shared_preferences/shared_preferences.dart";
-import 'package:logger/logger.dart';
+import "package:logger/logger.dart";
 
 class MyselfPage extends StatefulWidget {
   // MyselfPage({Key? key}) : super(key: key);
   final List<FlSpot> spots;
   final int currentHP;
-  final int recordHighHP;
-  final int recordLowHP;
+  final double recordHighHP;
+  final double recordLowHP;
+  final Color barColor;
+  final Color fontColor;
+  final double fontPosition;
+  final String? imgUrl;
   const MyselfPage(
       {required this.spots,
       required this.currentHP,
       required this.recordHighHP,
       required this.recordLowHP,
+      required this.barColor,
+      required this.fontColor,
+      required this.fontPosition,
+      required this.imgUrl,
       Key? key})
       : super(key: key);
   // 使用するStateを指定
@@ -36,21 +44,6 @@ class _MyselfPageState extends State<MyselfPage> {
   var logger = Logger();
 
   // final List<FlSpot> spots;
-  // List<FlSpot> spots = const [
-  //   FlSpot(0, 98),
-  //   FlSpot(1, 92),
-  //   FlSpot(2, 79),
-  //   FlSpot(2.6, 40),
-  //   FlSpot(3, 68),
-  //   FlSpot(4, 62),
-  //   FlSpot(4.3, 80),
-  //   FlSpot(5, 49),
-  //   FlSpot(6, 35),
-  //   // FlSpot(7, 29),
-  //   // FlSpot(8, 19),
-  //   // FlSpot(9, 9),
-  //   // FlSpot(10, 0),
-  // ];
 
   void initTest() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -100,7 +93,6 @@ class _MyselfPageState extends State<MyselfPage> {
                   //   },
                   //   child: const Text("押せるよ"),
                   // ),
-                  // _currentmyAvatar(null),
                   const SizedBox(height: 30),
                   Container(
                     alignment: Alignment.center,
@@ -113,7 +105,7 @@ class _MyselfPageState extends State<MyselfPage> {
                     // child: Text(
                     //   "Avatar name",
                     //   // style: GoogleFonts.orelegaOne(
-                    //   style: GoogleFonts.roboto(
+                    //   style: GoogleFonts.bizUDGothic(
                     //     fontWeight: FontWeight.bold,
                     //     fontSize: 30,
                     //     color: Colors.black,
@@ -122,7 +114,7 @@ class _MyselfPageState extends State<MyselfPage> {
                     child: Text(
                       "アバター名",
                       // style: GoogleFonts.orelegaOne(
-                      style: GoogleFonts.roboto(
+                      style: GoogleFonts.bizUDGothic(
                         fontWeight: FontWeight.bold,
                         fontSize: 30,
                         color: Theme.of(context).shadowColor,
@@ -132,8 +124,8 @@ class _MyselfPageState extends State<MyselfPage> {
                   const SizedBox(height: 30),
                   Row(children: [
                     const SizedBox(width: 20),
-                    // _currentmyAvatar(null),
-                    _currentmyAvatar("assets/images/illust_normal.jpg"),
+                    _currentmyAvatar(widget.imgUrl),
+                    // _currentmyAvatar("assets/images/illust_normal.jpg"),
                     WaveViewWidget(widget: widget),
                   ]),
                   const SizedBox(height: 30),
@@ -245,7 +237,7 @@ class _MyselfPageState extends State<MyselfPage> {
       ),
       child: CircleAvatar(
         backgroundColor: hasImage ? Colors.transparent : color,
-        backgroundImage: hasImage ? AssetImage(imgUrl) : null,
+        backgroundImage: hasImage ? NetworkImage(imgUrl) : null,
         radius: 100,
         child: !hasImage
             ? Text("Avatar image",
@@ -299,13 +291,13 @@ class RecordWidget extends StatelessWidget {
         ),
         const SizedBox(width: 30),
         Column(children: [
-          Text(widget.recordHighHP.toString(),
+          Text(widget.recordHighHP.round().toString(),
               style: GoogleFonts.sourceCodePro(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).hintColor)),
           // const SizedBox(height: 10),
-          Text(widget.recordLowHP.toString(),
+          Text(widget.recordLowHP.round().toString(),
               style: GoogleFonts.sourceCodePro(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
@@ -320,9 +312,11 @@ class WaveViewWidget extends StatelessWidget {
   const WaveViewWidget({
     super.key,
     required this.widget,
+    // required this.barColor
   });
 
   final MyselfPage widget;
+  // final int barColor;
 
   @override
   Widget build(BuildContext context) {
@@ -333,7 +327,7 @@ class WaveViewWidget extends StatelessWidget {
         height: 160,
         decoration: BoxDecoration(
           //ここがhpの上部分
-          color: HexColor('#E8EDFE'),
+          color: HexColor("#E8EDFE"),
           // color: HexColor("#0087aa"),
           borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(80.0),
@@ -352,21 +346,15 @@ class WaveViewWidget extends StatelessWidget {
           //black
           // fontcolor: Theme.of(context).shadowColor,
           //white
-          fontcolor: Theme.of(context).cardColor,
+          fontcolor: widget.fontColor,
           //red
           // fontcolor: Theme.of(context).shadowColor,
-          //red
-          // barcolor: Theme.of(context).primaryColor,
-          //yellow
-          // barcolor: Theme.of(context).dividerColor
-          //light green
-          // barcolor: Theme.of(context).splashColor,
-          //green
-          barcolor: Theme.of(context).hoverColor,
+          barcolor: widget.barColor,
           //真ん中
-          // fontposition: 15
+          // fontposition: 0,
           //中央下
-          fontposition: 48.5,
+          fontposition: widget.fontPosition,
+          // fontposition: 48.5,
         ),
       ),
     );
@@ -380,22 +368,37 @@ class LineChartWidget extends StatelessWidget {
   });
 
   final MyselfPage widget;
+  final List<FlSpot> spots = const [
+    //   FlSpot(0, 98),
+    //   FlSpot(1, 92),
+    //   FlSpot(2, 79),
+    //   FlSpot(2.6, 40),
+    //   FlSpot(3, 68),
+    //   FlSpot(4, 62),
+    FlSpot(4.3, 80),
+    FlSpot(5, 49),
+    FlSpot(6, 35),
+    FlSpot(7, 29),
+    FlSpot(8, 19),
+    FlSpot(9, 9),
+    FlSpot(10, 0),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return LineChart(
       LineChartData(
-        minX: 0,
-        maxX: 6,
+        // minX: 0,
+        // maxX: 6,
         backgroundColor: const Color(0xffd0e3ce),
         lineBarsData: [
           LineChartBarData(
             isCurved: true,
             color: Colors.red[400],
             barWidth: 3,
-            dotData: FlDotData(show: true),
+            dotData: FlDotData(show: false),
             spots: widget.spots,
-            dashArray: [10, 6],
+            // dashArray: [10, 6],
           )
         ],
         titlesData: FlTitlesData(
@@ -426,7 +429,26 @@ class LineChartWidget extends StatelessWidget {
       color: Colors.pink,
       fontFamily: "Digital",
     );
-    String text;
+    String text = "";
+    // int test = value.toInt();
+    // int check = 0;
+    // for (int i = 0; i<12; i++) {
+    //   if (test == check) {
+    //     text = test.toString() + ":00";
+    //     break;
+    //   } else {
+    //     if (check == 24) {
+    //       check == 0;
+    //     }
+    //     check += 4;
+    //   }
+    // }
+
+    // if (text == "") {
+    //   return Container();
+    // }
+
+    // text = value.toInt().toString();
     switch (value.toInt()) {
       case 0:
         text = "00:00";
@@ -439,6 +461,9 @@ class LineChartWidget extends StatelessWidget {
         break;
       case 12:
         text = "12:00";
+        break;
+      case 14:
+        text = "14:00";
         break;
       case 16:
         text = "16:00";
