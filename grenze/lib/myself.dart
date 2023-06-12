@@ -83,7 +83,7 @@ class _MyselfPageState extends State<MyselfPage> {
                   const SizedBox(
                     height: 30,
                   ),
-                  if (userId != null) Text(userId!),
+                  // if (userId != null) Text(userId!),
                   // TextButton(
                   //   onPressed: () {
                   //     setState(() {

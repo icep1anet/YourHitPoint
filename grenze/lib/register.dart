@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:fluttericon/octicons_icons.dart";
 // import "package:flutter_chat_types/flutter_chat_types.dart" as types;
 // import "package:image_picker/image_picker.dart";
 // import "dart:io";
@@ -31,7 +32,7 @@ class _RegisterPageState extends State<RegisterPage> {
   // XFile? pickerFile;
   String? imageUrl;
   bool? hasData;
-  List<String> choices = ["猫", "犬", "鶴", "鴨", "キジ"];
+  List<String> choices = ["猫", "犬", "フクロウ", "カブトムシ", "亀"];
   String avatarType = "猫";
   var logger = Logger();
   String? userId;
@@ -45,8 +46,8 @@ class _RegisterPageState extends State<RegisterPage> {
     // _getPrefItems();
     _fNode = FocusNode();
     _focusNode = FocusNode();
-    _userNameController = TextEditingController(text: "aaa");
-    _avatarNameController = TextEditingController(text: "bbb");
+    _userNameController = TextEditingController(text: "多喜男");
+    _avatarNameController = TextEditingController(text: "ガララワニ");
   }
 
   @override
@@ -102,8 +103,15 @@ class _RegisterPageState extends State<RegisterPage> {
             child: Scaffold(
               resizeToAvoidBottomInset: false,
               appBar: AppBar(
+                backgroundColor: const Color(0xff00a5bf),
                 systemOverlayStyle: SystemUiOverlayStyle.light,
-                title: const Text("Profile"),
+                title: const Text("Profile settings",
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white
+                  ),
+                ),
+                  
                 actions: [
                   //   if (hasData != null)
                   //     IconButton(
@@ -136,6 +144,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       //         fontWeight: FontWeight.bold, fontSize: 15)),
                       // const SizedBox(height: 15),
                       TextField(
+                        style: const TextStyle(
+                          fontSize: 20
+                        ),
                         autocorrect: false,
                         autofocus: false,
                         controller: _userNameController,
@@ -145,7 +156,10 @@ class _RegisterPageState extends State<RegisterPage> {
                               Radius.circular(8),
                             ),
                           ),
-                          labelText: "userName",
+                          labelText: "ユーザーネーム",
+                          labelStyle: const TextStyle(
+                            fontSize: 25
+                          ),
                           suffixIcon: IconButton(
                             icon: const Icon(Icons.cancel),
                             onPressed: () => _userNameController?.clear(),
@@ -159,10 +173,13 @@ class _RegisterPageState extends State<RegisterPage> {
                         textCapitalization: TextCapitalization.none,
                         textInputAction: TextInputAction.next,
                       ),
-                      const SizedBox(height: 50),
+                      const SizedBox(height: 40),
                       Container(
                         margin: const EdgeInsets.symmetric(vertical: 8),
                         child: TextField(
+                          style: const TextStyle(
+                          fontSize: 20
+                        ),
                           autocorrect: false,
                           controller: _avatarNameController,
                           decoration: InputDecoration(
@@ -171,7 +188,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                 Radius.circular(8),
                               ),
                             ),
-                            labelText: "avatarName",
+                            labelText: "アバターネーム",
+                            labelStyle: const TextStyle(
+                            fontSize: 25
+                            ),
                             suffixIcon: IconButton(
                               icon: const Icon(Icons.cancel),
                               onPressed: () => _avatarNameController?.clear(),
@@ -195,21 +215,61 @@ class _RegisterPageState extends State<RegisterPage> {
                       style：テキストスタイル
                       underline：ドロップダウンボタンの下線
                       */
-                      DropdownButton(
-                        items: choices
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        value: avatarType,
-                        onChanged: (String? value) {
-                          setState(() {
-                            avatarType = value!;
-                          });
-                        },
+                      const SizedBox(height: 30,),
+                      Container(
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.only(right: 10, top: 10),
+                        child: const Text("アバタータイプ",
+                          style:TextStyle(
+                            fontSize: 18,
+                            color: Color(0xff696969)
+                        )),
                       ),
+                      Container(
+                        // height: 50,
+                        decoration: BoxDecoration(
+
+                          border: Border.all(
+                            // right: BorderSide(), 
+                          color: const Color(0xff696969), width: 1
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                          
+                        ),
+                      
+                        child: DropdownButton(
+                          style:
+                              const TextStyle(fontSize: 25, color: Colors.black),
+                          items: choices
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                            
+                              alignment: Alignment.centerLeft,
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          value: avatarType,
+                          alignment: Alignment.center,
+                          onChanged: (String? value) {
+                            setState(() {
+                              avatarType = value!;
+                            });
+                          },
+                          icon: const Padding( //Icon at tail, arrow bottom is default icon
+                            padding: EdgeInsets.only(left:20),
+                            child:Icon(
+                                  Octicons.triangle_down,
+                                  size: 15,
+                            )
+                            ), 
+                            iconEnabledColor: const Color(0xff696969), //Icon color
+                            dropdownColor: Colors.white, //dropdown background color
+                            underline: Container(), //remove underline
+                            // isExpanded: true,
+                        ),
+                        ),
+                      
 
                       // Container(
                       //     margin: const EdgeInsets.only(top: 16),
@@ -252,6 +312,11 @@ class _RegisterPageState extends State<RegisterPage> {
 
                       const SizedBox(height: 30),
                       TextButton(
+                        // style: TextButton.styleFrom(
+                        //   side: BorderSide(
+                        //     color: Color(0xff483d8b)
+                        //   )
+                        // ),
                         onPressed: () {
                           // firstNameとlastNameは必須で入力しないと登録できないようにする
                           if (_registering == false &&
@@ -261,8 +326,14 @@ class _RegisterPageState extends State<RegisterPage> {
                           }
                         },
                         child: hasData != null
-                            ? const Text("Change Profile")
-                            : const Text("Profile Register"),
+                            ? const Text("プロフィール変更",
+                            style: TextStyle(
+                              fontSize: 23
+                            ),)
+                            : const Text("プロフィール登録",
+                            style: TextStyle(
+                              fontSize: 23
+                            ),),
                       ),
                       const SizedBox(height: 5),
                       //ローディング
@@ -372,29 +443,29 @@ class _RegisterPageState extends State<RegisterPage> {
   //   prefs.setString("userName", _userNameController!.text);
   //   prefs.setString("avatarName", _avatarNameController!.text);
   //   prefs.setString("avatarType", avatarType);
-    // catch (e) {
-    //   setState(() {
-    //     _registering = false;
-    //   });
+  // catch (e) {
+  //   setState(() {
+  //     _registering = false;
+  //   });
 
-    //   await showDialog(
-    //     context: context,
-    //     builder: (context) => AlertDialog(
-    //       actions: [
-    //         TextButton(
-    //           onPressed: () {
-    //             Navigator.of(context).pop();
-    //           },
-    //           child: const Text("OK"),
-    //         ),
-    //       ],
-    //       content: Text(
-    //         e.toString(),
-    //       ),
-    //       title: const Text("Error"),
-    //     ),
-    //   );
-    // }
+  //   await showDialog(
+  //     context: context,
+  //     builder: (context) => AlertDialog(
+  //       actions: [
+  //         TextButton(
+  //           onPressed: () {
+  //             Navigator.of(context).pop();
+  //           },
+  //           child: const Text("OK"),
+  //         ),
+  //       ],
+  //       content: Text(
+  //         e.toString(),
+  //       ),
+  //       title: const Text("Error"),
+  //     ),
+  //   );
+  // }
   // }
 
   void navigateMain() async {

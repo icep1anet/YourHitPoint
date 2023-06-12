@@ -21,9 +21,13 @@ class _FriendPageState extends State<FriendPage> {
   @override
   void initState() {
     super.initState();
-    _userIdController = TextEditingController(text: "aaa");
+    _userIdController = TextEditingController(text: "your id");
   }
-
+  @override
+  void dispose() {
+    _userIdController?.dispose();
+    super.dispose();
+  }
   void changeUserId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("userId", _userIdController!.text);
