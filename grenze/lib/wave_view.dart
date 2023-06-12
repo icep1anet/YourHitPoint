@@ -97,150 +97,151 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                     parent: animationController!,
                     curve: Curves.easeInOut,
                   ),
-                  builder: (context, child) => Stack(
+                  builder: (context, child) =>
+                      Stack(
                         children: <Widget>[
-                          ClipPath(
-                            clipper: WaveClipper(
-                                animationController!.value, animList1),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                //引数
-                                color: barcolor.withOpacity(0.5),
-                                borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(80.0),
-                                    bottomLeft: Radius.circular(80.0),
-                                    bottomRight: Radius.circular(80.0),
-                                    topRight: Radius.circular(80.0)),
-                                gradient: LinearGradient(
-                                  colors: [
-                                    //引数
-                                    barcolor.withOpacity(0.2),
-                                    barcolor.withOpacity(0.5)
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                              ),
-                            ),
-                          ),
-                          ClipPath(
-                            clipper: WaveClipper(
-                                animationController!.value, animList2),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                //引数
-                                color: barcolor,
-
-                                gradient: LinearGradient(
-                                  colors: [
-                                    //引数
-                                    barcolor.withOpacity(0.4),
-                                    barcolor
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                                borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(80.0),
-                                    bottomLeft: Radius.circular(80.0),
-                                    bottomRight: Radius.circular(80.0),
-                                    topRight: Radius.circular(80.0)),
-                              ),
-                            ),
-                          ),
+                          // ClipPath(
+                          //   clipper: WaveClipper(
+                          //       animationController!.value, animList1),
+                          //   child: Container(
+                          //     decoration: BoxDecoration(
+                          //       //引数
+                          //       color: barcolor.withOpacity(0.5),
+                          //       borderRadius: const BorderRadius.only(
+                          //           topLeft: Radius.circular(80.0),
+                          //           bottomLeft: Radius.circular(80.0),
+                          //           bottomRight: Radius.circular(80.0),
+                          //           topRight: Radius.circular(80.0)),
+                          //       gradient: LinearGradient(
+                          //         colors: [
+                          //           //引数
+                          //           barcolor.withOpacity(0.2),
+                          //           barcolor.withOpacity(0.5)
+                          //         ],
+                          //         begin: Alignment.topLeft,
+                          //         end: Alignment.bottomRight,
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
+                          // ClipPath(
+                          //   clipper: WaveClipper(
+                          //       animationController!.value, animList2),
+                          //   child: Container(
+                          //     decoration: BoxDecoration(
+                          //       //引数
+                          //       color: barcolor,
+                          //
+                          //       gradient: LinearGradient(
+                          //         colors: [
+                          //           //引数
+                          //           barcolor.withOpacity(0.4),
+                          //           barcolor
+                          //         ],
+                          //         begin: Alignment.topLeft,
+                          //         end: Alignment.bottomRight,
+                          //       ),
+                          //       borderRadius: const BorderRadius.only(
+                          //           topLeft: Radius.circular(80.0),
+                          //           bottomLeft: Radius.circular(80.0),
+                          //           bottomRight: Radius.circular(80.0),
+                          //           topRight: Radius.circular(80.0)),
+                          //     ),
+                          //   ),
+                          // ),
                           
-                          // Positioned(
-                          //   top: 0,
-                          //   left: 6,
-                          //   bottom: 8,
-                          //   child: ScaleTransition(
-                          //     alignment: Alignment.center,
-                          //     scale: Tween(begin: 0.0, end: 1.0).animate(
-                          //         CurvedAnimation(
-                          //             parent: animationController!,
-                          //             curve: const Interval(0.0, 1.0,
-                          //                 curve: Curves.fastOutSlowIn))),
-                          //     child: Container(
-                          //       width: 2,
-                          //       height: 2,
-                          //       decoration: BoxDecoration(
-                          //         color: Theme.of(context)
-                          //             .cardColor
-                          //             .withOpacity(0.4),
-                          //         shape: BoxShape.circle,
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
-                          // Positioned(
-                          //   left: 24,
-                          //   right: 0,
-                          //   bottom: 16,
-                          //   child: ScaleTransition(
-                          //     alignment: Alignment.center,
-                          //     scale: Tween(begin: 0.0, end: 1.0).animate(
-                          //         CurvedAnimation(
-                          //             parent: animationController!,
-                          //             curve: const Interval(0.4, 1.0,
-                          //                 curve: Curves.fastOutSlowIn))),
-                          //     child: Container(
-                          //       width: 4,
-                          //       height: 4,
-                          //       decoration: BoxDecoration(
-                          //         color: Theme.of(context)
-                          //             .cardColor
-                          //             .withOpacity(0.4),
-                          //         shape: BoxShape.circle,
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
-                          // Positioned(
-                          //   left: 0,
-                          //   right: 24,
-                          //   bottom: 32,
-                          //   child: ScaleTransition(
-                          //     alignment: Alignment.center,
-                          //     scale: Tween(begin: 0.0, end: 1.0).animate(
-                          //         CurvedAnimation(
-                          //             parent: animationController!,
-                          //             curve: const Interval(0.6, 0.8,
-                          //                 curve: Curves.fastOutSlowIn))),
-                          //     child: Container(
-                          //       width: 3,
-                          //       height: 3,
-                          //       decoration: BoxDecoration(
-                          //         color: Theme.of(context)
-                          //             .cardColor
-                          //             .withOpacity(0.4),
-                          //         shape: BoxShape.circle,
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
-                          // Positioned(
-                          //   top: 0,
-                          //   right: 20,
-                          //   bottom: 0,
-                          //   child: Transform(
-                          //     transform: Matrix4.translationValues(0.0,
-                          //         16 * (1.0 - animationController!.value), 0.0),
-                          //     child: Container(
-                          //       width: 4,
-                          //       height: 4,
-                          //       decoration: BoxDecoration(
-                          //         color: Theme.of(context)
-                          //             .cardColor
-                          //             .withOpacity(
-                          //                 animationController!.status ==
-                          //                         AnimationStatus.reverse
-                          //                     ? 0.0
-                          //                     : 0.4),
-                          //         shape: BoxShape.circle,
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
+                          Positioned(
+                            top: 0,
+                            left: 6,
+                            bottom: 8,
+                            child: ScaleTransition(
+                              alignment: Alignment.center,
+                              scale: Tween(begin: 0.0, end: 1.0).animate(
+                                  CurvedAnimation(
+                                      parent: animationController!,
+                                      curve: const Interval(0.0, 1.0,
+                                          curve: Curves.fastOutSlowIn))),
+                              child: Container(
+                                width: 2,
+                                height: 2,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .cardColor
+                                      .withOpacity(0.4),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            left: 24,
+                            right: 0,
+                            bottom: 16,
+                            child: ScaleTransition(
+                              alignment: Alignment.center,
+                              scale: Tween(begin: 0.0, end: 1.0).animate(
+                                  CurvedAnimation(
+                                      parent: animationController!,
+                                      curve: const Interval(0.4, 1.0,
+                                          curve: Curves.fastOutSlowIn))),
+                              child: Container(
+                                width: 4,
+                                height: 4,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .cardColor
+                                      .withOpacity(0.4),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            left: 0,
+                            right: 24,
+                            bottom: 32,
+                            child: ScaleTransition(
+                              alignment: Alignment.center,
+                              scale: Tween(begin: 0.0, end: 1.0).animate(
+                                  CurvedAnimation(
+                                      parent: animationController!,
+                                      curve: const Interval(0.6, 0.8,
+                                          curve: Curves.fastOutSlowIn))),
+                              child: Container(
+                                width: 3,
+                                height: 3,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .cardColor
+                                      .withOpacity(0.4),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            top: 0,
+                            right: 20,
+                            bottom: 0,
+                            child: Transform(
+                              transform: Matrix4.translationValues(0.0,
+                                  16 * (1.0 - animationController!.value), 0.0),
+                              child: Container(
+                                width: 4,
+                                height: 4,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .cardColor
+                                      .withOpacity(
+                                          animationController!.status ==
+                                                  AnimationStatus.reverse
+                                              ? 0.0
+                                              : 0.4),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       )),
               Padding(

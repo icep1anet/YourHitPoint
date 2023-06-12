@@ -47,7 +47,9 @@ class UserDataProvider with ChangeNotifier {
     logger.d("reset!!!!!!!");
     hpNumber = 0;
     // このモデルをlistenしているWidgetに対してrebuild指示
-    notifyListeners();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
   }
 
   // debug
@@ -65,7 +67,9 @@ class UserDataProvider with ChangeNotifier {
   void setPageIndex(int index) {
     pageIndex = index;
     // rebuild指示は必要ない
-    notifyListeners();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
   }
 
   void setItemToSharedPref(List<String> itemNames, List<dynamic> items) async {
@@ -74,7 +78,9 @@ class UserDataProvider with ChangeNotifier {
       prefs.setString(itemNames[i], items[i]);
       if (itemNames[i] == "userId") {
         userId = items[i];
-        notifyListeners();
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          notifyListeners();
+        });
       }
     }
   }
@@ -87,11 +93,14 @@ class UserDataProvider with ChangeNotifier {
     // String? avatarName = prefs.getString("avatarName");
     // String? avatarType = prefs.getString("avatarType");
     if (userName != null) logger.d("userName:$userName");
-    notifyListeners();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
   }
 
   //現在のHPを変える
   void changeHP() {
+    logger.d(hpNumber);
     if (hpNumber < 100) {
       // setState(() {
       // currentHP = hpNumber;
@@ -118,9 +127,11 @@ class UserDataProvider with ChangeNotifier {
         fontColor = Colors.black;
         fontPosition = 0;
       }
-      hpNumber += 1;
+      hpNumber += 10;
     } else {}
-    notifyListeners();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
   }
 
   void setUserId(newId) async {
@@ -128,7 +139,9 @@ class UserDataProvider with ChangeNotifier {
     prefs.setString("userId", newId);
     userId = prefs.getString("userId");
     logger.d(userId);
-    notifyListeners();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
   }
 
   Future<void> fetchFirebaseData() async {

@@ -38,11 +38,11 @@ class _MyselfPageState extends State<MyselfPage> {
     super.initState();
     context
         .read<UserDataProvider>()
-        .setTimerFunc(10, context.read<UserDataProvider>().setZeroHP);
+        .setTimerFunc(50, context.read<UserDataProvider>().setZeroHP);
 
     context
         .read<UserDataProvider>()
-        .setTimerFunc(30, context.read<UserDataProvider>().changeHP);
+        .setTimerFunc(10, context.read<UserDataProvider>().changeHP);
 
     context.read<UserDataProvider>().getPrefItems();
     context.read<UserDataProvider>().fetchFirebaseData();
@@ -53,8 +53,6 @@ class _MyselfPageState extends State<MyselfPage> {
   Widget build(BuildContext context) {
     final imgUrl = context
         .select((UserDataProvider userDataProvider) => userDataProvider.imgUrl);
-    final currentHP = context.select(
-        (UserDataProvider userDataProvider) => userDataProvider.hpNumber);
     return Scaffold(
         body: NestedScrollView(
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -101,7 +99,7 @@ class _MyselfPageState extends State<MyselfPage> {
                     const SizedBox(width: 20),
                     _currentmyAvatar(imgUrl),
                     // _currentmyAvatar("assets/images/illust_normal.jpg"),
-                    WaveViewWidget(widget: widget, currentHP: currentHP),
+                    WaveViewWidget(widget: widget),
                   ]),
                   const SizedBox(height: 30),
                   Container(
@@ -286,13 +284,15 @@ class RecordWidget extends StatelessWidget {
 }
 
 class WaveViewWidget extends StatelessWidget {
-  const WaveViewWidget({super.key, required this.widget, required currentHP});
+  const WaveViewWidget({super.key, required this.widget});
 
   final MyselfPage widget;
   // final int barColor;
 
   @override
   Widget build(BuildContext context) {
+    final hpNumber = context.select(
+      (UserDataProvider userDataProvider) => userDataProvider.hpNumber);
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 8, top: 16),
       child: Container(
@@ -314,7 +314,8 @@ class WaveViewWidget extends StatelessWidget {
                 blurRadius: 4),
           ],
         ),
-        child: const WaveView(
+        child: WaveView(
+            percentageValue: hpNumber.toDouble()
             //black
             // fontcolor: Theme.of(context).shadowColor,
             //white
@@ -521,7 +522,7 @@ class HPWidget extends StatelessWidget {
             style: GoogleFonts.roboto(fontWeight: FontWeight.w500, fontSize: 20)
             // Theme.of(context).textTheme.headlineSmall
             ),
-        Text(userDataProvider.currentHP.toString(),
+        Text(userDataProvider.hpNumber.toString(),
             style: GoogleFonts.sourceCodePro(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,

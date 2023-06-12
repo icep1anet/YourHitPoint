@@ -75,6 +75,16 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   final _pageViewController = PageController();
 
+  //ページ起動時に呼ばれる初期化関数
+  @override
+  void initState() {
+    super.initState();
+
+    context.read<UserDataProvider>().getPrefItems();
+    // context.read<UserDataProvider>().fetchFirebaseData();
+    context.read<UserDataProvider>().setHPspotsList(testDataList);
+  }
+
   //registerページに画面遷移
   void moveToRegister() async {
     await Navigator.of(context).push(
