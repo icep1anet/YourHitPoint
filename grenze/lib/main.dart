@@ -102,7 +102,7 @@ class _MainPageState extends State<MainPage> {
     // _timeLog();
     // fetchFirebaseData();
     changeHP();
-    Timer.periodic(const Duration(seconds: 30), (timer) {
+    Timer.periodic(const Duration(seconds: 100), (timer) {
       zeroHP();
     });
     Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -221,7 +221,7 @@ class _MainPageState extends State<MainPage> {
         currentHP = hpNumber;
         // currentHP = HPlist[HPnumber]["y"];
       });
-      if (hpNumber < 14) {
+      if (hpNumber < 100) {
         hpNumber += 1;
       } else {}
     }

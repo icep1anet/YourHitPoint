@@ -38,18 +38,8 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
     animationController!.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         animationController?.reverse();
-
-        //test
-        animationController!.stop();
-        waveAnimationController!.stop();
-        _startDelay2();
       } else if (status == AnimationStatus.dismissed) {
         animationController?.forward();
-
-        //test
-        animationController!.stop();
-        waveAnimationController!.stop();
-        _startDelay();
       }
     });
     waveAnimationController!.addListener(() {
@@ -86,23 +76,14 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
   }
 
   @override
-  // void dispose() {
-  //   animationController?.dispose();
-  //   waveAnimationController?.dispose();
-  //   super.dispose();
-  // }
-
-  void _startDelay() async {
-    await Future.delayed(const Duration(seconds: 5));
-    animationController?.forward();
-    waveAnimationController!.repeat();
-  }
-
-  void _startDelay2() async {
-    await Future.delayed(const Duration(seconds: 5));
-    animationController?.reverse();
-    // animationController?.reverse();
-    waveAnimationController!.repeat();
+  void dispose() {
+    if (animationController != null) {
+      animationController?.dispose();
+    }
+    if (waveAnimationController != null) {
+      waveAnimationController?.dispose();
+    }
+    super.dispose();
   }
 
   @override
@@ -200,94 +181,87 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                 ),
               ),
             ),
-            Positioned(
-              top: 0,
-              left: 6,
-              bottom: 8,
-              child: ScaleTransition(
-                alignment: Alignment.center,
-                scale: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-                    parent: animationController!,
-                    curve:
-                        const Interval(0.0, 1.0, curve: Curves.fastOutSlowIn))),
-                child: Container(
-                  width: 2,
-                  height: 2,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor.withOpacity(0.4),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              left: 24,
-              right: 0,
-              bottom: 16,
-              child: ScaleTransition(
-                alignment: Alignment.center,
-                scale: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-                    parent: animationController!,
-                    curve:
-                        const Interval(0.4, 1.0, curve: Curves.fastOutSlowIn))),
-                child: Container(
-                  width: 4,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor.withOpacity(0.4),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              left: 0,
-              right: 24,
-              bottom: 32,
-              child: ScaleTransition(
-                alignment: Alignment.center,
-                scale: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-                    parent: animationController!,
-                    curve:
-                        const Interval(0.6, 0.8, curve: Curves.fastOutSlowIn))),
-                child: Container(
-                  width: 3,
-                  height: 3,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor.withOpacity(0.4),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              top: 0,
-              right: 20,
-              bottom: 0,
-              child: Transform(
-                transform: Matrix4.translationValues(
-                    0.0, 16 * (1.0 - animationController!.value), 0.0),
-                child: Container(
-                  width: 4,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor.withOpacity(
-                        animationController!.status == AnimationStatus.reverse
-                            ? 0.0
-                            : 0.4),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-            ),
-            Column(
-              children: <Widget>[
-                AspectRatio(
-                  aspectRatio: 1,
-                  child: Image.asset("assets/images/bottle.png"),
-                ),
-              ],
-            )
+            // Positioned(
+            //   top: 110,
+            //   left: 16,
+            //   bottom: 8,
+            //   child: ScaleTransition(
+            //     alignment: Alignment.center,
+            //     scale: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+            //         parent: animationController!,
+            //         curve:
+            //             const Interval(0.0, 1.0, curve: Curves.fastOutSlowIn))),
+            //     child: Container(
+            //       width: 2,
+            //       height: 2,
+            //       decoration: BoxDecoration(
+            //         color: Theme.of(context).cardColor.withOpacity(0.4),
+            //         shape: BoxShape.circle,
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            // Positioned(
+            //   left: 24,
+            //   right: 0,
+            //   bottom: 16,
+            //   child: ScaleTransition(
+            //     alignment: Alignment.center,
+            //     scale: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+            //         parent: animationController!,
+            //         curve:
+            //             const Interval(0.4, 1.0, curve: Curves.fastOutSlowIn))),
+            //     child: Container(
+            //       width: 4,
+            //       height: 4,
+            //       decoration: BoxDecoration(
+            //         color: Theme.of(context).cardColor.withOpacity(0.4),
+            //         shape: BoxShape.circle,
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            // Positioned(
+            //   left: 0,
+            //   right: 24,
+            //   bottom: 32,
+            //   child: ScaleTransition(
+            //     alignment: Alignment.center,
+            //     scale: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+            //         parent: animationController!,
+            //         curve:
+            //             const Interval(0.6, 0.8, curve: Curves.fastOutSlowIn))),
+            //     child: Container(
+            //       width: 3,
+            //       height: 3,
+            //       decoration: BoxDecoration(
+            //         color: Theme.of(context).cardColor.withOpacity(0.4),
+            //         shape: BoxShape.circle,
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            // Positioned(
+            //   top: 0,
+            //   right: 20,
+            //   bottom: 0,
+            //   child: Transform(
+            //     transform: Matrix4.translationValues(
+            //         0.0, 16 * (1.0 - animationController!.value), 0.0),
+            //     child: Container(
+            //       width: 4,
+            //       height: 4,
+            //       decoration: BoxDecoration(
+            //         color: Theme.of(context).cardColor.withOpacity(
+            //             animationController!.status == AnimationStatus.reverse
+            //                 ? 0.0
+            //                 : 0.4),
+            //         shape: BoxShape.circle,
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            const Image(image: AssetImage("assets/images/bottle.png")),
           ],
         ),
       ),
