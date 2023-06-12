@@ -146,7 +146,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       //         fontWeight: FontWeight.bold, fontSize: 15)),
                       // const SizedBox(height: 15),
                       TextField(
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 20
                         ),
                         autocorrect: false,
@@ -179,7 +179,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       Container(
                         margin: const EdgeInsets.symmetric(vertical: 8),
                         child: TextField(
-                          style: TextStyle(
+                          style: const TextStyle(
                           fontSize: 20
                         ),
                           autocorrect: false,
