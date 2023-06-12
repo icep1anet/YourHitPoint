@@ -10,8 +10,6 @@ import "package:http/http.dart" as http;
 import "friend.dart";
 import "package:logger/logger.dart";
 import "package:salomon_bottom_bar/salomon_bottom_bar.dart";
-// import "design.dart";
-// import "asset_manifest.dart";
 import "package:google_fonts/google_fonts.dart";
 import 'package:flutter_localizations/flutter_localizations.dart';
 

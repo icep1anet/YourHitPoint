@@ -1,7 +1,4 @@
 import "package:flutter/material.dart";
-// import "package:fl_chart/fl_chart.dart";
-// import "register.dart";
-// import "package:device_info_plus/device_info_plus.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "main.dart";
 import "package:logger/logger.dart";
