@@ -386,17 +386,17 @@ class LineChartWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return LineChart(
       LineChartData(
-        minX: 0,
-        maxX: 6,
+        // minX: 0,
+        // maxX: 6,
         backgroundColor: const Color(0xffd0e3ce),
         lineBarsData: [
           LineChartBarData(
             isCurved: true,
             color: Colors.red[400],
             barWidth: 3,
-            dotData: FlDotData(show: true),
-            spots: spots,
-            dashArray: [10, 6],
+            dotData: FlDotData(show: false),
+            spots: widget.spots,
+            // dashArray: [10, 6],
           )
         ],
         titlesData: FlTitlesData(
@@ -459,6 +459,9 @@ class LineChartWidget extends StatelessWidget {
         break;
       case 12:
         text = "12:00";
+        break;
+      case 14:
+        text = "14:00";
         break;
       case 16:
         text = "16:00";

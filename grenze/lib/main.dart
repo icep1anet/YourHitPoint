@@ -13,9 +13,6 @@ import "package:salomon_bottom_bar/salomon_bottom_bar.dart";
 // import "design.dart";
 // import "asset_manifest.dart";
 import "package:google_fonts/google_fonts.dart";
-import "package:csv/csv.dart";
-import "package:path_provider/path_provider.dart";
-import "dart:io";
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 String? userId;
@@ -109,47 +106,27 @@ class _MainPageState extends State<MainPage> {
   Color barColor = const Color(0xFF32cd32);
   Color fontColor = Colors.white;
   double fontPosition = 60;
+  DateTime? latestDataTime;
 
-  // データをCSVファイルに保存する関数
-  Future<void> saveDataToCsv(List<Map<String, dynamic>> data) async {
-    // CSVフォーマットの文字列に変換
-    List<List<dynamic>> csvData = data
-        .map((map) => [map["x"], map["y"]]) // 必要なフィールドを選択
-        .toList();
 
-    String csvString = const ListToCsvConverter().convert(csvData);
-
-    // データを保存するディレクトリを取得
-    Directory directory = await getApplicationDocumentsDirectory();
-    String filePath = "${directory.path}/data.csv";
-
-    // ファイルにデータを書き込む
-    File file = File(filePath);
-    await file.writeAsString(csvString);
-    logger.d("CSVファイルが保存されました。");
-  }
 
   //ページ起動時に呼ばれる初期化関数
   @override
   void initState() {
     super.initState();
     logger.d(spots);
-    // saveDataToCsv(dataList);
     // initTest();
     _getPrefItems();
     // _timeLog();
-    // fetchFirebaseData();
+    fetchFirebaseData();
     changeHP();
     Timer.periodic(const Duration(seconds: 30), (timer) {
       zeroHP();
     });
-    Timer.periodic(const Duration(milliseconds: 10000), (timer) {
-      changeHP();
-      // _timeLog();
-      // fetchFirebaseData();
-    });
-    // spots = createFlSpotList(dataList);
-    // logger.d("timer");
+    // Timer.periodic(const Duration(milliseconds: 10000), (timer) {
+    //   changeHP();
+
+    // });
   }
 
   // データリストからFlSpotのリストを作成する関数
@@ -234,8 +211,22 @@ class _MainPageState extends State<MainPage> {
   // //responseを送ってfirebaseにデータ登録する
   Future<void> fetchFirebaseData() async {
     logger.d("startttttt");
+    DateTime now = DateTime.now();
+    logger.d("1");
+    DateTime hoursAgo = now.add(const Duration(hours: 4) * -1);
+    logger.d("2");
+    if (latestDataTime != null) {
+      if (latestDataTime!.compareTo(hoursAgo) == 1) {
+        hoursAgo = latestDataTime!;
+        logger.d("latestDataTime:$latestDataTime");
+      }
+    }
     var url = Uri.https("o2nr395oib.execute-api.ap-northeast-1.amazonaws.com",
-        "/default/get_HP_data", {"userId": "id_abcd"});
+        "/default/get_HP_data", {
+      "userId": "id_abcd",
+      "startTimestamp": hoursAgo.toString(),
+      "endTimestamp": now.toString()
+    });
     var response = await http.get(url);
     logger.d(response.body);
     if (response.statusCode == 200) {
@@ -250,15 +241,20 @@ class _MainPageState extends State<MainPage> {
       List<Map<dynamic, dynamic>> tes2 = [];
       for (Map a in tes1) {
         tes2.add(a);
-      }
-      logger.d("daiichidannkai");
+      }      logger.d("daiichidannkai");
       List<FlSpot> tes = createFlSpotList(tes2);
-      logger.d("dekimasitayo");
-      setState(() {
-        spots = tes;
-        logger.d("spots:");
-        logger.d(spots);
-      });
+      logger.d(tes);
+      logger.d("tes.length: ${tes.length}");
+      logger.d("spots.length: ${spots.length}");
+      if (spots.isNotEmpty) {
+        logger.d("spots is Empty");
+        spots.removeRange(0, tes.length-1);
+      }
+      spots.addAll(tes);
+      logger.d("spotsAfter: $spots");
+      logger.d("spotsLengthAfter: ${spots.length}");
+      //latestDataTimeの更新
+      latestDataTime = now;
     } else {
       // リクエストが失敗した場合、エラーメッセージを表示します
       logger.d("Request failed with status: ${response.statusCode}");
