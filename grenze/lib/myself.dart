@@ -14,8 +14,8 @@ class MyselfPage extends StatefulWidget {
   // MyselfPage({Key? key}) : super(key: key);
   final List<FlSpot> spots;
   final int currentHP;
-  final int recordHighHP;
-  final int recordLowHP;
+  final double recordHighHP;
+  final double recordLowHP;
   final Color barColor;
   final Color fontColor;
   final double fontPosition;
@@ -291,13 +291,13 @@ class RecordWidget extends StatelessWidget {
         ),
         const SizedBox(width: 30),
         Column(children: [
-          Text(widget.recordHighHP.toString(),
+          Text(widget.recordHighHP.round().toString(),
               style: GoogleFonts.sourceCodePro(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).hintColor)),
           // const SizedBox(height: 10),
-          Text(widget.recordLowHP.toString(),
+          Text(widget.recordLowHP.round().toString(),
               style: GoogleFonts.sourceCodePro(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,

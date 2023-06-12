@@ -92,8 +92,8 @@ class _MainPageState extends State<MainPage> {
   String? avatarType;
   int currentHP = 100;
   String? userName;
-  int recordHighHP = 0;
-  int recordLowHP = 0;
+  double recordHighHP = 0;
+  double recordLowHP = 0;
   int hpNumber = 0;
   List hpList = [];
   var logger = Logger();
@@ -255,6 +255,8 @@ class _MainPageState extends State<MainPage> {
         // spots.addAll(tes);
         imgUrl = responseMap["url"];
         spots = spots + tes;
+        recordHighHP = responseMap["recordHighHP"];
+        recordLowHP = responseMap["recordLowHP"];
       });
       logger.d("spotsAfter: $spots");
       logger.d("spotsLengthAfter: ${spots.length}");
