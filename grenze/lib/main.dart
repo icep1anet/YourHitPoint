@@ -8,13 +8,15 @@ import "dart:async";
 import "package:fl_chart/fl_chart.dart";
 import "package:http/http.dart" as http;
 import "friend.dart";
-import 'package:logger/logger.dart';
-import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+import "package:logger/logger.dart";
+import "package:salomon_bottom_bar/salomon_bottom_bar.dart";
 // import "design.dart";
 // import "asset_manifest.dart";
-import 'package:google_fonts/google_fonts.dart';
+import "package:google_fonts/google_fonts.dart";
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 String? userId;
+const locale = Locale("ja", "JP");
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,11 +42,20 @@ class MyApp extends StatelessWidget {
         splashColor: const Color(0xff00ff7f),
         dividerColor: const Color(0xffffd700),
       ),
-      home: const RegisterPage(),
+      home: const MainPage(),
       //画面遷移するときのルート追加
       routes: {
         "/home": (context) => const MainPage(),
       },
+      locale: locale,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        locale,
+      ],
     );
   }
 }
@@ -79,28 +90,33 @@ class _MainPageState extends State<MainPage> {
   ];
   String? avatarName;
   String? avatarType;
-  int currentHP = 0;
+  int currentHP = 100;
   String? userName;
-  int recordHighHP = 0;
-  int recordLowHP = 0;
+  double recordHighHP = 0;
+  double recordLowHP = 0;
   int hpNumber = 0;
   List hpList = [];
   var logger = Logger();
-  List<Map<String, dynamic>> dataList = [
-    {'x': 1.0, 'y': 2.0},
-    {'x': 3.0, 'y': 4.0},
-    {'x': 5.0, 'y': 6.0},
+  List<Map> dataList = [
+    {"x": 1.0, "y": 2.0},
+    {"x": 3.0, "y": 4.0},
+    {"x": 5.0, "y": 6.0},
   ];
   String? imgUrl;
+  Color barColor = const Color(0xFF32cd32);
+  Color fontColor = Colors.white;
+  double fontPosition = 60;
+  DateTime? latestDataTime;
 
   //ページ起動時に呼ばれる初期化関数
   @override
   void initState() {
     super.initState();
+    logger.d(spots);
     // initTest();
     _getPrefItems();
     // _timeLog();
-    // fetchFirebaseData();
+    fetchFirebaseData();
     changeHP();
     Timer.periodic(const Duration(seconds: 1000), (timer) {
       zeroHP();
@@ -115,10 +131,10 @@ class _MainPageState extends State<MainPage> {
   }
 
   // データリストからFlSpotのリストを作成する関数
-  List<FlSpot> createFlSpotList(List<Map<String, dynamic>> dataList) {
+  List<FlSpot> createFlSpotList(List<Map> dataList) {
     return dataList.map((map) {
-      double x = map['x'];
-      double y = map['y'];
+      double x = map["x"];
+      double y = map["y"];
       return FlSpot(x, y);
     }).toList();
   }
@@ -128,7 +144,7 @@ class _MainPageState extends State<MainPage> {
     if (mounted) {
       setState(() {
         logger.d("reset!!!!!!!");
-        hpNumber = 0;
+        hpNumber = 120;
       });
     }
   }
@@ -196,18 +212,59 @@ class _MainPageState extends State<MainPage> {
   // //responseを送ってfirebaseにデータ登録する
   Future<void> fetchFirebaseData() async {
     logger.d("startttttt");
-    var url = Uri.https(
-        "o2nr395oib.execute-api.ap-northeast-1.amazonaws.com",
-        "/default/get_HP_data",
-        {"userName": "a", "avatarName": "b", "avatarType": "c"});
+    DateTime now = DateTime.now();
+    DateTime hoursAgo = now.add(const Duration(hours: 4) * -1);
+    if (latestDataTime != null) {
+      if (latestDataTime!.compareTo(hoursAgo) == 1) {
+        hoursAgo = latestDataTime!;
+        logger.d("latestDataTime:$latestDataTime");
+      }
+    }
+    var url = Uri.https("o2nr395oib.execute-api.ap-northeast-1.amazonaws.com",
+        "/default/get_HP_data", {
+      "userId": "id_abcd",
+      "startTimestamp": hoursAgo.toString(),
+      "endTimestamp": now.toString()
+    });
     var response = await http.get(url);
     logger.d(response.body);
     if (response.statusCode == 200) {
       // リクエストが成功した場合、レスポンスの内容を取得して表示します
+      logger.d("成功しました！");
       logger.d(response.body);
 
-      var responseJson = jsonDecode(response.body);
-      logger.d(responseJson);
+      var responseMap = jsonDecode(response.body);
+      logger.d("past:");
+      logger.d(responseMap["past_spots"]);
+      List tes1 = responseMap["past_spots"];
+      List<Map<dynamic, dynamic>> tes2 = [];
+      for (Map a in tes1) {
+        tes2.add(a);
+      }
+      logger.d("daiichidannkai");
+      List<FlSpot> tes = createFlSpotList(tes2);
+      logger.d(tes);
+      logger.d("tes.length: ${tes.length}");
+      logger.d("spots.length: ${spots.length}");
+      if (spots.isNotEmpty) {
+        logger.d("spots is not Empty");
+        spots.removeRange(0, tes.length - 1);
+      }
+      // for (int i = 0; i < tes.length; i++) {
+      //   spots.add(tes[i]);
+      // }
+      setState(() {
+        // spots = tes;
+        // spots.addAll(tes);
+        imgUrl = responseMap["url"];
+        spots = spots + tes;
+        recordHighHP = responseMap["recordHighHP"];
+        recordLowHP = responseMap["recordLowHP"];
+      });
+      logger.d("spotsAfter: $spots");
+      logger.d("spotsLengthAfter: ${spots.length}");
+      //latestDataTimeの更新
+      latestDataTime = now;
     } else {
       // リクエストが失敗した場合、エラーメッセージを表示します
       logger.d("Request failed with status: ${response.statusCode}");
@@ -217,11 +274,32 @@ class _MainPageState extends State<MainPage> {
   //現在のHPを変える
   void changeHP() {
     if (mounted) {
-      setState(() {
-        currentHP = hpNumber;
-        // currentHP = HPlist[HPnumber]["y"];
-      });
-      if (hpNumber < 100) {
+      if (hpNumber < 14) {
+        setState(() {
+          // currentHP = hpNumber;
+          // currentHP = hpList[hpNumber]["y"];
+        });
+        if (80 < currentHP) {
+          barColor = const Color(0xFF32cd32);
+          fontColor = Colors.white;
+          fontPosition = 60;
+        } else if (40 < currentHP && currentHP <= 80) {
+          barColor = const Color(0xff00ff7f);
+          fontColor = Colors.white;
+          fontPosition = 60;
+        } else if (30 < currentHP && currentHP <= 40) {
+          barColor = const Color(0xff00ff7f);
+          fontColor = Colors.black;
+          fontPosition = 0;
+        } else if (0 < currentHP && currentHP <= 30) {
+          barColor = const Color(0xffffd700);
+          fontColor = Colors.black;
+          fontPosition = 0;
+        } else {
+          barColor = const Color(0xffdc143c);
+          fontColor = Colors.black;
+          fontPosition = 0;
+        }
         hpNumber += 1;
       } else {}
     }
@@ -271,6 +349,10 @@ class _MainPageState extends State<MainPage> {
               currentHP: currentHP,
               recordHighHP: recordHighHP,
               recordLowHP: recordLowHP,
+              barColor: barColor,
+              fontColor: fontColor,
+              fontPosition: fontPosition,
+              imgUrl: imgUrl,
             ),
             const FriendPage(),
           ],
@@ -280,46 +362,46 @@ class _MainPageState extends State<MainPage> {
             });
           },
         ),
-        // bottomNavigationBar: SalomonBottomBar(
-        //     backgroundColor: const Color.fromARGB(255, 178, 211, 244),
-        //     currentIndex: _selectedIndex,
-        //     selectedItemColor: const Color(0xff6200ee),
-        //     unselectedItemColor: const Color(0xff757575),
-        //     onTap: _onItemTapped,
-        //     //(index) {
-        //     //   setState(() {
-        //     //     _selectedIndex = index;
-        //     //   });
-        //     // },
-        //     items: _navBarItems),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              // activeIcon: Icon(Icons.book_online),
-              label: "Myself",
-              tooltip: "My Page",
-              backgroundColor: Color.fromARGB(255, 103, 219, 234),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.people),
-              // activeIcon: Icon(Icons.school_outlined),
-              label: "Friends",
-              tooltip: "Friends Page",
-              backgroundColor: Color.fromARGB(255, 231, 154, 195),
-            ),
-          ],
-          type: BottomNavigationBarType.shifting,
-          backgroundColor: Colors.red,
-          enableFeedback: true,
-          selectedFontSize: 20,
-          selectedIconTheme: const IconThemeData(size: 30, color: Colors.green),
-          selectedItemColor: Colors.black,
-          unselectedIconTheme:
-              const IconThemeData(size: 25, color: Colors.white),
-        ),
+        bottomNavigationBar: SalomonBottomBar(
+            backgroundColor: const Color.fromARGB(255, 178, 211, 244),
+            currentIndex: _selectedIndex,
+            selectedItemColor: const Color(0xff6200ee),
+            unselectedItemColor: const Color(0xff757575),
+            onTap: _onItemTapped,
+            //(index) {
+            //   setState(() {
+            //     _selectedIndex = index;
+            //   });
+            // },
+            items: _navBarItems),
+        // bottomNavigationBar: BottomNavigationBar(
+        //   currentIndex: _selectedIndex,
+        //   onTap: _onItemTapped,
+        //   items: const <BottomNavigationBarItem>[
+        //     BottomNavigationBarItem(
+        //       icon: Icon(Icons.person),
+        //       // activeIcon: Icon(Icons.book_online),
+        //       label: "Myself",
+        //       tooltip: "My Page",
+        //       backgroundColor: Color.fromARGB(255, 103, 219, 234),
+        //     ),
+        //     BottomNavigationBarItem(
+        //       icon: Icon(Icons.people),
+        //       // activeIcon: Icon(Icons.school_outlined),
+        //       label: "Friends",
+        //       tooltip: "Friends Page",
+        //       backgroundColor: Color.fromARGB(255, 231, 154, 195),
+        //     ),
+        //   ],
+        //   type: BottomNavigationBarType.shifting,
+        //   backgroundColor: Colors.red,
+        //   enableFeedback: true,
+        //   selectedFontSize: 20,
+        //   selectedIconTheme: const IconThemeData(size: 30, color: Colors.green),
+        //   selectedItemColor: Colors.black,
+        //   unselectedIconTheme:
+        //       const IconThemeData(size: 25, color: Colors.white),
+        // ),
       );
     }
   }
@@ -346,9 +428,9 @@ class HexColor extends Color {
   HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
 
   static int _getColorFromHex(String hexColor) {
-    hexColor = hexColor.toUpperCase().replaceAll('#', '');
+    hexColor = hexColor.toUpperCase().replaceAll("#", "");
     if (hexColor.length == 6) {
-      hexColor = 'FF$hexColor';
+      hexColor = "FF$hexColor";
     }
     return int.parse(hexColor, radix: 16);
   }
@@ -362,7 +444,7 @@ class HexColor extends Color {
         //   BottomNavigationBarItem(
         //     icon: Icon(Icons.person),
         //     // activeIcon: Icon(Icons.book_online),
-        //     label: 'Myself',
+        //     label: "Myself",
 
         //     tooltip: "My Page",
         //     backgroundColor: Color.fromARGB(255, 179, 206, 233),
@@ -370,7 +452,7 @@ class HexColor extends Color {
         //   BottomNavigationBarItem(
         //     icon: Icon(Icons.people),
         //     // activeIcon: Icon(Icons.school_outlined),
-        //     label: 'Friends',
+        //     label: "Friends",
         //     tooltip: "Friends Page",
         //     backgroundColor: Color.fromARGB(255, 231, 154, 195),
         //   ),

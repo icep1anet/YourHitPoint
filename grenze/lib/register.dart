@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import 'package:fluttericon/iconic_icons.dart';
 import "package:fluttericon/octicons_icons.dart";
 // import "package:flutter_chat_types/flutter_chat_types.dart" as types;
 // import "package:image_picker/image_picker.dart";
@@ -9,7 +8,7 @@ import "package:fluttericon/octicons_icons.dart";
 // import "package:qr_flutter/qr_flutter.dart";
 // import "main.dart";
 import "package:shared_preferences/shared_preferences.dart";
-import 'package:logger/logger.dart';
+import "package:logger/logger.dart";
 import "dart:convert";
 import "package:http/http.dart" as http;
 
@@ -37,7 +36,6 @@ class _RegisterPageState extends State<RegisterPage> {
   String avatarType = "猫";
   var logger = Logger();
   String? userId;
-  final _text = "avatarType";
 
   //ページ起動時に呼ばれる初期化関数
   @override
@@ -146,7 +144,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       //         fontWeight: FontWeight.bold, fontSize: 15)),
                       // const SizedBox(height: 15),
                       TextField(
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 20
                         ),
                         autocorrect: false,
@@ -179,7 +177,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       Container(
                         margin: const EdgeInsets.symmetric(vertical: 8),
                         child: TextField(
-                          style: TextStyle(
+                          style: const TextStyle(
                           fontSize: 20
                         ),
                           autocorrect: false,

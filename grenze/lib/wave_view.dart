@@ -1,8 +1,8 @@
-// import 'dart:js';
-import 'dart:math' as math;
-// import 'package:best_flutter_ui_templates/fitness_app/fitness_app_Theme.dart';
-import 'package:flutter/material.dart';
-import 'package:vector_math/vector_math.dart' as vector;
+// import "dart:js";
+import "dart:math" as math;
+// import "package:best_flutter_ui_templates/fitness_app/fitness_app_Theme.dart";
+import "package:flutter/material.dart";
+import "package:vector_math/vector_math.dart" as vector;
 
 class WaveView extends StatefulWidget {
   final double percentageValue;
@@ -37,7 +37,12 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
         duration: const Duration(seconds: 4), vsync: this);
     animationController!.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        // animationController?.reverse();
+        animationController?.reverse();
+
+        //test
+        // animationController!.stop();
+        // waveAnimationController!.stop();
+        // _startDelay2();
       } else if (status == AnimationStatus.dismissed) {
         animationController?.forward();
       }
@@ -166,10 +171,10 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                     const Padding(
                       padding: EdgeInsets.only(top: 3.0),
                       child: Text(
-                        '%',
+                        "%",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                            fontFamily: 'Roboto',
+                            fontFamily: "Roboto",
                             fontWeight: FontWeight.w500,
                             fontSize: 14,
                             letterSpacing: 0.0,

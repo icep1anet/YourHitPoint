@@ -4,7 +4,7 @@ import "package:flutter/material.dart";
 // import "package:device_info_plus/device_info_plus.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "main.dart";
-import 'package:logger/logger.dart';
+import "package:logger/logger.dart";
 
 class FriendPage extends StatefulWidget {
   const FriendPage({Key? key}) : super(key: key);
@@ -21,9 +21,13 @@ class _FriendPageState extends State<FriendPage> {
   @override
   void initState() {
     super.initState();
-    _userIdController = TextEditingController(text: "aaa");
+    _userIdController = TextEditingController(text: "your id");
   }
-
+  @override
+  void dispose() {
+    _userIdController?.dispose();
+    super.dispose();
+  }
   void changeUserId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("userId", _userIdController!.text);
