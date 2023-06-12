@@ -102,10 +102,10 @@ class _MainPageState extends State<MainPage> {
     // _timeLog();
     // fetchFirebaseData();
     changeHP();
-    Timer.periodic(const Duration(seconds: 100), (timer) {
+    Timer.periodic(const Duration(seconds: 1000), (timer) {
       zeroHP();
     });
-    Timer.periodic(const Duration(seconds: 1), (timer) {
+    Timer.periodic(const Duration(seconds: 10), (timer) {
       changeHP();
       // _timeLog();
       // fetchFirebaseData();

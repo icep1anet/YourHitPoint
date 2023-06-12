@@ -32,19 +32,19 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
   @override
   void initState() {
     animationController = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
+        duration: const Duration(seconds: 4), vsync: this);
     waveAnimationController = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
+        duration: const Duration(seconds: 4), vsync: this);
     animationController!.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        animationController?.reverse();
+        // animationController?.reverse();
       } else if (status == AnimationStatus.dismissed) {
         animationController?.forward();
       }
     });
     waveAnimationController!.addListener(() {
       animList1.clear();
-      for (int i = -2 - bottleOffset1.dx.toInt(); i <= 60 + 2; i++) {
+      for (int i = -2 - bottleOffset1.dx.toInt(); i <= 120 + 2; i++) {
         animList1.add(
           Offset(
             i.toDouble() + bottleOffset1.dx.toInt(),
@@ -155,16 +155,16 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                     Text(
                       widget.percentageValue.round().toString(),
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontFamily: 'Roboto',
                           fontWeight: FontWeight.w500,
                           fontSize: 24,
                           letterSpacing: 0.0,
                           //引数
-                          color: widget.fontcolor),
+                          color: Colors.black),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 3.0),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 3.0),
                       child: Text(
                         '%',
                         textAlign: TextAlign.center,
@@ -174,7 +174,7 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                             fontSize: 14,
                             letterSpacing: 0.0,
                             //引数
-                            color: widget.fontcolor),
+                            color: Colors.black),
                       ),
                     ),
                   ],
@@ -182,8 +182,8 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
               ),
             ),
             // Positioned(
-            //   top: 110,
-            //   left: 16,
+            //   top: 0,
+            //   left: 6,
             //   bottom: 8,
             //   child: ScaleTransition(
             //     alignment: Alignment.center,
