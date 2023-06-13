@@ -107,6 +107,10 @@ class _MainPageState extends State<MainPage> {
   Color fontColor = Colors.white;
   double fontPosition = 60;
   DateTime? latestDataTime;
+  int? minX;
+  int? maxX;
+  double minY = -30;
+
 
   //ページ起動時に呼ばれる初期化関数
   @override
@@ -208,8 +212,8 @@ class _MainPageState extends State<MainPage> {
       logger.d(responseMap["past_spots"]);
       List tes1 = responseMap["past_spots"];
       List<Map<dynamic, dynamic>> tes2 = [];
-      for (Map a in tes1) {
-        tes2.add(a);
+      for (Map map in tes1) {
+        tes2.add(map);
       }
       logger.d("daiichidannkai");
       List<FlSpot> tes = createFlSpotList(tes2);
@@ -222,7 +226,7 @@ class _MainPageState extends State<MainPage> {
       } else {
         logger.d("spots is Empty or tes is Empty");
       }
-      // List furTest = createFlSpotList(responseMap["future_spots"]);
+      // List<FlSpot> furTest = createFlSpotList(responseMap["future_spots"]);
       setState(() {
         imgUrl = responseMap["url"];
         spots = spots + tes;
