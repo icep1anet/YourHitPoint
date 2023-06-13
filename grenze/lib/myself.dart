@@ -20,6 +20,9 @@ class MyselfPage extends StatefulWidget {
   final Color fontColor;
   final double fontPosition;
   final String? imgUrl;
+  final double? minX;
+  final double? maxX;
+  // final List<FlSpot> futureSpots;
   const MyselfPage(
       {required this.spots,
       required this.currentHP,
@@ -29,6 +32,9 @@ class MyselfPage extends StatefulWidget {
       required this.fontColor,
       required this.fontPosition,
       required this.imgUrl,
+      required this.minX,
+      required this.maxX,
+      // required this.futureSpots,
       Key? key})
       : super(key: key);
   // 使用するStateを指定
@@ -388,8 +394,8 @@ class LineChartWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return LineChart(
       LineChartData(
-        // minX: 0,
-        // maxX: 6,
+        minX: widget.minX,
+        maxX: widget.maxX,
         backgroundColor: const Color(0xffd0e3ce),
         lineBarsData: [
           LineChartBarData(
@@ -399,7 +405,15 @@ class LineChartWidget extends StatelessWidget {
             dotData: FlDotData(show: false),
             spots: widget.spots,
             // dashArray: [10, 6],
-          )
+          ),
+          // LineChartBarData(
+          //   isCurved: true,
+          //   color: Colors.green[400],
+          //   barWidth: 3,
+          //   dotData: FlDotData(show: true),
+          //   spots: widget.futureSpots,
+          //   dashArray: [10, 6],
+          // ),
         ],
         titlesData: FlTitlesData(
           rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -412,13 +426,20 @@ class LineChartWidget extends StatelessWidget {
                 return bottomGraphWidgets(
                   value,
                   meta,
-                  // constraints.maxWidth,
                 );
               },
               reservedSize: 30,
             ),
           ),
         ),
+        extraLinesData: ExtraLinesData(
+          horizontalLines: [
+            HorizontalLine(
+              y: 0,
+              color: Colors.blue,
+              ),
+          ]
+        )
       ),
     );
   }
@@ -453,11 +474,20 @@ class LineChartWidget extends StatelessWidget {
       case 0:
         text = "00:00";
         break;
+      case 2:
+        text = "02:00";
+        break;
       case 4:
         text = "04:00";
         break;
+      case 6:
+        text = "06:00";
+        break;
       case 8:
         text = "08:00";
+        break;
+      case 10:
+        text = "10:00";
         break;
       case 12:
         text = "12:00";
@@ -468,29 +498,29 @@ class LineChartWidget extends StatelessWidget {
       case 16:
         text = "16:00";
         break;
+      case 18:
+        text = "18:00";
+        break;
       case 20:
         text = "20:00";
+        break;
+      case 22:
+        text = "22:00";
         break;
       case 24:
         text = "00:00";
         break;
+      case 26:
+        text = "02:00";
+        break;
       case 28:
         text = "04:00";
         break;
+      case 30:
+        text = "06:00";
+        break;
       case 32:
         text = "08:00";
-        break;
-      case 36:
-        text = "12:00";
-        break;
-      case 40:
-        text = "16:00";
-        break;
-      case 44:
-        text = "20:00";
-        break;
-      case 48:
-        text = "00:00";
         break;
 
       default:
