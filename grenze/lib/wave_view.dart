@@ -100,55 +100,55 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                   builder: (context, child) =>
                       Stack(
                         children: <Widget>[
-                          // ClipPath(
-                          //   clipper: WaveClipper(
-                          //       animationController!.value, animList1),
-                          //   child: Container(
-                          //     decoration: BoxDecoration(
-                          //       //引数
-                          //       color: barcolor.withOpacity(0.5),
-                          //       borderRadius: const BorderRadius.only(
-                          //           topLeft: Radius.circular(80.0),
-                          //           bottomLeft: Radius.circular(80.0),
-                          //           bottomRight: Radius.circular(80.0),
-                          //           topRight: Radius.circular(80.0)),
-                          //       gradient: LinearGradient(
-                          //         colors: [
-                          //           //引数
-                          //           barcolor.withOpacity(0.2),
-                          //           barcolor.withOpacity(0.5)
-                          //         ],
-                          //         begin: Alignment.topLeft,
-                          //         end: Alignment.bottomRight,
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
-                          // ClipPath(
-                          //   clipper: WaveClipper(
-                          //       animationController!.value, animList2),
-                          //   child: Container(
-                          //     decoration: BoxDecoration(
-                          //       //引数
-                          //       color: barcolor,
-                          //
-                          //       gradient: LinearGradient(
-                          //         colors: [
-                          //           //引数
-                          //           barcolor.withOpacity(0.4),
-                          //           barcolor
-                          //         ],
-                          //         begin: Alignment.topLeft,
-                          //         end: Alignment.bottomRight,
-                          //       ),
-                          //       borderRadius: const BorderRadius.only(
-                          //           topLeft: Radius.circular(80.0),
-                          //           bottomLeft: Radius.circular(80.0),
-                          //           bottomRight: Radius.circular(80.0),
-                          //           topRight: Radius.circular(80.0)),
-                          //     ),
-                          //   ),
-                          // ),
+                          ClipPath(
+                            clipper: WaveClipper(
+                                animationController!.value, animList1),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                //引数
+                                color: barcolor.withOpacity(0.5),
+                                borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(80.0),
+                                    bottomLeft: Radius.circular(80.0),
+                                    bottomRight: Radius.circular(80.0),
+                                    topRight: Radius.circular(80.0)),
+                                gradient: LinearGradient(
+                                  colors: [
+                                    //引数
+                                    barcolor.withOpacity(0.2),
+                                    barcolor.withOpacity(0.5)
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                              ),
+                            ),
+                          ),
+                          ClipPath(
+                            clipper: WaveClipper(
+                                animationController!.value, animList2),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                //引数
+                                color: barcolor,
+                          
+                                gradient: LinearGradient(
+                                  colors: [
+                                    //引数
+                                    barcolor.withOpacity(0.4),
+                                    barcolor
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(80.0),
+                                    bottomLeft: Radius.circular(80.0),
+                                    bottomRight: Radius.circular(80.0),
+                                    topRight: Radius.circular(80.0)),
+                              ),
+                            ),
+                          ),
                           
                           Positioned(
                             top: 0,
@@ -242,6 +242,7 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                               ),
                             ),
                           ),
+                        
                         ],
                       )),
               Padding(

@@ -44,9 +44,6 @@ class _MyselfPageState extends State<MyselfPage> {
         .read<UserDataProvider>()
         .setTimerFunc(10, context.read<UserDataProvider>().changeHP);
 
-    context.read<UserDataProvider>().getPrefItems();
-    context.read<UserDataProvider>().fetchFirebaseData();
-    context.read<UserDataProvider>().setHPspotsList(testDataList);
   }
 
   @override
