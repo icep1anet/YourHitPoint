@@ -111,7 +111,6 @@ class _MainPageState extends State<MainPage> {
   double? maxX;
   String activeLimitTime = "";
 
-
   //ページ起動時に呼ばれる初期化関数
   @override
   void initState() {
@@ -152,15 +151,6 @@ class _MainPageState extends State<MainPage> {
   }
 
 
-  //debug
-  void initrem() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove("userId");
-    // for (int i = 0; i <= 10; i++) {
-    //   prefs.remove("userId" + i.toString());
-    // }
-  }
-
 
   //ローカルdbからuserIdを取ってくる&debug
   void _getPrefItems() async {
@@ -187,7 +177,7 @@ class _MainPageState extends State<MainPage> {
   Future<void> fetchFirebaseData() async {
     logger.d("startttttt");
     DateTime now = DateTime.now();
-    DateTime hoursAgo = now.add(const Duration(hours: 50) * -1);
+    DateTime hoursAgo = now.add(const Duration(hours: 8) * -1);
     if (latestDataTime != null) {
       if (latestDataTime!.compareTo(hoursAgo) == 1) {
         hoursAgo = latestDataTime!;
@@ -210,39 +200,48 @@ class _MainPageState extends State<MainPage> {
       var responseMap = jsonDecode(response.body);
       logger.d("past:");
       logger.d(responseMap["past_spots"]);
-      List tes1 = responseMap["past_spots"];
-      List<Map<dynamic, dynamic>> tes2 = [];
-      for (Map map in tes1) {
-        tes2.add(map);
+      List pastTmp = responseMap["past_spots"];
+      List<Map<dynamic, dynamic>> pastTmp2 = [];
+      for (Map map in pastTmp) {
+        pastTmp2.add(map);
+      }
+      List futureTmp = responseMap["future_spots"];
+      List<Map<dynamic, dynamic>> futureTmp2 = [];
+      for (Map map in futureTmp) {
+        futureTmp2.add(map);
       }
       logger.d("daiichidannkai");
-      List<FlSpot> tes = createFlSpotList(tes2);
-      logger.d(tes);
-      logger.d("tes.length: ${tes.length}");
+      List<FlSpot> pastTmp3 = createFlSpotList(pastTmp2);
+      List<FlSpot> futureTmp3 = createFlSpotList(futureTmp2);
+      logger.d("pastTmp3: $pastTmp3");
+      logger.d("pastTmp3.length: ${pastTmp3.length}");
       logger.d("spots.length: ${spots.length}");
-      if (spots.isNotEmpty && tes.isNotEmpty) {
+      if (spots.isNotEmpty && pastTmp3.isNotEmpty) {
         logger.d("spots is not Empty");
-        spots.removeRange(0, tes.length - 1);
+        spots.removeRange(0, pastTmp3.length - 1);
       } else {
         logger.d("spots is Empty or tes is Empty");
       }
-      // List<FlSpot> furTest = createFlSpotList(responseMap["future_spots"]);
       setState(() {
         imgUrl = responseMap["url"];
-        spots = spots + tes;
-        if  (spots.isNotEmpty) {
+        spots = spots + pastTmp3;
+        if (spots.isNotEmpty) {
           minX = spots[0].x.toInt().toDouble();
+          logger.d("minx更新: ${minX.toString()}");
         } else {
           minX = null;
         }
-        // futureSpots = furTest;
+        futureSpots = futureTmp3;
+        logger.d("futureSpots: $futureSpots");
         if (futureSpots.isNotEmpty) {
           maxX = futureSpots.last.x.ceil().toDouble();
+          logger.d("maxx更新: ${maxX.toString()}");
         } else {
           maxX = null;
         }
         recordHighHP = responseMap["recordHighHP"];
         recordLowHP = responseMap["recordLowHP"];
+        activeLimitTime = responseMap["activeLimitTime"];
       });
       logger.d("spotsAfter: $spots");
       logger.d("spotsLengthAfter: ${spots.length}");
@@ -340,7 +339,7 @@ class _MainPageState extends State<MainPage> {
               minX: minX,
               maxX: maxX,
               activeLimitTime: activeLimitTime,
-              // futureSpots: futureSpots,
+              futureSpots: futureSpots,
             ),
             const FriendPage(),
           ],

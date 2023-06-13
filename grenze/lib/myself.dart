@@ -23,7 +23,7 @@ class MyselfPage extends StatefulWidget {
   final double? minX;
   final double? maxX;
   final String activeLimitTime;
-  // final List<FlSpot> futureSpots;
+  final List<FlSpot> futureSpots;
   const MyselfPage(
       {required this.spots,
       required this.currentHP,
@@ -36,7 +36,7 @@ class MyselfPage extends StatefulWidget {
       required this.minX,
       required this.maxX,
       required this.activeLimitTime,
-      // required this.futureSpots,
+      required this.futureSpots,
       Key? key})
       : super(key: key);
   // 使用するStateを指定
@@ -91,7 +91,7 @@ class _MyselfPageState extends State<MyselfPage> {
                   const SizedBox(
                     height: 30,
                   ),
-                  // if (userId != null) Text(userId!),
+                  if (userId != null) Text(userId!),
                   // TextButton(
                   //   onPressed: () {
                   //     setState(() {
@@ -133,7 +133,6 @@ class _MyselfPageState extends State<MyselfPage> {
                   Row(children: [
                     const SizedBox(width: 20),
                     _currentmyAvatar(widget.imgUrl),
-                    // _currentmyAvatar("assets/images/illust_normal.jpg"),
                     WaveViewWidget(widget: widget),
                   ]),
                   const SizedBox(height: 30),
@@ -171,7 +170,6 @@ class _MyselfPageState extends State<MyselfPage> {
                   const SizedBox(height: 20),
                   Container(
                       width: 300,
-                      // width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(
                             color: Theme.of(context).focusColor, width: 5),
@@ -273,7 +271,6 @@ class RecordWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 300,
-      // width: double.infinity,
       decoration: BoxDecoration(
         border: Border.all(color: Theme.of(context).focusColor, width: 5),
         borderRadius: BorderRadius.circular(8),
@@ -304,7 +301,6 @@ class RecordWidget extends StatelessWidget {
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).hintColor)),
-          // const SizedBox(height: 10),
           Text(widget.recordLowHP.round().toString(),
               style: GoogleFonts.sourceCodePro(
                   fontSize: 30,
@@ -320,11 +316,9 @@ class WaveViewWidget extends StatelessWidget {
   const WaveViewWidget({
     super.key,
     required this.widget,
-    // required this.barColor
   });
 
   final MyselfPage widget;
-  // final int barColor;
 
   @override
   Widget build(BuildContext context) {
@@ -336,7 +330,6 @@ class WaveViewWidget extends StatelessWidget {
         decoration: BoxDecoration(
           //ここがhpの上部分
           color: HexColor("#E8EDFE"),
-          // color: HexColor("#0087aa"),
           borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(80.0),
               bottomLeft: Radius.circular(80.0),
@@ -351,18 +344,9 @@ class WaveViewWidget extends StatelessWidget {
         ),
         child: WaveView(
           percentageValue: widget.currentHP.toDouble(),
-          //black
-          // fontcolor: Theme.of(context).shadowColor,
-          //white
           fontcolor: widget.fontColor,
-          //red
-          // fontcolor: Theme.of(context).shadowColor,
           barcolor: widget.barColor,
-          //真ん中
-          // fontposition: 0,
-          //中央下
           fontposition: widget.fontPosition,
-          // fontposition: 48.5,
         ),
       ),
     );
@@ -376,73 +360,55 @@ class LineChartWidget extends StatelessWidget {
   });
 
   final MyselfPage widget;
-  final List<FlSpot> spots = const [
-    //   FlSpot(0, 98),
-    //   FlSpot(1, 92),
-    //   FlSpot(2, 79),
-    //   FlSpot(2.6, 40),
-    //   FlSpot(3, 68),
-    //   FlSpot(4, 62),
-    FlSpot(4.3, 80),
-    FlSpot(5, 49),
-    FlSpot(6, 35),
-    FlSpot(7, 29),
-    FlSpot(8, 19),
-    FlSpot(9, 9),
-    FlSpot(10, 0),
-  ];
 
   @override
   Widget build(BuildContext context) {
     return LineChart(
       LineChartData(
-        minX: widget.minX,
-        maxX: widget.maxX,
-        backgroundColor: const Color(0xffd0e3ce),
-        lineBarsData: [
-          LineChartBarData(
-            isCurved: true,
-            color: Colors.red[400],
-            barWidth: 3,
-            dotData: FlDotData(show: false),
-            spots: widget.spots,
-            // dashArray: [10, 6],
-          ),
-          // LineChartBarData(
-          //   isCurved: true,
-          //   color: Colors.green[400],
-          //   barWidth: 3,
-          //   dotData: FlDotData(show: true),
-          //   spots: widget.futureSpots,
-          //   dashArray: [10, 6],
-          // ),
-        ],
-        titlesData: FlTitlesData(
-          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              interval: 1,
-              getTitlesWidget: (value, meta) {
-                return bottomGraphWidgets(
-                  value,
-                  meta,
-                );
-              },
-              reservedSize: 30,
+          minX: widget.minX,
+          maxX: widget.maxX,
+          backgroundColor: const Color(0xffd0e3ce),
+          lineBarsData: [
+            LineChartBarData(
+              isCurved: true,
+              color: Colors.red[400],
+              barWidth: 3,
+              dotData: FlDotData(show: false),
+              spots: widget.spots,
+              // dashArray: [10, 6],
+            ),
+            LineChartBarData(
+              isCurved: true,
+              color: Colors.blue[400],
+              barWidth: 3,
+              dotData: FlDotData(show: false),
+              spots: widget.futureSpots,
+              dashArray: [10, 6],
+            ),
+          ],
+          titlesData: FlTitlesData(
+            rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                interval: 1,
+                getTitlesWidget: (value, meta) {
+                  return bottomGraphWidgets(
+                    value,
+                    meta,
+                  );
+                },
+                reservedSize: 30,
+              ),
             ),
           ),
-        ),
-        extraLinesData: ExtraLinesData(
-          horizontalLines: [
+          extraLinesData: ExtraLinesData(horizontalLines: [
             HorizontalLine(
               y: 0,
               color: Colors.blue,
-              ),
-          ]
-        )
-      ),
+            ),
+          ])),
     );
   }
 
@@ -453,25 +419,7 @@ class LineChartWidget extends StatelessWidget {
       fontFamily: "Digital",
     );
     String text = "";
-    // int test = value.toInt();
-    // int check = 0;
-    // for (int i = 0; i<12; i++) {
-    //   if (test == check) {
-    //     text = test.toString() + ":00";
-    //     break;
-    //   } else {
-    //     if (check == 24) {
-    //       check == 0;
-    //     }
-    //     check += 4;
-    //   }
-    // }
 
-    // if (text == "") {
-    //   return Container();
-    // }
-
-    // text = value.toInt().toString();
     switch (value.toInt()) {
       case 0:
         text = "00:00";
@@ -603,18 +551,14 @@ class SliverAppBarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      // automaticallyImplyLeading: false,
       expandedHeight: 300.0,
       floating: true,
       pinned: true,
       stretch: true,
-      // primary: false,
       collapsedHeight: 100,
       backgroundColor: Theme.of(context).focusColor,
-      // const Color(0xff00a5bf),
       toolbarHeight: 100,
       flexibleSpace: FlexibleSpaceBar(
-          // stretchModes: []
           centerTitle: true,
           collapseMode: CollapseMode.parallax,
           title: Text("My Hit Point",
