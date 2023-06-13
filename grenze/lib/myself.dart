@@ -103,11 +103,8 @@ class _MyselfPageState extends State<MyselfPage> {
                     alignment: Alignment.center,
                     width: 200,
                     decoration: BoxDecoration(
-                      //なんか合わない
-                      // color: Color.fromARGB(255, 209, 209, 209),
                       border: Border(
                         bottom: BorderSide(color: Theme.of(context).focusColor
-                            // Color.fromARGB(255, 24, 168, 190)
                             ),
                       ),
                     ),
@@ -184,7 +181,6 @@ class _MyselfPageState extends State<MyselfPage> {
                         //         fontSize: 30,
                         //         color: Colors.black)),
                         child: Text("HP 記録",
-                            // style: GoogleFonts.orelegaOne(
                             style: GoogleFonts.roboto(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 30,
@@ -313,18 +309,6 @@ class WaveViewWidget extends StatelessWidget {
         ),
         child: WaveView(
             percentageValue: hpNumber.toDouble()
-            //black
-            // fontcolor: Theme.of(context).shadowColor,
-            //white
-            // fontcolor: userDataProvider.fontColor,
-            //red
-            // fontcolor: Theme.of(context).shadowColor,
-            // barcolor: userDataProvider.barColor,
-            //真ん中
-            // fontposition: 0,
-            //中央下
-            // fontposition: userDataProvider.fontPosition,
-            // fontposition: 48.5,
             ),
       ),
     );
@@ -338,21 +322,6 @@ class LineChartWidget extends StatelessWidget {
   });
 
   final MyselfPage widget;
-  final List<FlSpot> spots = const [
-    //   FlSpot(0, 98),
-    //   FlSpot(1, 92),
-    //   FlSpot(2, 79),
-    //   FlSpot(2.6, 40),
-    //   FlSpot(3, 68),
-    //   FlSpot(4, 62),
-    FlSpot(4.3, 80),
-    FlSpot(5, 49),
-    FlSpot(6, 35),
-    FlSpot(7, 29),
-    FlSpot(8, 19),
-    FlSpot(9, 9),
-    FlSpot(10, 0),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -360,8 +329,6 @@ class LineChartWidget extends StatelessWidget {
         Provider.of<UserDataProvider>(context, listen: true);
     return LineChart(
       LineChartData(
-        // minX: 0,
-        // maxX: 6,
         backgroundColor: const Color(0xffd0e3ce),
         lineBarsData: [
           LineChartBarData(
@@ -370,8 +337,7 @@ class LineChartWidget extends StatelessWidget {
             barWidth: 3,
             dotData: FlDotData(show: false),
             spots: userDataProvider.spots,
-            // dashArray: [10, 6],
-          )
+          ),
         ],
         titlesData: FlTitlesData(
           rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -384,13 +350,20 @@ class LineChartWidget extends StatelessWidget {
                 return bottomGraphWidgets(
                   value,
                   meta,
-                  // constraints.maxWidth,
                 );
               },
               reservedSize: 30,
             ),
           ),
         ),
+        extraLinesData: ExtraLinesData(
+          horizontalLines: [
+            HorizontalLine(
+              y: 0,
+              color: Colors.blue,
+              ),
+          ]
+        )
       ),
     );
   }
@@ -402,34 +375,25 @@ class LineChartWidget extends StatelessWidget {
       fontFamily: "Digital",
     );
     String text = "";
-    // int test = value.toInt();
-    // int check = 0;
-    // for (int i = 0; i<12; i++) {
-    //   if (test == check) {
-    //     text = test.toString() + ":00";
-    //     break;
-    //   } else {
-    //     if (check == 24) {
-    //       check == 0;
-    //     }
-    //     check += 4;
-    //   }
-    // }
 
-    // if (text == "") {
-    //   return Container();
-    // }
-
-    // text = value.toInt().toString();
     switch (value.toInt()) {
       case 0:
         text = "00:00";
         break;
+      case 2:
+        text = "02:00";
+        break;
       case 4:
         text = "04:00";
         break;
+      case 6:
+        text = "06:00";
+        break;
       case 8:
         text = "08:00";
+        break;
+      case 10:
+        text = "10:00";
         break;
       case 12:
         text = "12:00";
@@ -440,29 +404,29 @@ class LineChartWidget extends StatelessWidget {
       case 16:
         text = "16:00";
         break;
+      case 18:
+        text = "18:00";
+        break;
       case 20:
         text = "20:00";
+        break;
+      case 22:
+        text = "22:00";
         break;
       case 24:
         text = "00:00";
         break;
+      case 26:
+        text = "02:00";
+        break;
       case 28:
         text = "04:00";
         break;
+      case 30:
+        text = "06:00";
+        break;
       case 32:
         text = "08:00";
-        break;
-      case 36:
-        text = "12:00";
-        break;
-      case 40:
-        text = "16:00";
-        break;
-      case 44:
-        text = "20:00";
-        break;
-      case 48:
-        text = "00:00";
         break;
 
       default:
@@ -543,18 +507,14 @@ class SliverAppBarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      // automaticallyImplyLeading: false,
       expandedHeight: 300.0,
       floating: true,
       pinned: true,
       stretch: true,
-      // primary: false,
       collapsedHeight: 100,
       backgroundColor: Theme.of(context).focusColor,
-      // const Color(0xff00a5bf),
       toolbarHeight: 100,
       flexibleSpace: FlexibleSpaceBar(
-          // stretchModes: []
           centerTitle: true,
           collapseMode: CollapseMode.parallax,
           title: Text("My Hit Point",
