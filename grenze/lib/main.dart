@@ -142,7 +142,7 @@ class _MainPageState extends State<MainPage> {
     if (mounted) {
       setState(() {
         logger.d("reset!!!!!!!");
-        hpNumber = 120;
+        hpNumber = 0;
       });
     }
   }
@@ -183,7 +183,7 @@ class _MainPageState extends State<MainPage> {
   Future<void> fetchFirebaseData() async {
     logger.d("startttttt");
     DateTime now = DateTime.now();
-    DateTime hoursAgo = now.add(const Duration(hours: 40) * -1);
+    DateTime hoursAgo = now.add(const Duration(hours: 44) * -1);
     if (latestDataTime != null) {
       if (latestDataTime!.compareTo(hoursAgo) == 1) {
         hoursAgo = latestDataTime!;
@@ -224,8 +224,6 @@ class _MainPageState extends State<MainPage> {
       }
       // List furTest = createFlSpotList(responseMap["future_spots"]);
       setState(() {
-        // spots = tes;
-        // spots.addAll(tes);
         imgUrl = responseMap["url"];
         spots = spots + tes;
         // futureSpots = furTest;
@@ -236,6 +234,7 @@ class _MainPageState extends State<MainPage> {
       logger.d("spotsLengthAfter: ${spots.length}");
       //latestDataTimeの更新
       latestDataTime = now;
+      hpNumber = 0;
     } else {
       // リクエストが失敗した場合、エラーメッセージを表示します
       logger.d("Request failed with status: ${response.statusCode}");
@@ -245,10 +244,10 @@ class _MainPageState extends State<MainPage> {
   //現在のHPを変える
   void changeHP() {
     if (mounted) {
-      if (hpNumber < 14) {
+      if (hpNumber < futureSpots.length) {
         setState(() {
           // currentHP = hpNumber;
-          // currentHP = hpList[hpNumber]["y"];
+          currentHP = futureSpots[hpNumber].y.toInt();
         });
         if (80 < currentHP) {
           barColor = const Color(0xFF32cd32);

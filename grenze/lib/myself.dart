@@ -470,11 +470,20 @@ class LineChartWidget extends StatelessWidget {
       case 0:
         text = "00:00";
         break;
+      case 2:
+        text = "02:00";
+        break;
       case 4:
         text = "04:00";
         break;
+      case 6:
+        text = "06:00";
+        break;
       case 8:
         text = "08:00";
+        break;
+      case 10:
+        text = "10:00";
         break;
       case 12:
         text = "12:00";
@@ -485,29 +494,29 @@ class LineChartWidget extends StatelessWidget {
       case 16:
         text = "16:00";
         break;
+      case 18:
+        text = "18:00";
+        break;
       case 20:
         text = "20:00";
+        break;
+      case 22:
+        text = "22:00";
         break;
       case 24:
         text = "00:00";
         break;
+      case 26:
+        text = "02:00";
+        break;
       case 28:
         text = "04:00";
         break;
+      case 30:
+        text = "06:00";
+        break;
       case 32:
         text = "08:00";
-        break;
-      case 36:
-        text = "12:00";
-        break;
-      case 40:
-        text = "16:00";
-        break;
-      case 44:
-        text = "20:00";
-        break;
-      case 48:
-        text = "00:00";
         break;
 
       default:
