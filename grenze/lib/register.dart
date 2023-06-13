@@ -1,12 +1,8 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:fluttericon/octicons_icons.dart";
-// import "package:flutter_chat_types/flutter_chat_types.dart" as types;
-// import "package:image_picker/image_picker.dart";
-// import "dart:io";
-// import "util.dart";
-// import "package:qr_flutter/qr_flutter.dart";
-// import "main.dart";
+import "package:grenze/user_data.dart";
+import "package:provider/provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:logger/logger.dart";
 import "dart:convert";
@@ -20,8 +16,8 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  FocusNode? _fNode;
-  FocusNode? _focusNode;
+  FocusNode? _focusUserNameNode;
+  FocusNode? _focusAvatarNameNode;
   TextEditingController? _userNameController;
   bool _registering = false;
   TextEditingController? _avatarNameController;
@@ -44,22 +40,20 @@ class _RegisterPageState extends State<RegisterPage> {
     // initializeFlutterFire();
     // initSharedPreferences();
     // _getPrefItems();
-    _fNode = FocusNode();
-    _focusNode = FocusNode();
+    _focusUserNameNode = FocusNode();
+    _focusAvatarNameNode = FocusNode();
     _userNameController = TextEditingController(text: "多喜男");
     _avatarNameController = TextEditingController(text: "ガララワニ");
   }
 
   @override
   void dispose() {
-    _focusNode?.dispose();
+    _focusUserNameNode?.dispose();
+    _focusAvatarNameNode?.dispose();
     _userNameController?.dispose();
     _avatarNameController?.dispose();
     super.dispose();
   }
-  // void initSharedPreferences() async{
-  //   prefs = await SharedPreferences.getInstance();
-  // }
 
   _setPrefItems(String userId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -95,23 +89,20 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Focus(
-        focusNode: _fNode,
+        focusNode: _focusUserNameNode,
         child: GestureDetector(
             onTap: () {
-              _fNode?.requestFocus();
+              _focusUserNameNode?.requestFocus();
             },
             child: Scaffold(
               resizeToAvoidBottomInset: false,
               appBar: AppBar(
                 backgroundColor: const Color(0xff00a5bf),
                 systemOverlayStyle: SystemUiOverlayStyle.light,
-                title: const Text("Profile settings",
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white
-                  ),
+                title: const Text(
+                  "Profile settings",
+                  style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
-                  
                 actions: [
                   //   if (hasData != null)
                   //     IconButton(
@@ -139,14 +130,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   padding: const EdgeInsets.only(top: 40, left: 24, right: 24),
                   child: Column(
                     children: [
-                      // Text("userId: $userId",
-                      //     style: const TextStyle(
-                      //         fontWeight: FontWeight.bold, fontSize: 15)),
-                      // const SizedBox(height: 15),
                       TextField(
-                        style: const TextStyle(
-                          fontSize: 20
-                        ),
+                        style: const TextStyle(fontSize: 20),
                         autocorrect: false,
                         autofocus: false,
                         controller: _userNameController,
@@ -157,9 +142,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                           ),
                           labelText: "ユーザーネーム",
-                          labelStyle: const TextStyle(
-                            fontSize: 25
-                          ),
+                          labelStyle: const TextStyle(fontSize: 25),
                           suffixIcon: IconButton(
                             icon: const Icon(Icons.cancel),
                             onPressed: () => _userNameController?.clear(),
@@ -167,7 +150,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         keyboardType: TextInputType.text,
                         onEditingComplete: () {
-                          _focusNode?.requestFocus();
+                          _focusAvatarNameNode?.requestFocus();
                         },
                         readOnly: _registering,
                         textCapitalization: TextCapitalization.none,
@@ -177,9 +160,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       Container(
                         margin: const EdgeInsets.symmetric(vertical: 8),
                         child: TextField(
-                          style: const TextStyle(
-                          fontSize: 20
-                        ),
+                          style: const TextStyle(fontSize: 20),
                           autocorrect: false,
                           controller: _avatarNameController,
                           decoration: InputDecoration(
@@ -189,18 +170,16 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                             ),
                             labelText: "アバターネーム",
-                            labelStyle: const TextStyle(
-                            fontSize: 25
-                            ),
+                            labelStyle: const TextStyle(fontSize: 25),
                             suffixIcon: IconButton(
                               icon: const Icon(Icons.cancel),
                               onPressed: () => _avatarNameController?.clear(),
                             ),
                           ),
-                          focusNode: _focusNode,
+                          focusNode: _focusAvatarNameNode,
                           keyboardType: TextInputType.text,
                           onEditingComplete: () {
-                            _focusNode?.unfocus();
+                            _focusAvatarNameNode?.unfocus();
                           },
                           textCapitalization: TextCapitalization.none,
                           textInputAction: TextInputAction.done,
@@ -215,35 +194,32 @@ class _RegisterPageState extends State<RegisterPage> {
                       style：テキストスタイル
                       underline：ドロップダウンボタンの下線
                       */
-                      const SizedBox(height: 30,),
+                      const SizedBox(
+                        height: 30,
+                      ),
                       Container(
                         alignment: Alignment.center,
                         padding: const EdgeInsets.only(right: 10, top: 10),
                         child: const Text("アバタータイプ",
-                          style:TextStyle(
-                            fontSize: 18,
-                            color: Color(0xff696969)
-                        )),
+                            style: TextStyle(
+                                fontSize: 18, color: Color(0xff696969))),
                       ),
                       Container(
                         // height: 50,
                         decoration: BoxDecoration(
-
                           border: Border.all(
-                            // right: BorderSide(), 
-                          color: const Color(0xff696969), width: 1
-                          ),
+                              // right: BorderSide(),
+                              color: const Color(0xff696969),
+                              width: 1),
                           borderRadius: BorderRadius.circular(10),
-                          
                         ),
-                      
+
                         child: DropdownButton(
-                          style:
-                              const TextStyle(fontSize: 25, color: Colors.black),
+                          style: const TextStyle(
+                              fontSize: 25, color: Colors.black),
                           items: choices
                               .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
-                            
                               alignment: Alignment.centerLeft,
                               value: value,
                               child: Text(value),
@@ -256,20 +232,21 @@ class _RegisterPageState extends State<RegisterPage> {
                               avatarType = value!;
                             });
                           },
-                          icon: const Padding( //Icon at tail, arrow bottom is default icon
-                            padding: EdgeInsets.only(left:20),
-                            child:Icon(
-                                  Octicons.triangle_down,
-                                  size: 15,
-                            )
-                            ), 
-                            iconEnabledColor: const Color(0xff696969), //Icon color
-                            dropdownColor: Colors.white, //dropdown background color
-                            underline: Container(), //remove underline
-                            // isExpanded: true,
+                          icon: const Padding(
+                              //Icon at tail, arrow bottom is default icon
+                              padding: EdgeInsets.only(left: 20),
+                              child: Icon(
+                                Octicons.triangle_down,
+                                size: 15,
+                              )),
+                          iconEnabledColor:
+                              const Color(0xff696969), //Icon color
+                          dropdownColor:
+                              Colors.white, //dropdown background color
+                          underline: Container(), //remove underline
+                          // isExpanded: true,
                         ),
-                        ),
-                      
+                      ),
 
                       // Container(
                       //     margin: const EdgeInsets.only(top: 16),
@@ -278,7 +255,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       //         children: [
                       //           ElevatedButton(
                       //             onPressed: () {
-                      //               _fNode?.requestFocus();
+                      //               _focusUserNameNode?.requestFocus();
                       //               _selectImage();
                       //             },
                       //             style: ElevatedButton.styleFrom(
@@ -292,7 +269,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       //           ),
                       //           IconButton(
                       //             onPressed: () {
-                      //               _fNode?.requestFocus();
+                      //               _focusUserNameNode?.requestFocus();
                       //               setState(() {
                       //                 imagePath = null;
                       //                 imageUrl = null;
@@ -326,14 +303,14 @@ class _RegisterPageState extends State<RegisterPage> {
                           }
                         },
                         child: hasData != null
-                            ? const Text("プロフィール変更",
-                            style: TextStyle(
-                              fontSize: 23
-                            ),)
-                            : const Text("プロフィール登録",
-                            style: TextStyle(
-                              fontSize: 23
-                            ),),
+                            ? const Text(
+                                "プロフィール変更",
+                                style: TextStyle(fontSize: 23),
+                              )
+                            : const Text(
+                                "プロフィール登録",
+                                style: TextStyle(fontSize: 23),
+                              ),
                       ),
                       const SizedBox(height: 5),
                       //ローディング
@@ -348,8 +325,8 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   // void initializeFlutterFire() async {
-  //   _fNode = FocusNode();
-  //   _focusNode = FocusNode();
+  //   _focusUserNameNode = FocusNode();
+  //   _focusAvatarNameNode = FocusNode();
   //   DocumentSnapshot snapshot =
   //       await FirebaseChatCore.instance.getUserData(userId);
   //   if (snapshot.exists) {
@@ -393,12 +370,18 @@ class _RegisterPageState extends State<RegisterPage> {
         userId = responseMap["userId"];
         logger.d(userId);
         // if (!mounted) return;
-        final SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString("userId", userId!);
-        prefs.setString("userName", _userNameController!.text);
-        prefs.setString("avatarName", _avatarNameController!.text);
-        prefs.setString("avatarType", avatarType);
-        navigateMain();
+        if (context.mounted){
+          context.read<UserDataProvider>().setItemToSharedPref(
+            ["userId", "userName",
+             "avatarName", "avatarType"], 
+            [userId!, _userNameController!.text,
+             _avatarNameController!.text, avatarType]
+            );
+        }
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          navigateMain();
+        });
+        
       } else {
         // リクエストが失敗した場合、エラーメッセージを表示します
         logger.d("Request failed with status: ${response.statusCode}");
@@ -435,17 +418,6 @@ class _RegisterPageState extends State<RegisterPage> {
   //   FocusScope.of(context).unfocus();
   //   setState(() {
   //     _registering = true;
-  //   });
-
-  //   if (!mounted) return;
-  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   prefs.setString("userId", userId!);
-  //   prefs.setString("userName", _userNameController!.text);
-  //   prefs.setString("avatarName", _avatarNameController!.text);
-  //   prefs.setString("avatarType", avatarType);
-  // catch (e) {
-  //   setState(() {
-  //     _registering = false;
   //   });
 
   //   await showDialog(
@@ -498,24 +470,6 @@ class _RegisterPageState extends State<RegisterPage> {
   //     child: CircleAvatar(
   //       backgroundColor: hasImage ? Colors.transparent : color,
   //       backgroundImage: hasImage ? FileImage(imagePath!) : null,
-  //       radius: 60,
-  //       child: !hasImage
-  //           ? const Text(
-  //               "no image",
-  //             )
-  //           : null,
-  //     ),
-  //   );
-  // }
-
-  // Widget _currentmyAvatar(String? imgUrl) {
-  //   var color = getmyAvatarNameColor(userId);
-  //   final hasImage = imgUrl != null;
-  //   return Container(
-  //     margin: const EdgeInsets.only(right: 16),
-  //     child: CircleAvatar(
-  //       backgroundColor: hasImage ? Colors.transparent : color,
-  //       backgroundImage: hasImage ? NetworkImage(imgUrl) : null,
   //       radius: 60,
   //       child: !hasImage
   //           ? const Text(

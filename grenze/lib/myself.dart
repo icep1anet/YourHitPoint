@@ -3,40 +3,20 @@ import "package:fl_chart/fl_chart.dart";
 import "package:flutter/material.dart";
 import "package:fluttericon/iconic_icons.dart";
 import "package:google_fonts/google_fonts.dart";
-import "main.dart";
-import "wave_view.dart";
-import "register.dart";
-// import "package:device_info_plus/device_info_plus.dart";
+import "package:grenze/user_data.dart";
+import "package:provider/provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:logger/logger.dart";
 
+import "main.dart";
+import "wave_view.dart";
+import "register.dart";
+
+var logger = Logger();
+
 class MyselfPage extends StatefulWidget {
   // MyselfPage({Key? key}) : super(key: key);
-  final List<FlSpot> spots;
-  final int currentHP;
-  final double recordHighHP;
-  final double recordLowHP;
-  final Color barColor;
-  final Color fontColor;
-  final double fontPosition;
-  final String? imgUrl;
-  final double? minX;
-  final double? maxX;
-  // final List<FlSpot> futureSpots;
-  const MyselfPage(
-      {required this.spots,
-      required this.currentHP,
-      required this.recordHighHP,
-      required this.recordLowHP,
-      required this.barColor,
-      required this.fontColor,
-      required this.fontPosition,
-      required this.imgUrl,
-      required this.minX,
-      required this.maxX,
-      // required this.futureSpots,
-      Key? key})
-      : super(key: key);
+  const MyselfPage({Key? key}) : super(key: key);
   // 使用するStateを指定
   @override
   State createState() => _MyselfPageState();
@@ -44,11 +24,6 @@ class MyselfPage extends StatefulWidget {
 
 // Stateを継承して使う
 class _MyselfPageState extends State<MyselfPage> {
-  Map test = {"x": 3, "y": 4};
-  double kon = 3;
-  double point = 0;
-  var logger = Logger();
-
   // final List<FlSpot> spots;
 
   void initTest() async {
@@ -57,24 +32,25 @@ class _MyselfPageState extends State<MyselfPage> {
     logger.d("delete");
   }
 
+  //ページ起動時に呼ばれる初期化関数
+  @override
+  void initState() {
+    super.initState();
+    context
+        .read<UserDataProvider>()
+        .setTimerFunc(50, context.read<UserDataProvider>().setZeroHP);
+
+    context
+        .read<UserDataProvider>()
+        .setTimerFunc(10, context.read<UserDataProvider>().changeHP);
+
+  }
+
   @override
   Widget build(BuildContext context) {
+    final imgUrl = context
+        .select((UserDataProvider userDataProvider) => userDataProvider.imgUrl);
     return Scaffold(
-        // appBar: AppBar(
-        //   centerTitle: true,
-        //   backgroundColor: const Color(0xFF0087AA),
-        //   toolbarHeight: 100,
-        //   title: Text(
-        //     "Grenze",
-        //     style: GoogleFonts.italianno(
-        //         textStyle: Theme.of(context).textTheme.headlineMedium,
-        //         fontSize: 70,
-        //         color: Colors.white),
-        //   ),
-        //   actions: [
-        //     IconButton(onPressed: () {}, icon: const Icon(Icons.settings))
-        //   ],
-        // ),
         body: NestedScrollView(
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
         return <Widget>[
@@ -86,19 +62,7 @@ class _MyselfPageState extends State<MyselfPage> {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: <Widget>[
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  // if (userId != null) Text(userId!),
-                  // TextButton(
-                  //   onPressed: () {
-                  //     setState(() {
-                  //       spots.add(FlSpot(point, 10*point));
-                  //       point++;
-                  //     });
-                  //   },
-                  //   child: const Text("押せるよ"),
-                  // ),
+                  const SizedBox(height: 30),
                   const SizedBox(height: 30),
                   Container(
                     alignment: Alignment.center,
@@ -130,7 +94,7 @@ class _MyselfPageState extends State<MyselfPage> {
                   const SizedBox(height: 30),
                   Row(children: [
                     const SizedBox(width: 20),
-                    _currentmyAvatar(widget.imgUrl),
+                    _currentmyAvatar(imgUrl),
                     // _currentmyAvatar("assets/images/illust_normal.jpg"),
                     WaveViewWidget(widget: widget),
                   ]),
@@ -139,11 +103,8 @@ class _MyselfPageState extends State<MyselfPage> {
                     alignment: Alignment.center,
                     width: 200,
                     decoration: BoxDecoration(
-                      //なんか合わない
-                      // color: Color.fromARGB(255, 209, 209, 209),
                       border: Border(
                         bottom: BorderSide(color: Theme.of(context).focusColor
-                            // Color.fromARGB(255, 24, 168, 190)
                             ),
                       ),
                     ),
@@ -220,7 +181,6 @@ class _MyselfPageState extends State<MyselfPage> {
                         //         fontSize: 30,
                         //         color: Colors.black)),
                         child: Text("HP 記録",
-                            // style: GoogleFonts.orelegaOne(
                             style: GoogleFonts.roboto(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 30,
@@ -246,7 +206,7 @@ class _MyselfPageState extends State<MyselfPage> {
         backgroundImage: hasImage ? NetworkImage(imgUrl) : null,
         radius: 100,
         child: !hasImage
-            ? Text("Avatar image",
+            ? Text("No image",
                 // style: GoogleFonts.orelegaOne(
                 style: GoogleFonts.roboto(
                   color: const Color(0xff1e90ff),
@@ -269,6 +229,8 @@ class RecordWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final UserDataProvider userDataProvider =
+        Provider.of<UserDataProvider>(context, listen: true);
     return Container(
       width: 300,
       // width: double.infinity,
@@ -297,13 +259,13 @@ class RecordWidget extends StatelessWidget {
         ),
         const SizedBox(width: 30),
         Column(children: [
-          Text(widget.recordHighHP.round().toString(),
+          Text(userDataProvider.recordHighHP.round().toString(),
               style: GoogleFonts.sourceCodePro(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).hintColor)),
           // const SizedBox(height: 10),
-          Text(widget.recordLowHP.round().toString(),
+          Text(userDataProvider.recordLowHP.round().toString(),
               style: GoogleFonts.sourceCodePro(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
@@ -315,17 +277,15 @@ class RecordWidget extends StatelessWidget {
 }
 
 class WaveViewWidget extends StatelessWidget {
-  const WaveViewWidget({
-    super.key,
-    required this.widget,
-    // required this.barColor
-  });
+  const WaveViewWidget({super.key, required this.widget});
 
   final MyselfPage widget;
   // final int barColor;
 
   @override
   Widget build(BuildContext context) {
+    final hpNumber = context.select(
+      (UserDataProvider userDataProvider) => userDataProvider.hpNumber);
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 8, top: 16),
       child: Container(
@@ -348,20 +308,8 @@ class WaveViewWidget extends StatelessWidget {
           ],
         ),
         child: WaveView(
-          percentageValue: widget.currentHP.toDouble(),
-          //black
-          // fontcolor: Theme.of(context).shadowColor,
-          //white
-          fontcolor: widget.fontColor,
-          //red
-          // fontcolor: Theme.of(context).shadowColor,
-          barcolor: widget.barColor,
-          //真ん中
-          // fontposition: 0,
-          //中央下
-          fontposition: widget.fontPosition,
-          // fontposition: 48.5,
-        ),
+            percentageValue: hpNumber.toDouble()
+            ),
       ),
     );
   }
@@ -374,28 +322,15 @@ class LineChartWidget extends StatelessWidget {
   });
 
   final MyselfPage widget;
-  final List<FlSpot> spots = const [
-    //   FlSpot(0, 98),
-    //   FlSpot(1, 92),
-    //   FlSpot(2, 79),
-    //   FlSpot(2.6, 40),
-    //   FlSpot(3, 68),
-    //   FlSpot(4, 62),
-    FlSpot(4.3, 80),
-    FlSpot(5, 49),
-    FlSpot(6, 35),
-    FlSpot(7, 29),
-    FlSpot(8, 19),
-    FlSpot(9, 9),
-    FlSpot(10, 0),
-  ];
 
   @override
   Widget build(BuildContext context) {
+    final UserDataProvider userDataProvider =
+        Provider.of<UserDataProvider>(context, listen: true);
     return LineChart(
       LineChartData(
-        minX: widget.minX,
-        maxX: widget.maxX,
+        minX: userDataProvider.minGraphX,
+        maxX: userDataProvider.maxGraphX,
         backgroundColor: const Color(0xffd0e3ce),
         lineBarsData: [
           LineChartBarData(
@@ -403,17 +338,8 @@ class LineChartWidget extends StatelessWidget {
             color: Colors.red[400],
             barWidth: 3,
             dotData: FlDotData(show: false),
-            spots: widget.spots,
-            // dashArray: [10, 6],
+            spots: userDataProvider.spots,
           ),
-          // LineChartBarData(
-          //   isCurved: true,
-          //   color: Colors.green[400],
-          //   barWidth: 3,
-          //   dotData: FlDotData(show: true),
-          //   spots: widget.futureSpots,
-          //   dashArray: [10, 6],
-          // ),
         ],
         titlesData: FlTitlesData(
           rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -451,25 +377,7 @@ class LineChartWidget extends StatelessWidget {
       fontFamily: "Digital",
     );
     String text = "";
-    // int test = value.toInt();
-    // int check = 0;
-    // for (int i = 0; i<12; i++) {
-    //   if (test == check) {
-    //     text = test.toString() + ":00";
-    //     break;
-    //   } else {
-    //     if (check == 24) {
-    //       check == 0;
-    //     }
-    //     check += 4;
-    //   }
-    // }
 
-    // if (text == "") {
-    //   return Container();
-    // }
-
-    // text = value.toInt().toString();
     switch (value.toInt()) {
       case 0:
         text = "00:00";
@@ -567,6 +475,8 @@ class HPWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final UserDataProvider userDataProvider =
+        Provider.of<UserDataProvider>(context, listen: true);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -575,7 +485,7 @@ class HPWidget extends StatelessWidget {
             style: GoogleFonts.roboto(fontWeight: FontWeight.w500, fontSize: 20)
             // Theme.of(context).textTheme.headlineSmall
             ),
-        Text(widget.currentHP.toString(),
+        Text(userDataProvider.hpNumber.toString(),
             style: GoogleFonts.sourceCodePro(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
@@ -599,18 +509,14 @@ class SliverAppBarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      // automaticallyImplyLeading: false,
       expandedHeight: 300.0,
       floating: true,
       pinned: true,
       stretch: true,
-      // primary: false,
       collapsedHeight: 100,
       backgroundColor: Theme.of(context).focusColor,
-      // const Color(0xff00a5bf),
       toolbarHeight: 100,
       flexibleSpace: FlexibleSpaceBar(
-          // stretchModes: []
           centerTitle: true,
           collapseMode: CollapseMode.parallax,
           title: Text("My Hit Point",

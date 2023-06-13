@@ -1,22 +1,16 @@
-// import "dart:js";
-import "dart:math" as math;
-// import "package:best_flutter_ui_templates/fitness_app/fitness_app_Theme.dart";
-import "package:flutter/material.dart";
-import "package:vector_math/vector_math.dart" as vector;
+import 'dart:math' as math;
+import 'package:flutter/material.dart';
+import 'package:grenze/user_data.dart';
+import 'package:provider/provider.dart';
+import 'package:vector_math/vector_math.dart' as vector;
 
 class WaveView extends StatefulWidget {
   final double percentageValue;
-  final Color fontcolor;
-  final Color barcolor;
-  final double fontposition;
 
-  const WaveView(
-      {Key? key,
-      this.percentageValue = 100.0,
-      this.fontcolor = Colors.white,
-      this.barcolor = const Color(0xFF32cd32),
-      this.fontposition = 48.5})
-      : super(key: key);
+  const WaveView({
+    Key? key,
+    this.percentageValue = 100.0,
+  }) : super(key: key);
   @override
   WaveViewState createState() => WaveViewState();
 }
@@ -31,30 +25,20 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    animationController = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
-    waveAnimationController = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
+    animationController =
+        AnimationController(duration: const Duration(seconds: 4), vsync: this);
+    waveAnimationController =
+        AnimationController(duration: const Duration(seconds: 4), vsync: this);
     animationController!.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         animationController?.reverse();
-
-        //test
-        // animationController!.stop();
-        // waveAnimationController!.stop();
-        // _startDelay2();
       } else if (status == AnimationStatus.dismissed) {
         animationController?.forward();
-
-        //test
-        // animationController!.stop();
-        // waveAnimationController!.stop();
-        // _startDelay();
       }
     });
     waveAnimationController!.addListener(() {
       animList1.clear();
-      for (int i = -2 - bottleOffset1.dx.toInt(); i <= 60 + 2; i++) {
+      for (int i = -2 - bottleOffset1.dx.toInt(); i <= 120 + 2; i++) {
         animList1.add(
           Offset(
             i.toDouble() + bottleOffset1.dx.toInt(),
@@ -87,211 +71,221 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    animationController?.dispose();
-    waveAnimationController?.dispose();
+    if (animationController != null) {
+      animationController?.dispose();
+    }
+    if (waveAnimationController != null) {
+      waveAnimationController?.dispose();
+    }
     super.dispose();
-  }
-
-  void _startDelay() async {
-    await Future.delayed(const Duration(seconds: 5));
-    animationController?.forward();
-    waveAnimationController!.repeat();
-  }
-
-  void _startDelay2() async {
-    await Future.delayed(const Duration(seconds: 5));
-    animationController?.reverse();
-    // animationController?.reverse();
-    waveAnimationController!.repeat();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: AnimatedBuilder(
-        animation: CurvedAnimation(
-          parent: animationController!,
-          curve: Curves.easeInOut,
-        ),
-        builder: (context, child) => Stack(
-          children: <Widget>[
-            ClipPath(
-              clipper: WaveClipper(animationController!.value, animList1),
-              child: Container(
-                decoration: BoxDecoration(
-                  //引数
-                  color: widget.barcolor.withOpacity(0.5),
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(80.0),
-                      bottomLeft: Radius.circular(80.0),
-                      bottomRight: Radius.circular(80.0),
-                      topRight: Radius.circular(80.0)),
-                  gradient: LinearGradient(
-                    colors: [
-                      //引数
-                      widget.barcolor.withOpacity(0.2),
-                      widget.barcolor.withOpacity(0.5)
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-              ),
-            ),
-            ClipPath(
-              clipper: WaveClipper(animationController!.value, animList2),
-              child: Container(
-                decoration: BoxDecoration(
-                  //引数
-                  color: widget.barcolor,
+    final barcolor = context.select(
+        (UserDataProvider userDataProvider) => userDataProvider.barColor);
+    final fontposition = context.select(
+        (UserDataProvider userDataProvider) => userDataProvider.fontPosition);
 
-                  gradient: LinearGradient(
-                    colors: [
-                      //引数
-                      widget.barcolor.withOpacity(0.4),
-                      widget.barcolor
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+    return Container(
+        alignment: Alignment.center,
+        child: Consumer(builder: (context, userDataProvider, child) {
+          return Stack(
+            children: <Widget>[
+              AnimatedBuilder(
+                  animation: CurvedAnimation(
+                    parent: animationController!,
+                    curve: Curves.easeInOut,
                   ),
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(80.0),
-                      bottomLeft: Radius.circular(80.0),
-                      bottomRight: Radius.circular(80.0),
-                      topRight: Radius.circular(80.0)),
-                ),
-              ),
-            ),
-            Padding(
-              //ここで%の高さを変更できる　引数で決める
-              padding: EdgeInsets.only(top: widget.fontposition),
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      widget.percentageValue.round().toString(),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontFamily: "Roboto",
-                          fontWeight: FontWeight.w500,
-                          fontSize: 24,
-                          letterSpacing: 0.0,
-                          //引数
-                          color: widget.fontcolor),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 3.0),
-                      child: Text(
-                        "%",
+                  builder: (context, child) =>
+                      Stack(
+                        children: <Widget>[
+                          ClipPath(
+                            clipper: WaveClipper(
+                                animationController!.value, animList1),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                //引数
+                                color: barcolor.withOpacity(0.5),
+                                borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(80.0),
+                                    bottomLeft: Radius.circular(80.0),
+                                    bottomRight: Radius.circular(80.0),
+                                    topRight: Radius.circular(80.0)),
+                                gradient: LinearGradient(
+                                  colors: [
+                                    //引数
+                                    barcolor.withOpacity(0.2),
+                                    barcolor.withOpacity(0.5)
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                              ),
+                            ),
+                          ),
+                          ClipPath(
+                            clipper: WaveClipper(
+                                animationController!.value, animList2),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                //引数
+                                color: barcolor,
+                          
+                                gradient: LinearGradient(
+                                  colors: [
+                                    //引数
+                                    barcolor.withOpacity(0.4),
+                                    barcolor
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(80.0),
+                                    bottomLeft: Radius.circular(80.0),
+                                    bottomRight: Radius.circular(80.0),
+                                    topRight: Radius.circular(80.0)),
+                              ),
+                            ),
+                          ),
+                          
+                          Positioned(
+                            top: 0,
+                            left: 6,
+                            bottom: 8,
+                            child: ScaleTransition(
+                              alignment: Alignment.center,
+                              scale: Tween(begin: 0.0, end: 1.0).animate(
+                                  CurvedAnimation(
+                                      parent: animationController!,
+                                      curve: const Interval(0.0, 1.0,
+                                          curve: Curves.fastOutSlowIn))),
+                              child: Container(
+                                width: 2,
+                                height: 2,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .cardColor
+                                      .withOpacity(0.4),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            left: 24,
+                            right: 0,
+                            bottom: 16,
+                            child: ScaleTransition(
+                              alignment: Alignment.center,
+                              scale: Tween(begin: 0.0, end: 1.0).animate(
+                                  CurvedAnimation(
+                                      parent: animationController!,
+                                      curve: const Interval(0.4, 1.0,
+                                          curve: Curves.fastOutSlowIn))),
+                              child: Container(
+                                width: 4,
+                                height: 4,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .cardColor
+                                      .withOpacity(0.4),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            left: 0,
+                            right: 24,
+                            bottom: 32,
+                            child: ScaleTransition(
+                              alignment: Alignment.center,
+                              scale: Tween(begin: 0.0, end: 1.0).animate(
+                                  CurvedAnimation(
+                                      parent: animationController!,
+                                      curve: const Interval(0.6, 0.8,
+                                          curve: Curves.fastOutSlowIn))),
+                              child: Container(
+                                width: 3,
+                                height: 3,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .cardColor
+                                      .withOpacity(0.4),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            top: 0,
+                            right: 20,
+                            bottom: 0,
+                            child: Transform(
+                              transform: Matrix4.translationValues(0.0,
+                                  16 * (1.0 - animationController!.value), 0.0),
+                              child: Container(
+                                width: 4,
+                                height: 4,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .cardColor
+                                      .withOpacity(
+                                          animationController!.status ==
+                                                  AnimationStatus.reverse
+                                              ? 0.0
+                                              : 0.4),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ),
+                        
+                        ],
+                      )),
+              Padding(
+                //ここで%の高さを変更できる　引数で決める
+                padding: EdgeInsets.only(top: fontposition),
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        widget.percentageValue.round().toString(),
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontFamily: "Roboto",
+                        style: const TextStyle(
+                            fontFamily: 'Roboto',
                             fontWeight: FontWeight.w500,
-                            fontSize: 14,
+                            fontSize: 24,
                             letterSpacing: 0.0,
                             //引数
-                            color: widget.fontcolor),
+                            color: Colors.black),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Positioned(
-              top: 0,
-              left: 6,
-              bottom: 8,
-              child: ScaleTransition(
-                alignment: Alignment.center,
-                scale: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-                    parent: animationController!,
-                    curve:
-                        const Interval(0.0, 1.0, curve: Curves.fastOutSlowIn))),
-                child: Container(
-                  width: 2,
-                  height: 2,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor.withOpacity(0.4),
-                    shape: BoxShape.circle,
+                      const Padding(
+                        padding: EdgeInsets.only(top: 3.0),
+                        child: Text(
+                          "%",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontFamily: "Roboto",
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              letterSpacing: 0.0,
+                              //引数
+                              color: Colors.black),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ),
-            Positioned(
-              left: 24,
-              right: 0,
-              bottom: 16,
-              child: ScaleTransition(
-                alignment: Alignment.center,
-                scale: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-                    parent: animationController!,
-                    curve:
-                        const Interval(0.4, 1.0, curve: Curves.fastOutSlowIn))),
-                child: Container(
-                  width: 4,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor.withOpacity(0.4),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              left: 0,
-              right: 24,
-              bottom: 32,
-              child: ScaleTransition(
-                alignment: Alignment.center,
-                scale: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-                    parent: animationController!,
-                    curve:
-                        const Interval(0.6, 0.8, curve: Curves.fastOutSlowIn))),
-                child: Container(
-                  width: 3,
-                  height: 3,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor.withOpacity(0.4),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              top: 0,
-              right: 20,
-              bottom: 0,
-              child: Transform(
-                transform: Matrix4.translationValues(
-                    0.0, 16 * (1.0 - animationController!.value), 0.0),
-                child: Container(
-                  width: 4,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor.withOpacity(
-                        animationController!.status == AnimationStatus.reverse
-                            ? 0.0
-                            : 0.4),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-            ),
-            Column(
-              children: <Widget>[
-                AspectRatio(
-                  aspectRatio: 1,
-                  child: Image.asset("assets/images/bottle.png"),
-                ),
-              ],
-            )
-          ],
-        ),
-      ),
-    );
+              const Image(image: AssetImage("assets/images/bottle.png")),
+            ],
+          );
+        }));
   }
 }
 
