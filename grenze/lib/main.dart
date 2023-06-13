@@ -95,7 +95,7 @@ class _MainPageState extends State<MainPage> {
   double recordHighHP = 0;
   double recordLowHP = 0;
   int hpNumber = 0;
-  List hpList = [];
+  List<FlSpot> futureSpots = [];
   var logger = Logger();
   List<Map> dataList = [
     {"x": 1.0, "y": 2.0},
@@ -119,7 +119,8 @@ class _MainPageState extends State<MainPage> {
     fetchFirebaseData();
     changeHP();
     Timer.periodic(const Duration(seconds: 30), (timer) {
-      zeroHP();
+      // zeroHP();
+      fetchFirebaseData();
     });
     // Timer.periodic(const Duration(milliseconds: 10000), (timer) {
     //   changeHP();
@@ -130,8 +131,8 @@ class _MainPageState extends State<MainPage> {
   // データリストからFlSpotのリストを作成する関数
   List<FlSpot> createFlSpotList(List<Map> dataList) {
     return dataList.map((map) {
-      double x = map["x"];
-      double y = map["y"];
+      double x = map["x"].toDouble();
+      double y = map["y"].toDouble();
       return FlSpot(x, y);
     }).toList();
   }
@@ -146,21 +147,6 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
-  // void _timeLog() {
-  //   if (mounted) {
-  //     setState(() {
-  //       _now = DateTime.now();
-  //       _year = _now.year;
-  //       _month = _now.month;
-  //       _day = _now.day;
-  //       _hour = _now.hour;
-  //       _minute = _now.minute;
-  //       _second = _now.second;
-  //     });
-  //     logger.d(_now);
-  //     logger.d("$_year年$_month月$_day日 $_hour時$_minute分$_second秒");
-  //   }
-  // }
 
   //debug
   void initrem() async {
@@ -171,19 +157,6 @@ class _MainPageState extends State<MainPage> {
     // }
   }
 
-  //registerページに画面遷移
-  void moveToRegister() async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        fullscreenDialog: true,
-        builder: (context) => const RegisterPage(),
-      ),
-    );
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // setState(() {
-    //   userId = prefs.getString("userId");
-    // });
-  }
 
   //ローカルdbからuserIdを取ってくる&debug
   void _getPrefItems() async {
@@ -210,7 +183,7 @@ class _MainPageState extends State<MainPage> {
   Future<void> fetchFirebaseData() async {
     logger.d("startttttt");
     DateTime now = DateTime.now();
-    DateTime hoursAgo = now.add(const Duration(hours: 4) * -1);
+    DateTime hoursAgo = now.add(const Duration(hours: 40) * -1);
     if (latestDataTime != null) {
       if (latestDataTime!.compareTo(hoursAgo) == 1) {
         hoursAgo = latestDataTime!;
@@ -243,18 +216,19 @@ class _MainPageState extends State<MainPage> {
       logger.d(tes);
       logger.d("tes.length: ${tes.length}");
       logger.d("spots.length: ${spots.length}");
-      if (spots.isNotEmpty) {
+      if (spots.isNotEmpty && tes.isNotEmpty) {
         logger.d("spots is not Empty");
         spots.removeRange(0, tes.length - 1);
+      } else {
+        logger.d("spots is Empty or tes is Empty");
       }
-      // for (int i = 0; i < tes.length; i++) {
-      //   spots.add(tes[i]);
-      // }
+      // List furTest = createFlSpotList(responseMap["future_spots"]);
       setState(() {
         // spots = tes;
         // spots.addAll(tes);
         imgUrl = responseMap["url"];
         spots = spots + tes;
+        // futureSpots = furTest;
         recordHighHP = responseMap["recordHighHP"];
         recordLowHP = responseMap["recordLowHP"];
       });
@@ -350,6 +324,7 @@ class _MainPageState extends State<MainPage> {
               fontColor: fontColor,
               fontPosition: fontPosition,
               imgUrl: imgUrl,
+              // futureSpots: futureSpots,
             ),
             const FriendPage(),
           ],

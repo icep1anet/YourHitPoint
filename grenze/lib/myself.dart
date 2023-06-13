@@ -20,6 +20,7 @@ class MyselfPage extends StatefulWidget {
   final Color fontColor;
   final double fontPosition;
   final String? imgUrl;
+  // final List<FlSpot> futureSpots;
   const MyselfPage(
       {required this.spots,
       required this.currentHP,
@@ -29,6 +30,7 @@ class MyselfPage extends StatefulWidget {
       required this.fontColor,
       required this.fontPosition,
       required this.imgUrl,
+      // required this.futureSpots,
       Key? key})
       : super(key: key);
   // 使用するStateを指定
@@ -399,7 +401,15 @@ class LineChartWidget extends StatelessWidget {
             dotData: FlDotData(show: false),
             spots: widget.spots,
             // dashArray: [10, 6],
-          )
+          ),
+          // LineChartBarData(
+          //   isCurved: true,
+          //   color: Colors.green[400],
+          //   barWidth: 3,
+          //   dotData: FlDotData(show: true),
+          //   spots: widget.futureSpots,
+          //   dashArray: [10, 6],
+          // ),
         ],
         titlesData: FlTitlesData(
           rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -412,13 +422,20 @@ class LineChartWidget extends StatelessWidget {
                 return bottomGraphWidgets(
                   value,
                   meta,
-                  // constraints.maxWidth,
                 );
               },
               reservedSize: 30,
             ),
           ),
         ),
+        extraLinesData: ExtraLinesData(
+          horizontalLines: [
+            HorizontalLine(
+              y: 0,
+              color: Colors.blue,
+              ),
+          ]
+        )
       ),
     );
   }

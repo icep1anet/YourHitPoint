@@ -85,12 +85,12 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
     super.initState();
   }
 
-  // @override
-  // void dispose() {
-  //   animationController?.dispose();
-  //   waveAnimationController?.dispose();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    animationController?.dispose();
+    waveAnimationController?.dispose();
+    super.dispose();
+  }
 
   void _startDelay() async {
     await Future.delayed(const Duration(seconds: 5));
