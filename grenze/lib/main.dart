@@ -107,9 +107,8 @@ class _MainPageState extends State<MainPage> {
   Color fontColor = Colors.white;
   double fontPosition = 60;
   DateTime? latestDataTime;
-  int? minX;
-  int? maxX;
-  double minY = -30;
+  double? minX;
+  double? maxX;
 
 
   //ページ起動時に呼ばれる初期化関数
@@ -187,7 +186,7 @@ class _MainPageState extends State<MainPage> {
   Future<void> fetchFirebaseData() async {
     logger.d("startttttt");
     DateTime now = DateTime.now();
-    DateTime hoursAgo = now.add(const Duration(hours: 44) * -1);
+    DateTime hoursAgo = now.add(const Duration(hours: 50) * -1);
     if (latestDataTime != null) {
       if (latestDataTime!.compareTo(hoursAgo) == 1) {
         hoursAgo = latestDataTime!;
@@ -230,7 +229,17 @@ class _MainPageState extends State<MainPage> {
       setState(() {
         imgUrl = responseMap["url"];
         spots = spots + tes;
+        if  (spots.isNotEmpty) {
+          minX = spots[0].x.toInt().toDouble();
+        } else {
+          minX = null;
+        }
         // futureSpots = furTest;
+        if (futureSpots.isNotEmpty) {
+          maxX = futureSpots.last.x.ceil().toDouble();
+        } else {
+          maxX = null;
+        }
         recordHighHP = responseMap["recordHighHP"];
         recordLowHP = responseMap["recordLowHP"];
       });
@@ -327,6 +336,8 @@ class _MainPageState extends State<MainPage> {
               fontColor: fontColor,
               fontPosition: fontPosition,
               imgUrl: imgUrl,
+              minX: minX,
+              maxX: maxX,
               // futureSpots: futureSpots,
             ),
             const FriendPage(),

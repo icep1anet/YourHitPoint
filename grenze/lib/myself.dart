@@ -20,6 +20,8 @@ class MyselfPage extends StatefulWidget {
   final Color fontColor;
   final double fontPosition;
   final String? imgUrl;
+  final double? minX;
+  final double? maxX;
   // final List<FlSpot> futureSpots;
   const MyselfPage(
       {required this.spots,
@@ -30,6 +32,8 @@ class MyselfPage extends StatefulWidget {
       required this.fontColor,
       required this.fontPosition,
       required this.imgUrl,
+      required this.minX,
+      required this.maxX,
       // required this.futureSpots,
       Key? key})
       : super(key: key);
@@ -390,8 +394,8 @@ class LineChartWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return LineChart(
       LineChartData(
-        // minX: 0,
-        // maxX: 6,
+        minX: widget.minX,
+        maxX: widget.maxX,
         backgroundColor: const Color(0xffd0e3ce),
         lineBarsData: [
           LineChartBarData(
