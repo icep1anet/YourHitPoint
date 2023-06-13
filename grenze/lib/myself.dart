@@ -22,6 +22,7 @@ class MyselfPage extends StatefulWidget {
   final String? imgUrl;
   final double? minX;
   final double? maxX;
+  final String activeLimitTime;
   // final List<FlSpot> futureSpots;
   const MyselfPage(
       {required this.spots,
@@ -34,6 +35,7 @@ class MyselfPage extends StatefulWidget {
       required this.imgUrl,
       required this.minX,
       required this.maxX,
+      required this.activeLimitTime,
       // required this.futureSpots,
       Key? key})
       : super(key: key);
@@ -180,7 +182,7 @@ class _MyselfPageState extends State<MyselfPage> {
                         child: Column(children: [
                           HPWidget(widget: widget),
                           // const SizedBox(width: 20),
-                          const LimitTimeWidget(),
+                          LimitTimeWidget(widget: widget),
                         ]),
                       )),
                   const SizedBox(height: 40),
@@ -537,14 +539,16 @@ class LineChartWidget extends StatelessWidget {
 class LimitTimeWidget extends StatelessWidget {
   const LimitTimeWidget({
     super.key,
+    required this.widget,
   });
+  final MyselfPage widget;
 
   @override
   Widget build(BuildContext context) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Text("推定活動限界",
           style: GoogleFonts.roboto(fontWeight: FontWeight.w500, fontSize: 20)),
-      Text("23:43",
+      Text(widget.activeLimitTime,
           style: GoogleFonts.sourceCodePro(
               fontSize: 30,
               fontWeight: FontWeight.bold,

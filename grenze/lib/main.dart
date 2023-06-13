@@ -109,6 +109,7 @@ class _MainPageState extends State<MainPage> {
   DateTime? latestDataTime;
   double? minX;
   double? maxX;
+  String activeLimitTime = "";
 
 
   //ページ起動時に呼ばれる初期化関数
@@ -338,6 +339,7 @@ class _MainPageState extends State<MainPage> {
               imgUrl: imgUrl,
               minX: minX,
               maxX: maxX,
+              activeLimitTime: activeLimitTime,
               // futureSpots: futureSpots,
             ),
             const FriendPage(),
