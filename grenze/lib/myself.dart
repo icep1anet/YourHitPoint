@@ -329,6 +329,8 @@ class LineChartWidget extends StatelessWidget {
         Provider.of<UserDataProvider>(context, listen: true);
     return LineChart(
       LineChartData(
+        minX: userDataProvider.minGraphX,
+        maxX: userDataProvider.maxGraphX,
         backgroundColor: const Color(0xffd0e3ce),
         lineBarsData: [
           LineChartBarData(

@@ -93,10 +93,6 @@ class _MainPageState extends State<MainPage> {
         builder: (context) => const RegisterPage(),
       ),
     );
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // setState(() {
-    //   userId = prefs.getString("userId");
-    // });
   }
 
   //ページ移動系

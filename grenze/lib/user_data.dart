@@ -28,6 +28,8 @@ class UserDataProvider with ChangeNotifier {
   Color barColor = const Color(0xFF32cd32);
   Color fontColor = Colors.white;
   DateTime? latestDataTime;
+  double? minGraphX;
+  double? maxGraphX;
 
   void setHPspotsList(List<Map> dataList) {
     spots = createHPSpotsList(dataList);
@@ -147,7 +149,7 @@ class UserDataProvider with ChangeNotifier {
   Future<void> fetchFirebaseData() async {
     logger.d("startttttt");
     DateTime now = DateTime.now();
-    DateTime hoursAgo = now.add(const Duration(hours: 4) * -1);
+    DateTime hoursAgo = now.add(const Duration(hours: 8) * -1);
     if (latestDataTime != null) {
       if (latestDataTime!.compareTo(hoursAgo) == 1) {
         hoursAgo = latestDataTime!;
@@ -190,8 +192,19 @@ class UserDataProvider with ChangeNotifier {
       // }
       // spots = tes;
       // spots.addAll(tes);
+
       imgUrl = responseMap["url"];
       spots = spots + tes;
+      if (spots.isNotEmpty) {
+        minGraphX = spots[0].x.toInt().toDouble();
+      } else {
+        minGraphX = null;
+      }
+      if (futureSpots.isNotEmpty) {
+        maxGraphX = futureSpots.last.x.ceil().toDouble();
+      } else {
+        maxGraphX = null;
+      }
       recordHighHP = responseMap["recordHighHP"];
       recordLowHP = responseMap["recordLowHP"];
       logger.d("spotsAfter: $spots");
