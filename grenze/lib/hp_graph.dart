@@ -9,7 +9,7 @@ List<FlSpot> createHPSpotsList(List<Map> dataList) {
   }).toList();
 }
 
-List<FlSpot> convertHPspotsList(List<Map> spotsList) {
+List<FlSpot> convertHPSpotsList(List<Map> spotsList) {
   //過去、未来のデータを色々やってList<FlSpot>の形に変換してspots, futureSpotsに追加、代入
   List<Map> tmp = [];
   for (Map x in tmp) {

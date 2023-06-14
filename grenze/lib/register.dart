@@ -8,6 +8,8 @@ import "package:logger/logger.dart";
 import "dart:convert";
 import "package:http/http.dart" as http;
 
+var logger = Logger();
+
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -30,7 +32,6 @@ class _RegisterPageState extends State<RegisterPage> {
   bool? hasData;
   List<String> choices = ["猫", "犬", "フクロウ", "カブトムシ", "亀"];
   String avatarType = "猫";
-  var logger = Logger();
   String? userId;
 
   //ページ起動時に呼ばれる初期化関数

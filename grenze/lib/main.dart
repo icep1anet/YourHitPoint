@@ -21,11 +21,8 @@ const testDataList = [
 ];
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(
-    ChangeNotifierProvider<UserDataProvider>(
-      create: (context) => UserDataProvider(), child: const MyApp())
-      );
-  
+  runApp(ChangeNotifierProvider<UserDataProvider>(
+      create: (context) => UserDataProvider(), child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -80,6 +77,9 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
 
+    context
+      .read<UserDataProvider>()
+      .setTimerFunc(900, context.read<UserDataProvider>().updateUserData);
     context.read<UserDataProvider>().getPrefItems();
     // context.read<UserDataProvider>().fetchFirebaseData();
     // context.read<UserDataProvider>().setHPspotsList(testDataList);
@@ -202,4 +202,3 @@ class HexColor extends Color {
     return int.parse(hexColor, radix: 16);
   }
 }
-
