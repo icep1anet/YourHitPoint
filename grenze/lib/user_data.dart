@@ -30,6 +30,8 @@ class UserDataProvider with ChangeNotifier {
   DateTime? latestDataTime;
   double? minGraphX;
   double? maxGraphX;
+  double? minGraphY;
+  double? maxGraphY;
   String activeLimitTime = "";
   List friendDataList = [];
 
@@ -194,15 +196,29 @@ class UserDataProvider with ChangeNotifier {
     //pastSpotsの0番目のデータからminxをとる
     if (pastSpots.isNotEmpty) {
       minGraphX = pastSpots.first.x.floor().toDouble();
+      maxGraphY = pastSpots.first.y;
+      double tmpMaxY = maxGraphY!;
+      maxGraphY =((maxGraphY!/10).round().toDouble())*10;
+      if (maxGraphY! < tmpMaxY) {
+        maxGraphY = maxGraphY! + 5.0;
+      }
     } else {
       minGraphX = null;
+      maxGraphY = null;
     }
     logger.d("futureSpots: $futureSpots");
     //futureSpotsの最後のデータからmaxXをとる
     if (futureSpots.isNotEmpty) {
       maxGraphX = futureSpots.last.x.ceil().toDouble();
+      minGraphY = futureSpots.last.y;
+      double tmpMinY = minGraphY!;
+      minGraphY =((minGraphY!/10).round().toDouble())*10;
+      if (minGraphY! > tmpMinY) {
+        minGraphY = minGraphY! - 5.0;
+      }
     } else {
       maxGraphX = null;
+      minGraphY = null;
     }
   }
 

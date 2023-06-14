@@ -330,6 +330,8 @@ class LineChartWidget extends StatelessWidget {
       LineChartData(
           minX: userDataProvider.minGraphX,
           maxX: userDataProvider.maxGraphX,
+          minY: userDataProvider.minGraphY,
+          maxY: userDataProvider.maxGraphY,
           backgroundColor: const Color(0xffd0e3ce),
           lineBarsData: [
             LineChartBarData(
