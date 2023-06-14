@@ -31,6 +31,7 @@ class UserDataProvider with ChangeNotifier {
   double? minGraphX;
   double? maxGraphX;
   String activeLimitTime = "";
+  List friendDataList = [];
 
   void setHPSpotsList(List<Map> dataList) {
     pastSpots = createHPSpotsList(dataList);
@@ -232,13 +233,41 @@ class UserDataProvider with ChangeNotifier {
       recordLowHP = responseBody["recordLowHP"];
       activeLimitTime = responseBody["activeLimitTime"];
     });
+    fetchFriendData(userId!).then((responseBody) {
+      // for (Map friendData in responseBody["friendDataList"]) {
+      //   friendDataList.add(CardWidget(friendData["currentHP"], friendData["avatarUrl"], friendData["friendName"]));
+      // }
+      friendDataList = responseBody["friendDataList"];
+    });
     //latestDataTimeの更新
     latestDataTime = now;
     hpNumber = 0;
     logger.d("Done!");
   }
+
+  Future<Map> fetchFriendData(String userId) async {
+    //リクエスト
+    var url = Uri.https("o2nr395oib.execute-api.ap-northeast-1.amazonaws.com",
+        "/default/get_HP_data", {
+      "userId": userId,
+    });
+    var response = await http.get(url);
+    logger.d(response.body);
+    //リクエストの返り値をマップ形式に変換
+    var responseBody = jsonDecode(response.body);
+    //リクエスト成功時
+    if (response.statusCode == 200) {
+      // リクエストが成功した場合、レスポンスの内容を取得して表示します
+      logger.d("frined成功しました!");
+      logger.d(response.body);
+    } else {
+      // リクエストが失敗した場合、エラーメッセージを表示します
+      logger.d("Request failed with status: ${responseBody.statusCode}");
+    }
+    return responseBody;
+  }
+
+
+
 }
-
-
-
 
