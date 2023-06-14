@@ -36,13 +36,13 @@ class _MyselfPageState extends State<MyselfPage> {
   @override
   void initState() {
     super.initState();
-    context
-        .read<UserDataProvider>()
-        .setTimerFunc(50, context.read<UserDataProvider>().setZeroHP);
+    // context
+    //     .read<UserDataProvider>()
+    //     .setTimerFunc(50, context.read<UserDataProvider>().setZeroHP);
 
     context
         .read<UserDataProvider>()
-        .setTimerFunc(10, context.read<UserDataProvider>().changeHP);
+        .setTimerFunc(1, context.read<UserDataProvider>().changeHP);
 
   }
 
@@ -284,8 +284,8 @@ class WaveViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hpNumber = context.select(
-      (UserDataProvider userDataProvider) => userDataProvider.hpNumber);
+    final currentHP = context.select(
+      (UserDataProvider userDataProvider) => userDataProvider.currentHP);
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 8, top: 16),
       child: Container(
@@ -308,7 +308,7 @@ class WaveViewWidget extends StatelessWidget {
           ],
         ),
         child: WaveView(
-            percentageValue: hpNumber.toDouble()
+            percentageValue: currentHP.toDouble()
             ),
       ),
     );
@@ -495,7 +495,7 @@ class HPWidget extends StatelessWidget {
             style: GoogleFonts.roboto(fontWeight: FontWeight.w500, fontSize: 20)
             // Theme.of(context).textTheme.headlineSmall
             ),
-        Text(userDataProvider.hpNumber.toString(),
+        Text(userDataProvider.currentHP.toString(),
             style: GoogleFonts.sourceCodePro(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,

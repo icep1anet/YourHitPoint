@@ -93,10 +93,10 @@ class UserDataProvider with ChangeNotifier {
   void getPrefItems() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     userId = prefs.getString("userId");
-    String? userName = prefs.getString("userName");
+    // String? userName = prefs.getString("userName");
     // String? avatarName = prefs.getString("avatarName");
     // String? avatarType = prefs.getString("avatarType");
-    if (userName != null) logger.d("userName:$userName");
+    // if (userName != null) logger.d("userName:$userName");
     WidgetsBinding.instance.addPostFrameCallback((_) {
       notifyListeners();
     });
@@ -104,12 +104,8 @@ class UserDataProvider with ChangeNotifier {
 
   //現在のHPを変える
   void changeHP() {
-    logger.d(hpNumber);
-    if (hpNumber < 100) {
-      // setState(() {
-      // currentHP = hpNumber;
-      // currentHP = hpList[hpNumber]["y"];
-      // });
+    if (hpNumber < futureSpots.length) {
+      currentHP = futureSpots[hpNumber].y.toInt();
       if (80 < currentHP) {
         barColor = const Color(0xFF32cd32);
         fontColor = Colors.white;
@@ -131,7 +127,7 @@ class UserDataProvider with ChangeNotifier {
         fontColor = Colors.black;
         fontPosition = 0;
       }
-      hpNumber += 10;
+      hpNumber += 1;
     } else {}
     WidgetsBinding.instance.addPostFrameCallback((_) {
       notifyListeners();
@@ -174,17 +170,17 @@ class UserDataProvider with ChangeNotifier {
       "endTimestamp": now.toString()
     });
     var response = await http.get(url);
-    logger.d(response.body);
+    logger.d("response.body: ${response.body}");
     //リクエストの返り値をマップ形式に変換
     var responseBody = jsonDecode(response.body);
     //リクエスト成功時
     if (response.statusCode == 200) {
       // リクエストが成功した場合、レスポンスの内容を取得して表示します
       logger.d("成功しました！");
-      logger.d(response.body);
+      // logger.d(response.body);
 
-      logger.d("past:");
-      logger.d(responseBody["past_spots"]);
+      // logger.d("past:");
+      // logger.d(responseBody["past_spots"]);
     } else {
       // リクエストが失敗した場合、エラーメッセージを表示します
       logger.d("Request failed with status: ${responseBody.statusCode}");
@@ -218,31 +214,39 @@ class UserDataProvider with ChangeNotifier {
     }
   }
 
-  updateUserData() {
+  updateUserData()  async {
     Map befFetchedtime = calculateBeforeFetchedDatetime();
     DateTime hoursAgo = befFetchedtime["hoursAgo"];
     DateTime now = befFetchedtime["now"];
     fetchFirebaseData(hoursAgo, now).then((responseBody) {
-      List<FlSpot> pastTmpSpots = convertHPSpotsList(responseBody["pastSpots"]);
-      futureSpots = convertHPSpotsList(responseBody["futureSpots"]);
-      pastSpots += pastTmpSpots;
+      logger.d("responseBody: $responseBody");
+      // logger.d("pastspot: ${responseBody["past_spots"]}");
+      List<FlSpot> pastTmpSpots = convertHPSpotsList(responseBody["past_spots"]);
+      logger.d("1");
+
+      futureSpots = convertHPSpotsList(responseBody["future_spots"]);
+      logger.d("2");
+
       removePastSpotsData(pastTmpSpots);
+      logger.d("3");
+      pastSpots += pastTmpSpots;
+
       updateMinMaxSpots();
       imgUrl = responseBody["url"];
       recordHighHP = responseBody["recordHighHP"];
       recordLowHP = responseBody["recordLowHP"];
       activeLimitTime = responseBody["activeLimitTime"];
     });
-    fetchFriendData(userId!).then((responseBody) {
-      // for (Map friendData in responseBody["friendDataList"]) {
-      //   friendDataList.add(CardWidget(friendData["currentHP"], friendData["avatarUrl"], friendData["friendName"]));
-      // }
-      friendDataList = responseBody["friendDataList"];
-    });
+    // fetchFriendData(userId!).then((responseBody) {
+    //   friendDataList = responseBody["friendDataList"];
+    // });
     //latestDataTimeの更新
     latestDataTime = now;
     hpNumber = 0;
     logger.d("Done!");
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
   }
 
   Future<Map> fetchFriendData(String userId) async {

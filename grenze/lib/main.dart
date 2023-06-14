@@ -81,7 +81,7 @@ class _MainPageState extends State<MainPage> {
       .read<UserDataProvider>()
       .setTimerFunc(900, context.read<UserDataProvider>().updateUserData);
     context.read<UserDataProvider>().getPrefItems();
-    // context.read<UserDataProvider>().fetchFirebaseData();
+    context.read<UserDataProvider>().updateUserData();
     // context.read<UserDataProvider>().setHPspotsList(testDataList);
   }
 

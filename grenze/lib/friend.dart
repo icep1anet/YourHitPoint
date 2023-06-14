@@ -39,7 +39,8 @@ class _FriendPageState extends State<FriendPage> {
           body: Center(
             child: Column(
               children: [
-                const ChangeIdWidget(),
+                const SizedBox(height: 400),
+                // const ChangeIdWidget(),
                 Column(
                   children: [
                       // SizedBox(
@@ -73,7 +74,7 @@ class _FriendPageState extends State<FriendPage> {
                       //   Map friendData = userDataProvider.friendDataList[index];
                       //   return CardWidget(friendData["currentHP"], friendData["friendName"], friendData["avatarUrl"]);
                       // },),
-                      const Divider(),
+                      // const Divider(),
                       ListView.builder(
                           itemBuilder: (BuildContext context, int index) {
                             return Container(
