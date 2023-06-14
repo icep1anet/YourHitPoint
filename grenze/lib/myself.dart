@@ -36,13 +36,13 @@ class _MyselfPageState extends State<MyselfPage> {
   @override
   void initState() {
     super.initState();
-    context
-        .read<UserDataProvider>()
-        .setTimerFunc(50, context.read<UserDataProvider>().setZeroHP);
+    // context
+    //     .read<UserDataProvider>()
+    //     .setTimerFunc(50, context.read<UserDataProvider>().setZeroHP);
 
-    context
-        .read<UserDataProvider>()
-        .setTimerFunc(10, context.read<UserDataProvider>().changeHP);
+    // context
+    //     .read<UserDataProvider>()
+    //     .setTimerFunc(10, context.read<UserDataProvider>().changeHP);
 
   }
 

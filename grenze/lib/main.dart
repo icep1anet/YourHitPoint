@@ -81,8 +81,8 @@ class _MainPageState extends State<MainPage> {
     super.initState();
 
     context.read<UserDataProvider>().getPrefItems();
-    context.read<UserDataProvider>().fetchFirebaseData();
-    context.read<UserDataProvider>().setHPspotsList(testDataList);
+    // context.read<UserDataProvider>().fetchFirebaseData();
+    // context.read<UserDataProvider>().setHPspotsList(testDataList);
   }
 
   //registerページに画面遷移
