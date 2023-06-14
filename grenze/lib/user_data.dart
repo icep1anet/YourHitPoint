@@ -30,6 +30,7 @@ class UserDataProvider with ChangeNotifier {
   DateTime? latestDataTime;
   double? minGraphX;
   double? maxGraphX;
+  String activeLimitTime = "";
 
   void setHPspotsList(List<Map> dataList) {
     spots = createHPSpotsList(dataList);

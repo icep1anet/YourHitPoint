@@ -449,10 +449,12 @@ class LimitTimeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final UserDataProvider userDataProvider =
+        Provider.of<UserDataProvider>(context, listen: true);
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Text("推定活動限界",
           style: GoogleFonts.roboto(fontWeight: FontWeight.w500, fontSize: 20)),
-      Text("23:43",
+      Text(userDataProvider.activeLimitTime,
           style: GoogleFonts.sourceCodePro(
               fontSize: 30,
               fontWeight: FontWeight.bold,
