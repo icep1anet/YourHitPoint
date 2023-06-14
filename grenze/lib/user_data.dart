@@ -33,11 +33,6 @@ class UserDataProvider with ChangeNotifier {
   String activeLimitTime = "";
   List friendDataList = [];
 
-  void test() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("userId", "id_abcd");
-  }
-
   void setHPSpotsList(List<Map> dataList) {
     pastSpots = createHPSpotsList(dataList);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -98,10 +93,6 @@ class UserDataProvider with ChangeNotifier {
   void getPrefItems() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     userId = prefs.getString("userId");
-    // String? userName = prefs.getString("userName");
-    // String? avatarName = prefs.getString("avatarName");
-    // String? avatarType = prefs.getString("avatarType");
-    // if (userName != null) logger.d("userName:$userName");
     WidgetsBinding.instance.addPostFrameCallback((_) {
       notifyListeners();
     });
@@ -168,9 +159,6 @@ class UserDataProvider with ChangeNotifier {
 
   Future<Map> fetchFirebaseData(DateTime hoursAgo, DateTime now) async {
     //リクエスト
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // userId = prefs.getString("userId");
-    logger.d("userId: $userId");
     var url = Uri.https("o2nr395oib.execute-api.ap-northeast-1.amazonaws.com",
         "/default/get_HP_data", {
       "userId": userId,
@@ -185,10 +173,6 @@ class UserDataProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       // リクエストが成功した場合、レスポンスの内容を取得して表示します
       logger.d("成功しました！");
-      // logger.d(response.body);
-
-      // logger.d("past:");
-      // logger.d(responseBody["past_spots"]);
     } else {
       // リクエストが失敗した場合、エラーメッセージを表示します
       logger.d("Request failed with status: ${responseBody.statusCode}");
@@ -200,7 +184,7 @@ class UserDataProvider with ChangeNotifier {
     //spotsにすでにデータがある場合は取ってきた新しい過去データの数だけ昔のspotsのデータをremove
     if (pastSpots.isNotEmpty && pastTmpSpots.isNotEmpty) {
       logger.d("spots is not Empty");
-      pastSpots.removeRange(0, pastTmpSpots.length - 1);
+      pastSpots.removeRange(0, pastTmpSpots.length);
     } else {
       logger.d("spots is Empty or tes is Empty");
     }
@@ -229,15 +213,9 @@ class UserDataProvider with ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     userId = prefs.getString("userId");
     fetchFirebaseData(hoursAgo, now).then((responseBody) {
-      logger.d("responseBody: $responseBody");
-      // logger.d("pastspot: ${responseBody["past_spots"]}");
       List<FlSpot> pastTmpSpots =
           convertHPSpotsList(responseBody["past_spots"]);
-      logger.d("1");
-
       futureSpots = convertHPSpotsList(responseBody["future_spots"]);
-      logger.d("2");
-
       removePastSpotsData(pastTmpSpots);
       pastSpots += pastTmpSpots;
       logger.d("pastSpots: $pastSpots");
@@ -268,14 +246,13 @@ class UserDataProvider with ChangeNotifier {
       "userId": userId,
     });
     var response = await http.get(url);
-    logger.d("未来body: ${response.body}");
+    logger.d("friendbody: ${response.body}");
     //リクエストの返り値をマップ形式に変換
     var responseBody = jsonDecode(response.body);
     //リクエスト成功時
     if (response.statusCode == 200) {
       // リクエストが成功した場合、レスポンスの内容を取得して表示します
       logger.d("frined成功しました!");
-      logger.d(response.body);
     } else {
       // リクエストが失敗した場合、エラーメッセージを表示します
       logger.d("Request failed with status: ${responseBody.statusCode}");

@@ -3,7 +3,6 @@ import "package:flutter/services.dart";
 import "package:fluttericon/octicons_icons.dart";
 import "package:grenze/user_data.dart";
 import "package:provider/provider.dart";
-import "package:shared_preferences/shared_preferences.dart";
 import "package:logger/logger.dart";
 import "dart:convert";
 import "package:http/http.dart" as http;
@@ -23,11 +22,6 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController? _userNameController;
   bool _registering = false;
   TextEditingController? _avatarNameController;
-  //画像のローカルパス
-  // File? imagePath;
-  // String userId = FirebaseAuth.instance.currentUser!.uid;
-  // String? userId;
-  // XFile? pickerFile;
   String? imageUrl;
   bool? hasData;
   List<String> choices = ["猫", "犬", "フクロウ", "カブトムシ", "亀"];
@@ -38,9 +32,6 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();
-    // initializeFlutterFire();
-    // initSharedPreferences();
-    // _getPrefItems();
     _focusUserNameNode = FocusNode();
     _focusAvatarNameNode = FocusNode();
     _userNameController = TextEditingController(text: "多喜男");
@@ -55,37 +46,6 @@ class _RegisterPageState extends State<RegisterPage> {
     _avatarNameController?.dispose();
     super.dispose();
   }
-
-  _setPrefItems(String userId) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("userId", userId);
-  }
-
-  _getPrefItems() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      userId = prefs.getString("userId");
-    });
-    if (userId == null) {
-      logger.d("no");
-    } else {
-      logger.d("yes");
-    }
-  }
-
-  // void addUserToFirestore(String userName, String avatarName, int avatarType) async{
-  //   CollectionReference users = FirebaseFirestore.instance.collection("users");
-
-  //   await users.doc("test").collection("user_info").doc("user_data").set({
-  //     "userName": _userNameController!.text,
-  //     "avatarName": _avatarNameController!.text,
-  //     "avatarType": avatarType,
-  //   }).then((value) {
-  //     logger.d("User added successfully!");
-  //   }).catchError((error) {
-  //     logger.d("Failed to add user: $error");
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -104,27 +64,6 @@ class _RegisterPageState extends State<RegisterPage> {
                   "Profile settings",
                   style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
-                actions: [
-                  //   if (hasData != null)
-                  //     IconButton(
-                  //       onPressed: () {
-                  //         showQRcode(userId);
-                  //       },
-                  //       icon: const Icon(Icons.qr_code_2),
-                  //       color: Colors.pink,
-                  //       iconSize: 35,
-                  //     ),
-                  IconButton(
-                      onPressed: () {
-                        _setPrefItems("12345kusa");
-                      },
-                      icon: const Icon(Icons.add)),
-                  IconButton(
-                      onPressed: () {
-                        _getPrefItems();
-                      },
-                      icon: const Icon(Icons.add)),
-                ],
               ),
               body: SingleChildScrollView(
                 child: Container(
@@ -186,15 +125,6 @@ class _RegisterPageState extends State<RegisterPage> {
                           textInputAction: TextInputAction.done,
                         ),
                       ),
-                      /*
-                      dropdownColor：ドロップダウンの背景色
-                      elevation：リストを開いた時の影の濃さ
-                      icon：ドロップダウンボタンのアイコン
-                      iconSize：ドロップダウンボタンのアイコンの大きさ
-                      itemHeight：リストの高さ
-                      style：テキストスタイル
-                      underline：ドロップダウンボタンの下線
-                      */
                       const SizedBox(
                         height: 30,
                       ),
@@ -206,15 +136,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                 fontSize: 18, color: Color(0xff696969))),
                       ),
                       Container(
-                        // height: 50,
                         decoration: BoxDecoration(
                           border: Border.all(
-                              // right: BorderSide(),
-                              color: const Color(0xff696969),
-                              width: 1),
+                              color: const Color(0xff696969), width: 1),
                           borderRadius: BorderRadius.circular(10),
                         ),
-
                         child: DropdownButton(
                           style: const TextStyle(
                               fontSize: 25, color: Colors.black),
@@ -234,67 +160,18 @@ class _RegisterPageState extends State<RegisterPage> {
                             });
                           },
                           icon: const Padding(
-                              //Icon at tail, arrow bottom is default icon
                               padding: EdgeInsets.only(left: 20),
                               child: Icon(
                                 Octicons.triangle_down,
                                 size: 15,
                               )),
-                          iconEnabledColor:
-                              const Color(0xff696969), //Icon color
-                          dropdownColor:
-                              Colors.white, //dropdown background color
-                          underline: Container(), //remove underline
-                          // isExpanded: true,
+                          iconEnabledColor: const Color(0xff696969),
+                          dropdownColor: Colors.white,
+                          underline: Container(),
                         ),
                       ),
-
-                      // Container(
-                      //     margin: const EdgeInsets.only(top: 16),
-                      //     child: Row(
-                      //         mainAxisAlignment: MainAxisAlignment.center,
-                      //         children: [
-                      //           ElevatedButton(
-                      //             onPressed: () {
-                      //               _focusUserNameNode?.requestFocus();
-                      //               _selectImage();
-                      //             },
-                      //             style: ElevatedButton.styleFrom(
-                      //               backgroundColor: Colors.green,
-                      //               elevation: 16,
-                      //             ),
-                      //             child: imagePath == null &&
-                      //                     imageUrl == null
-                      //                 ? const Text("Set Image")
-                      //                 : const Text("Change Image"),
-                      //           ),
-                      //           IconButton(
-                      //             onPressed: () {
-                      //               _focusUserNameNode?.requestFocus();
-                      //               setState(() {
-                      //                 imagePath = null;
-                      //                 imageUrl = null;
-                      //                 pickerFile = null;
-                      //               });
-                      //             },
-                      //             icon: const Icon(Icons.cancel),
-                      //             iconSize: 35,
-                      //             color: Colors.blue,
-                      //           )
-                      //         ])),
-                      // const SizedBox(height: 30),
-                      // //表示する画像はfirestrorageのものではなくローカルで表示
-                      // imagePath != null
-                      //     ? _buildmyAvatar(imagePath)
-                      //     : _currentmyAvatar(imageUrl),
-
                       const SizedBox(height: 30),
                       TextButton(
-                        // style: TextButton.styleFrom(
-                        //   side: BorderSide(
-                        //     color: Color(0xff483d8b)
-                        //   )
-                        // ),
                         onPressed: () {
                           // firstNameとlastNameは必須で入力しないと登録できないようにする
                           if (_registering == false &&
@@ -325,35 +202,13 @@ class _RegisterPageState extends State<RegisterPage> {
             )));
   }
 
-  // void initializeFlutterFire() async {
-  //   _focusUserNameNode = FocusNode();
-  //   _focusAvatarNameNode = FocusNode();
-  //   DocumentSnapshot snapshot =
-  //       await FirebaseChatCore.instance.getUserData(userId);
-  //   if (snapshot.exists) {
-  //     setState(() {
-  //       hasData = true;
-  //     });
-  //     _userNameController = TextEditingController(text: snapshot["firstName"]);
-  //     _avatarNameController = TextEditingController(
-  //       text: snapshot["lastName"],
-  //     );
-  //     imageUrl = snapshot["imageUrl"];
-  //   } else {
-  //     _userNameController = TextEditingController(text: "");
-  //     _avatarNameController = TextEditingController(text: "");
-  //   }
-  // }
-
   //responseを送ってfirebaseにデータ登録する
   Future<void> registerFirebase() async {
     FocusScope.of(context).unfocus();
     setState(() {
       _registering = true;
     });
-    logger.d("startttttt");
-    // var url =
-    //   Uri.https("o2nr395oib.execute-api.ap-northeast-1.amazonaws.com", "/default/get_HP_data",
+    logger.d("regist start");
     var url = Uri.https("vignp7m26e.execute-api.ap-northeast-1.amazonaws.com",
         "/default/register_firebase_yourHP", {
       "userName": _userNameController!.text,
@@ -362,11 +217,9 @@ class _RegisterPageState extends State<RegisterPage> {
     });
     try {
       var response = await http.get(url);
-      logger.d(response.body);
+      logger.d("register.body: ${response.body}");
       if (response.statusCode == 200) {
         // リクエストが成功した場合、レスポンスの内容を取得して表示します
-        // logger.d(response.body);
-
         var responseMap = jsonDecode(response.body);
         userId = responseMap["userId"];
         logger.d(userId);
@@ -419,32 +272,6 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  // void _register() async {
-  //   FocusScope.of(context).unfocus();
-  //   setState(() {
-  //     _registering = true;
-  //   });
-
-  //   await showDialog(
-  //     context: context,
-  //     builder: (context) => AlertDialog(
-  //       actions: [
-  //         TextButton(
-  //           onPressed: () {
-  //             Navigator.of(context).pop();
-  //           },
-  //           child: const Text("OK"),
-  //         ),
-  //       ],
-  //       content: Text(
-  //         e.toString(),
-  //       ),
-  //       title: const Text("Error"),
-  //     ),
-  //   );
-  // }
-  // }
-
   void navigateMain() async {
     await Navigator.pushNamedAndRemoveUntil(
       context,
@@ -452,36 +279,4 @@ class _RegisterPageState extends State<RegisterPage> {
       (route) => false,
     );
   }
-
-  // void _selectImage() async {
-  //   pickerFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-  //   if (pickerFile == null) {
-  //     setState(() {
-  //       _registering = false;
-  //     });
-  //     return;
-  //   }
-  //   File file = File(pickerFile!.path);
-  //   setState(() {
-  //     imagePath = file;
-  //   });
-  // }
-
-  // Widget _buildmyAvatar(File? path) {
-  //   var color = getmyAvatarNameColor(userId);
-  //   final hasImage = path != null;
-  //   return Container(
-  //     margin: const EdgeInsets.only(right: 16),
-  //     child: CircleAvatar(
-  //       backgroundColor: hasImage ? Colors.transparent : color,
-  //       backgroundImage: hasImage ? FileImage(imagePath!) : null,
-  //       radius: 60,
-  //       child: !hasImage
-  //           ? const Text(
-  //               "no image",
-  //             )
-  //           : null,
-  //     ),
-  //   );
-  // }
 }

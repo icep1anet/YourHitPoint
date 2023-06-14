@@ -189,22 +189,6 @@ class FriendCardWidget extends StatelessWidget {
 }
 
 
-    // return Card(
-    //   child: Column(
-    //     mainAxisSize: MainAxisSize.max,
-    //     children: <Widget>[
-    //       ListTile(
-    //         leading: _currentmyAvatar(null),
-    //         title: const Text("Name"),
-    //         subtitle: const Text("subtitle"),
-    //       ),
-
-
-    //     ],
-    //   ),
-    // );
-
-
 
     //card
     //     return SizedBox(

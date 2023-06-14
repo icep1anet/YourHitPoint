@@ -82,7 +82,6 @@ class _MainPageState extends State<MainPage> {
         .setTimerFunc(900, context.read<UserDataProvider>().updateUserData);
     // context.read<UserDataProvider>().getPrefItems();
     context.read<UserDataProvider>().updateUserData();
-    // context.read<UserDataProvider>().test();
     // context.read<UserDataProvider>().setHPspotsList(testDataList);
   }
 
@@ -103,8 +102,6 @@ class _MainPageState extends State<MainPage> {
           duration: const Duration(milliseconds: 100), curve: Curves.easeOut);
     });
   }
-
-  // //responseを送ってfirebaseにデータ登録する
 
   @override
   Widget build(BuildContext context) {
