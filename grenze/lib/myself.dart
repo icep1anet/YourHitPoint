@@ -340,6 +340,14 @@ class LineChartWidget extends StatelessWidget {
             dotData: FlDotData(show: false),
             spots: userDataProvider.spots,
           ),
+          LineChartBarData(
+            isCurved: true,
+            color: Colors.blue[400],
+            barWidth: 3,
+            dotData: FlDotData(show: false),
+            spots: userDataProvider.futureSpots,
+            dashArray: [10, 6],
+          ),
         ],
         titlesData: FlTitlesData(
           rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),

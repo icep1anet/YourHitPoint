@@ -22,7 +22,7 @@ class UserDataProvider with ChangeNotifier {
   double recordHighHP = 0;
   double recordLowHP = 0;
   String? imgUrl;
-  List futureSpots = [];
+  List<FlSpot> futureSpots = [];
   List<FlSpot> spots = [];
   double fontPosition = 48.5;
   Color barColor = const Color(0xFF32cd32);
@@ -157,6 +157,8 @@ class UserDataProvider with ChangeNotifier {
         logger.d("latestDataTime:$latestDataTime");
       }
     }
+
+
     var url = Uri.https("o2nr395oib.execute-api.ap-northeast-1.amazonaws.com",
         "/default/get_HP_data", {
       "userId": "id_abcd",
@@ -218,3 +220,86 @@ class UserDataProvider with ChangeNotifier {
     }
   }
 }
+
+
+
+  // // //responseを送ってfirebaseにデータ登録する
+  // Future<void> fetchFirebaseData() async {
+  //   logger.d("startttttt");
+  //   DateTime now = DateTime.now();
+  //   DateTime hoursAgo = now.add(const Duration(hours: 8) * -1);
+  //   if (latestDataTime != null) {
+  //     if (latestDataTime!.compareTo(hoursAgo) == 1) {
+  //       hoursAgo = latestDataTime!;
+  //       logger.d("latestDataTime:$latestDataTime");
+  //     }
+  //   }
+  //   var url = Uri.https("o2nr395oib.execute-api.ap-northeast-1.amazonaws.com",
+  //       "/default/get_HP_data", {
+  //     "userId": "id_abcd",
+  //     "startTimestamp": hoursAgo.toString(),
+  //     "endTimestamp": now.toString()
+  //   });
+  //   var response = await http.get(url);
+  //   logger.d(response.body);
+  //   if (response.statusCode == 200) {
+  //     // リクエストが成功した場合、レスポンスの内容を取得して表示します
+  //     logger.d("成功しました！");
+  //     logger.d(response.body);
+
+  //     var responseMap = jsonDecode(response.body);
+  //     logger.d("past:");
+  //     logger.d(responseMap["past_spots"]);
+  //     List pastTmp = responseMap["past_spots"];
+  //     List<Map<dynamic, dynamic>> pastTmp2 = [];
+  //     for (Map map in pastTmp) {
+  //       pastTmp2.add(map);
+  //     }
+  //     List futureTmp = responseMap["future_spots"];
+  //     List<Map<dynamic, dynamic>> futureTmp2 = [];
+  //     for (Map map in futureTmp) {
+  //       futureTmp2.add(map);
+  //     }
+  //     logger.d("daiichidannkai");
+  //     List<FlSpot> pastTmp3 = createFlSpotList(pastTmp2);
+  //     List<FlSpot> futureTmp3 = createFlSpotList(futureTmp2);
+  //     logger.d("pastTmp3: $pastTmp3");
+  //     logger.d("pastTmp3.length: ${pastTmp3.length}");
+  //     logger.d("spots.length: ${spots.length}");
+  //     if (spots.isNotEmpty && pastTmp3.isNotEmpty) {
+  //       logger.d("spots is not Empty");
+  //       spots.removeRange(0, pastTmp3.length - 1);
+  //     } else {
+  //       logger.d("spots is Empty or tes is Empty");
+  //     }
+  //     setState(() {
+  //       imgUrl = responseMap["url"];
+  //       spots = spots + pastTmp3;
+  //       if (spots.isNotEmpty) {
+  //         minX = spots[0].x.toInt().toDouble();
+  //         logger.d("minx更新: ${minX.toString()}");
+  //       } else {
+  //         minX = null;
+  //       }
+  //       futureSpots = futureTmp3;
+  //       logger.d("futureSpots: $futureSpots");
+  //       if (futureSpots.isNotEmpty) {
+  //         maxX = futureSpots.last.x.ceil().toDouble();
+  //         logger.d("maxx更新: ${maxX.toString()}");
+  //       } else {
+  //         maxX = null;
+  //       }
+  //       recordHighHP = responseMap["recordHighHP"];
+  //       recordLowHP = responseMap["recordLowHP"];
+  //       activeLimitTime = responseMap["activeLimitTime"];
+  //     });
+  //     logger.d("spotsAfter: $spots");
+  //     logger.d("spotsLengthAfter: ${spots.length}");
+  //     //latestDataTimeの更新
+  //     latestDataTime = now;
+  //     hpNumber = 0;
+  //   } else {
+  //     // リクエストが失敗した場合、エラーメッセージを表示します
+  //     logger.d("Request failed with status: ${response.statusCode}");
+  //   }
+  // }
