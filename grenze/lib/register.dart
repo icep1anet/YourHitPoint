@@ -371,18 +371,22 @@ class _RegisterPageState extends State<RegisterPage> {
         userId = responseMap["userId"];
         logger.d(userId);
         // if (!mounted) return;
-        if (context.mounted){
-          context.read<UserDataProvider>().setItemToSharedPref(
-            ["userId", "userName",
-             "avatarName", "avatarType"], 
-            [userId!, _userNameController!.text,
-             _avatarNameController!.text, avatarType]
-            );
+        if (context.mounted) {
+          context.read<UserDataProvider>().setItemToSharedPref([
+            "userId",
+            "userName",
+            "avatarName",
+            "avatarType"
+          ], [
+            userId!,
+            _userNameController!.text,
+            _avatarNameController!.text,
+            avatarType
+          ]);
         }
         WidgetsBinding.instance.addPostFrameCallback((_) {
           navigateMain();
         });
-        
       } else {
         // リクエストが失敗した場合、エラーメッセージを表示します
         logger.d("Request failed with status: ${response.statusCode}");

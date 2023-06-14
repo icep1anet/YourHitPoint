@@ -97,8 +97,7 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                     parent: animationController!,
                     curve: Curves.easeInOut,
                   ),
-                  builder: (context, child) =>
-                      Stack(
+                  builder: (context, child) => Stack(
                         children: <Widget>[
                           ClipPath(
                             clipper: WaveClipper(
@@ -131,7 +130,7 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                               decoration: BoxDecoration(
                                 //引数
                                 color: barcolor,
-                          
+
                                 gradient: LinearGradient(
                                   colors: [
                                     //引数
@@ -149,7 +148,6 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                               ),
                             ),
                           ),
-                          
                           Positioned(
                             top: 0,
                             left: 6,
@@ -242,7 +240,6 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                               ),
                             ),
                           ),
-                        
                         ],
                       )),
               Padding(

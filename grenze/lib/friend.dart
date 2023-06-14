@@ -37,102 +37,26 @@ class _FriendPageState extends State<FriendPage> {
         backgroundColor: const Color(0xff00a5bf),
       ),
       body: Center(
-          child: Column(children: [
-        const SizedBox(height: 400),
-        // const ChangeIdWidget(),
-        Column(
-          children: [
-            // SizedBox(
-            //   height: 200,
-            //   // width: 800,
-            //   child: Card(
-            //       // color: Colors.green, // Card自体の色
-            //       margin: const EdgeInsets.all(30),
-            //       elevation: 8, // 影の離れ具合
-            //       shadowColor: Colors.black ,// 影の色
-            //       shape: RoundedRectangleBorder( // 枠線を変更できる
-            //         borderRadius: BorderRadius.circular(10),
-            //       ),
-            //       child: const Column(
-            //         mainAxisSize: MainAxisSize.max,
-            //         children:  [
-            //           ListTile(
-            //             leading: Icon(Icons.add),
-            //             title: Text('Card03'),
-            //             subtitle: Text('Card SubTitle'),
-            //           ),
-            //           // Text('hello'),
-            //         ],
-            //       ),
-            //     ),
-            // ),
-            // const Divider(),
-            // ListView.builder(
-            // itemCount: userDataProvider.friendDataList.length,
-            // itemBuilder: (BuildContext context, int index) {
-            //   Map friendData = userDataProvider.friendDataList[index];
-            //   return CardWidget(friendData["currentHP"], friendData["friendName"], friendData["avatarUrl"]);
-            // },),
-            // const Divider(),
-
-            Container(
-              height: 136,
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),
-              decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFFE0E0E0)),
-                  borderRadius: BorderRadius.circular(8.0)),
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                children: [
-                  Expanded(
-                      child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "id_toko",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 8),
-                      Text("こんにちは", style: Theme.of(context).textTheme.caption),
-                      const SizedBox(height: 8),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icons.bookmark_border_rounded,
-                          Icons.share,
-                          Icons.more_vert
-                        ].map((e) {
-                          return InkWell(
-                            onTap: () {},
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
-                              child: Icon(e, size: 16),
-                            ),
-                          );
-                        }).toList(),
-                      )
-                    ],
-                  )),
-                  Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(8.0),
-                        // image: DecorationImage(
-                        //   fit: BoxFit.cover,
-                        //   // image: NetworkImage(),
-                        // )
-                      )),
-                ],
+        child: SizedBox(
+          child: Column(
+            children: [
+              Expanded(
+                // height: 600,
+                child: ListView.builder(
+                  // shrinkWrap: true,
+                  itemCount: userDataProvider.friendDataList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    Map friendData = userDataProvider.friendDataList[index];
+                    return FriendCardWidget(friendData["currentHP"].toInt(),
+                        friendData["friendName"], friendData["avatarUrl"]);
+                  },
+                ),
               ),
-            )
-          ],
+              const ChangeIdWidget(),
+            ],
+          ),
         ),
-      ])),
+      ),
     );
   }
 }
@@ -195,64 +119,70 @@ class _ChangeIdWidgetState extends State<ChangeIdWidget> {
   }
 }
 
-class CardWidget extends StatelessWidget {
+class FriendCardWidget extends StatelessWidget {
   final int currentHP;
   final String friendName;
   final String avatarUrl;
 
-  const CardWidget(this.currentHP, this.friendName, this.avatarUrl, {Key? key})
+  const FriendCardWidget(this.currentHP, this.friendName, this.avatarUrl,
+      {Key? key})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 200,
-      // width: 800,
-      child: Card(
-        color: const Color(0xffe0ffff), // Card自体の色
-        margin: const EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 20),
-        elevation: 8, // 影の離れ具合
-        shadowColor: Colors.black, // 影の色
-        shape: RoundedRectangleBorder(
-          // 枠線を変更できる
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            ListTile(
-              leading: _currentmyAvatar(avatarUrl),
-              title: Text(friendName),
-              subtitle: Text(currentHP.toString()),
-            ),
-            // Text('hello'),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _currentmyAvatar(String? imgUrl) {
-    var color = const Color(0xffd9d9d9);
-    final hasImage = imgUrl != null;
     return Container(
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-        // border: Border.all(width: 5, color: Theme.of(context).focusColor),
-      ),
-      child: CircleAvatar(
-        backgroundColor: hasImage ? Colors.transparent : color,
-        backgroundImage: hasImage ? NetworkImage(imgUrl) : null,
-        radius: 100,
-        child: !hasImage
-            ? Text("No image",
-                // style: GoogleFonts.orelegaOne(
-                style: GoogleFonts.roboto(
-                  color: const Color(0xff1e90ff),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 10,
-                ))
-            : null,
+      height: 136,
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),
+      decoration: BoxDecoration(
+          border: Border.all(color: const Color(0xFFE0E0E0)),
+          borderRadius: BorderRadius.circular(8.0)),
+      padding: const EdgeInsets.all(8),
+      child: Row(
+        children: [
+          Expanded(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                friendName,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 8),
+              Text("現在のHP: $currentHP",
+                  style: Theme.of(context).textTheme.bodySmall),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icons.bookmark_border_rounded,
+                  Icons.share,
+                  Icons.more_vert
+                ].map((e) {
+                  return InkWell(
+                    onTap: () {},
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Icon(e, size: 16),
+                    ),
+                  );
+                }).toList(),
+              )
+            ],
+          )),
+          Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                  color: Colors.grey,
+                  borderRadius: BorderRadius.circular(8.0),
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(avatarUrl),
+                  ))),
+        ],
       ),
     );
   }
@@ -271,5 +201,34 @@ class CardWidget extends StatelessWidget {
 
 
     //     ],
+    //   ),
+    // );
+
+
+
+    //card
+    //     return SizedBox(
+    //   height: 200,
+    //   // width: 800,
+    //   child: Card(
+    //     color: const Color(0xffe0ffff), // Card自体の色
+    //     margin: const EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 20),
+    //     elevation: 8, // 影の離れ具合
+    //     shadowColor: Colors.black, // 影の色
+    //     shape: RoundedRectangleBorder(
+    //       // 枠線を変更できる
+    //       borderRadius: BorderRadius.circular(10),
+    //     ),
+    //     child: Column(
+    //       mainAxisSize: MainAxisSize.max,
+    //       children: [
+    //         ListTile(
+    //           leading: _currentmyAvatar(avatarUrl),
+    //           title: Text(friendName),
+    //           subtitle: Text(currentHP.toString()),
+    //         ),
+    //         // Text('hello'),
+    //       ],
+    //     ),
     //   ),
     // );

@@ -33,6 +33,11 @@ class UserDataProvider with ChangeNotifier {
   String activeLimitTime = "";
   List friendDataList = [];
 
+  void test() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("userId", "id_abcd");
+  }
+
   void setHPSpotsList(List<Map> dataList) {
     pastSpots = createHPSpotsList(dataList);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -163,9 +168,12 @@ class UserDataProvider with ChangeNotifier {
 
   Future<Map> fetchFirebaseData(DateTime hoursAgo, DateTime now) async {
     //リクエスト
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // userId = prefs.getString("userId");
+    logger.d("userId: $userId");
     var url = Uri.https("o2nr395oib.execute-api.ap-northeast-1.amazonaws.com",
         "/default/get_HP_data", {
-      "userId": "id_abcd",
+      "userId": userId,
       "startTimestamp": hoursAgo.toString(),
       "endTimestamp": now.toString()
     });
@@ -214,22 +222,25 @@ class UserDataProvider with ChangeNotifier {
     }
   }
 
-  updateUserData()  async {
+  updateUserData() async {
     Map befFetchedtime = calculateBeforeFetchedDatetime();
     DateTime hoursAgo = befFetchedtime["hoursAgo"];
     DateTime now = befFetchedtime["now"];
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    userId = prefs.getString("userId");
     fetchFirebaseData(hoursAgo, now).then((responseBody) {
       logger.d("responseBody: $responseBody");
       // logger.d("pastspot: ${responseBody["past_spots"]}");
-      List<FlSpot> pastTmpSpots = convertHPSpotsList(responseBody["past_spots"]);
+      List<FlSpot> pastTmpSpots =
+          convertHPSpotsList(responseBody["past_spots"]);
       logger.d("1");
 
       futureSpots = convertHPSpotsList(responseBody["future_spots"]);
       logger.d("2");
 
       removePastSpotsData(pastTmpSpots);
-      logger.d("3");
       pastSpots += pastTmpSpots;
+      logger.d("pastSpots: $pastSpots");
 
       updateMinMaxSpots();
       imgUrl = responseBody["url"];
@@ -237,9 +248,10 @@ class UserDataProvider with ChangeNotifier {
       recordLowHP = responseBody["recordLowHP"];
       activeLimitTime = responseBody["activeLimitTime"];
     });
-    // fetchFriendData(userId!).then((responseBody) {
-    //   friendDataList = responseBody["friendDataList"];
-    // });
+    fetchFriendData(userId!).then((responseBody) {
+      friendDataList = responseBody["friendDataList"];
+    });
+    logger.d(friendDataList);
     //latestDataTimeの更新
     latestDataTime = now;
     hpNumber = 0;
@@ -251,12 +263,12 @@ class UserDataProvider with ChangeNotifier {
 
   Future<Map> fetchFriendData(String userId) async {
     //リクエスト
-    var url = Uri.https("o2nr395oib.execute-api.ap-northeast-1.amazonaws.com",
-        "/default/get_HP_data", {
+    var url = Uri.https("3fk5goov13.execute-api.ap-northeast-1.amazonaws.com",
+        "/default/get_friend_data_yourHP", {
       "userId": userId,
     });
     var response = await http.get(url);
-    logger.d(response.body);
+    logger.d("未来body: ${response.body}");
     //リクエストの返り値をマップ形式に変換
     var responseBody = jsonDecode(response.body);
     //リクエスト成功時
@@ -270,8 +282,4 @@ class UserDataProvider with ChangeNotifier {
     }
     return responseBody;
   }
-
-
-
 }
-
