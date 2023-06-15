@@ -18,7 +18,6 @@ List<FlSpot> convertHPSpotsList(List<dynamic> spotsList) {
   for (Map x in spotsList) {
     tmp.add(x);
   }
-  logger.d("tmp: $tmp");
   return createHPSpotsList(tmp);
 }
 

@@ -336,7 +336,7 @@ class LineChartWidget extends StatelessWidget {
           lineBarsData: [
             LineChartBarData(
               isCurved: true,
-              color: Colors.red[400],
+              color: Colors.blue,
               barWidth: 3,
               dotData: FlDotData(show: false),
               spots: userDataProvider.pastSpots,
@@ -370,7 +370,7 @@ class LineChartWidget extends StatelessWidget {
           extraLinesData: ExtraLinesData(horizontalLines: [
             HorizontalLine(
               y: 0,
-              color: Colors.blue,
+              color: Colors.red,
             ),
           ])),
     );
