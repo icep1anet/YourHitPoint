@@ -208,7 +208,7 @@ class _RegisterPageState extends State<RegisterPage> {
     setState(() {
       _registering = true;
     });
-    logger.d("regist start");
+    logger.d("register start");
     var url = Uri.https("vignp7m26e.execute-api.ap-northeast-1.amazonaws.com",
         "/default/register_firebase_yourHP", {
       "userName": _userNameController!.text,

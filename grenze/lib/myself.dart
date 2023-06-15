@@ -29,7 +29,7 @@ class _MyselfPageState extends State<MyselfPage> {
   void initTest() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove("userId");
-    logger.d("delete");
+    logger.d("deleteUserId");
   }
 
   //ページ起動時に呼ばれる初期化関数
@@ -40,9 +40,11 @@ class _MyselfPageState extends State<MyselfPage> {
     //     .read<UserDataProvider>()
     //     .setTimerFunc(50, context.read<UserDataProvider>().setZeroHP);
 
+    // context.read<UserDataProvider>().changeHP();
+
     context
         .read<UserDataProvider>()
-        .setTimerFunc(1, context.read<UserDataProvider>().changeHP);
+        .setTimerFunc(60 , context.read<UserDataProvider>().changeHP);
   }
 
   @override

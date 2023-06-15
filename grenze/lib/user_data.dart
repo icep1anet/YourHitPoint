@@ -42,7 +42,7 @@ class UserDataProvider with ChangeNotifier {
     });
   }
 
-  setTimerFunc(int time, Function func) {
+  void setTimerFunc(int time, Function func) {
     Timer.periodic(Duration(seconds: time), (timer) {
       func();
     });
@@ -58,18 +58,6 @@ class UserDataProvider with ChangeNotifier {
     });
   }
 
-  // debug
-  // useridをprefsから消す
-  void initRemoveUserId() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove("userId");
-    userId = null;
-    // for (int i = 0; i <= 10; i++) {
-    //   prefs.remove("userId" + i.toString());
-    // }
-    notifyListeners();
-  }
-
   void setPageIndex(int index) {
     pageIndex = index;
     // rebuild指示は必要ない
@@ -78,7 +66,8 @@ class UserDataProvider with ChangeNotifier {
     });
   }
 
-  void setItemToSharedPref(List<String> itemNames, List<dynamic> items) async {
+  Future<void> setItemToSharedPref(
+      List<String> itemNames, List<dynamic> items) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     for (int i = 0; i < itemNames.length; i++) {
       prefs.setString(itemNames[i], items[i]);
@@ -91,13 +80,33 @@ class UserDataProvider with ChangeNotifier {
     }
   }
 
+  Future<void> setUserId(newId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("userId", newId);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
+  }
+
   //ローカルdbからuserIdを取ってくる&debug
-  void getPrefItems() async {
+  Future<void> getUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     userId = prefs.getString("userId");
     WidgetsBinding.instance.addPostFrameCallback((_) {
       notifyListeners();
     });
+  }
+
+  // debug
+  // useridをprefsから消す
+  Future<void> initRemoveUserId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove("userId");
+    userId = null;
+    // for (int i = 0; i <= 10; i++) {
+    //   prefs.remove("userId" + i.toString());
+    // }
+    notifyListeners();
   }
 
   //現在のHPを変える
@@ -127,19 +136,7 @@ class UserDataProvider with ChangeNotifier {
       }
       hpNumber += 1;
     } else {}
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      notifyListeners();
-    });
-  }
-
-  void setUserId(newId) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("userId", newId);
-    userId = prefs.getString("userId");
-    logger.d(userId);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      notifyListeners();
-    });
+    notifyListeners();
   }
 
   Map calculateBeforeFetchedDatetime() {
@@ -152,11 +149,118 @@ class UserDataProvider with ChangeNotifier {
         hoursAgo = latestDataTime!;
         logger.d("latestDataTime:$latestDataTime");
       }
-    }
     var res = {};
     res["hoursAgo"] = hoursAgo;
     res["now"] = now;
     return res;
+  }
+
+  void removePastSpotsData(List<FlSpot> pastTmpSpots) {
+    //spotsにすでにデータがある場合は取ってきた新しい過去データの数だけ昔のspotsのデータをremove
+    if (pastSpots.isNotEmpty && pastTmpSpots.isNotEmpty) {
+      logger.d("spots is not Empty");
+      //pastSpotsからremoveするデータの個数を計算
+      // 32個に保つために 32 = 現在の個数 + 入ってくる個数 - 取り除く個数
+      // <=> 取り除く個数 = 現在の個数 + 入ってくる個数 -32
+      int removeCount = pastTmpSpots.length + pastSpots.length - 32;
+      if (removeCount > 0) {
+        pastSpots.removeRange(0, removeCount);
+      }
+    } else {
+      logger.d("spots is Empty or tes is Empty");
+    }
+  }
+
+  void updateMinMaxSpots() {
+    //pastSpotsの0番目のデータからminxをとる
+    if (pastSpots.isNotEmpty) {
+      minGraphX = pastSpots.first.x.floor().toDouble();
+      //maxYの値を５の倍数で切り上げる(例:32.4 -> 35.0)
+      maxGraphY = pastSpots.first.y;
+      double tmpMaxY = maxGraphY!;
+      maxGraphY = ((maxGraphY! / 10).round().toDouble()) * 10;
+      if (maxGraphY! < tmpMaxY) {
+        maxGraphY = maxGraphY! + 5.0;
+      }
+    } else {
+      minGraphX = null;
+      maxGraphY = null;
+    }
+    logger.d("futureSpots: $futureSpots");
+    //futureSpotsの最後のデータからmaxXをとる
+    if (futureSpots.isNotEmpty) {
+      maxGraphX = futureSpots.last.x.ceil().toDouble();
+      //maxYの値を５の倍数で切り下げる(例:32.4 -> 30.0)
+      minGraphY = futureSpots.last.y;
+      double tmpMinY = minGraphY!;
+      minGraphY = ((minGraphY! / 10).round().toDouble()) * 10;
+      if (minGraphY! > tmpMinY) {
+        minGraphY = minGraphY! - 5.0;
+      }
+    } else {
+      maxGraphX = null;
+      minGraphY = null;
+    }
+  }
+
+  updateUserData() async {
+    Map befFetchedtime = calculateBeforeFetchedDatetime();
+    DateTime hoursAgo = befFetchedtime["hoursAgo"];
+    DateTime now = befFetchedtime["now"];
+    logger.d(userId);
+    Map responseBody = await fetchFirebaseData(hoursAgo, now);
+    List<FlSpot> pastTmpSpots =
+        convertHPSpotsList(responseBody["past_spots"]);
+    futureSpots = convertHPSpotsList(responseBody["future_spots"]);
+    removePastSpotsData(pastTmpSpots);
+    pastSpots += pastTmpSpots;
+    logger.d("pastSpots: $pastSpots");
+
+    updateMinMaxSpots();
+    imgUrl = responseBody["url"];
+    recordHighHP = responseBody["recordHighHP"];
+    recordLowHP = responseBody["recordLowHP"];
+    activeLimitTime = responseBody["activeLimitTime"];
+    Map friendResponseBody = await fetchFriendData(userId!);
+    friendDataList = friendResponseBody["friendDataList"];
+    logger.d(friendDataList);
+    //latestDataTimeの更新
+    latestDataTime = now;
+    logger.d("update:latestdatatime");
+    hpNumber = 0;
+    logger.d("Done!");
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
+  }
+
+  initMain() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await setUserId(prefs.getString("userId"));
+    await getUserId();
+    await updateUserData();
+    changeHP();
+  }
+
+  Future<Map> fetchFriendData(String userId) async {
+    //リクエスト
+    var url = Uri.https("3fk5goov13.execute-api.ap-northeast-1.amazonaws.com",
+        "/default/get_friend_data_yourHP", {
+      "userId": userId,
+    });
+    var response = await http.get(url);
+    logger.d("friendbody: ${response.body}");
+    //リクエストの返り値をマップ形式に変換
+    var responseBody = jsonDecode(response.body);
+    //リクエスト成功時
+    if (response.statusCode == 200) {
+      // リクエストが成功した場合、レスポンスの内容を取得して表示します
+      logger.d("frined成功しました!");
+    } else {
+      // リクエストが失敗した場合、エラーメッセージを表示します
+      logger.d("Request failed with status: ${responseBody.statusCode}");
+    }
+    return responseBody;
   }
 
   Future<Map> fetchFirebaseData(DateTime hoursAgo, DateTime now) async {
@@ -175,100 +279,6 @@ class UserDataProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       // リクエストが成功した場合、レスポンスの内容を取得して表示します
       logger.d("成功しました！");
-    } else {
-      // リクエストが失敗した場合、エラーメッセージを表示します
-      logger.d("Request failed with status: ${responseBody.statusCode}");
-    }
-    return responseBody;
-  }
-
-  void removePastSpotsData(List<FlSpot> pastTmpSpots) {
-    //spotsにすでにデータがある場合は取ってきた新しい過去データの数だけ昔のspotsのデータをremove
-    if (pastSpots.isNotEmpty && pastTmpSpots.isNotEmpty) {
-      logger.d("spots is not Empty");
-      pastSpots.removeRange(0, pastTmpSpots.length);
-    } else {
-      logger.d("spots is Empty or tes is Empty");
-    }
-  }
-
-  void updateMinMaxSpots() {
-    //pastSpotsの0番目のデータからminxをとる
-    if (pastSpots.isNotEmpty) {
-      minGraphX = pastSpots.first.x.floor().toDouble();
-      maxGraphY = pastSpots.first.y;
-      double tmpMaxY = maxGraphY!;
-      maxGraphY =((maxGraphY!/10).round().toDouble())*10;
-      if (maxGraphY! < tmpMaxY) {
-        maxGraphY = maxGraphY! + 5.0;
-      }
-    } else {
-      minGraphX = null;
-      maxGraphY = null;
-    }
-    logger.d("futureSpots: $futureSpots");
-    //futureSpotsの最後のデータからmaxXをとる
-    if (futureSpots.isNotEmpty) {
-      maxGraphX = futureSpots.last.x.ceil().toDouble();
-      minGraphY = futureSpots.last.y;
-      double tmpMinY = minGraphY!;
-      minGraphY =((minGraphY!/10).round().toDouble())*10;
-      if (minGraphY! > tmpMinY) {
-        minGraphY = minGraphY! - 5.0;
-      }
-    } else {
-      maxGraphX = null;
-      minGraphY = null;
-    }
-  }
-
-  updateUserData() async {
-    Map befFetchedtime = calculateBeforeFetchedDatetime();
-    DateTime hoursAgo = befFetchedtime["hoursAgo"];
-    DateTime now = befFetchedtime["now"];
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    userId = prefs.getString("userId");
-    fetchFirebaseData(hoursAgo, now).then((responseBody) {
-      List<FlSpot> pastTmpSpots =
-          convertHPSpotsList(responseBody["past_spots"]);
-      futureSpots = convertHPSpotsList(responseBody["future_spots"]);
-      removePastSpotsData(pastTmpSpots);
-      pastSpots += pastTmpSpots;
-      logger.d("pastSpots: $pastSpots");
-
-      updateMinMaxSpots();
-      imgUrl = responseBody["url"];
-      recordHighHP = responseBody["recordHighHP"];
-      recordLowHP = responseBody["recordLowHP"];
-      activeLimitTime = responseBody["activeLimitTime"];
-    });
-    fetchFriendData(userId!).then((responseBody) {
-      friendDataList = responseBody["friendDataList"];
-    });
-    logger.d(friendDataList);
-    //latestDataTimeの更新
-    latestDataTime = now;
-    hpNumber = 0;
-    logger.d("Done!");
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      notifyListeners();
-    });
-  }
-
-  Future<Map> fetchFriendData(String userId) async {
-    //リクエスト
-    var url = Uri.https("3fk5goov13.execute-api.ap-northeast-1.amazonaws.com",
-        "/default/get_friend_data_yourHP", {
-      "userId": userId,
-    });
-    var response = await http.get(url);
-    logger.d("friendbody: ${response.body}");
-    //リクエストの返り値をマップ形式に変換
-    var responseBody = jsonDecode(response.body);
-    //リクエスト成功時
-    if (response.statusCode == 200) {
-      // リクエストが成功した場合、レスポンスの内容を取得して表示します
-      logger.d("frined成功しました!");
     } else {
       // リクエストが失敗した場合、エラーメッセージを表示します
       logger.d("Request failed with status: ${responseBody.statusCode}");
