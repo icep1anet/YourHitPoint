@@ -149,6 +149,7 @@ class UserDataProvider with ChangeNotifier {
         hoursAgo = latestDataTime!;
         logger.d("latestDataTime:$latestDataTime");
       }
+    }
     var res = {};
     res["hoursAgo"] = hoursAgo;
     res["now"] = now;
