@@ -86,6 +86,8 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
         (UserDataProvider userDataProvider) => userDataProvider.barColor);
     final fontposition = context.select(
         (UserDataProvider userDataProvider) => userDataProvider.fontPosition);
+    final fontColor = context.select(
+        (UserDataProvider userDataProvider) => userDataProvider.fontColor);
 
     return Container(
         alignment: Alignment.center,
@@ -130,7 +132,6 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                               decoration: BoxDecoration(
                                 //引数
                                 color: barcolor,
-
                                 gradient: LinearGradient(
                                   colors: [
                                     //引数
@@ -253,16 +254,18 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                       Text(
                         widget.percentageValue.round().toString(),
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 24,
-                            letterSpacing: 0.0,
-                            //引数
-                            color: Colors.black),
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 24,
+                          letterSpacing: 0.0,
+                          //引数
+                          color: fontColor,
+                          // color: Colors.black
+                        ),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 3.0),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 3.0),
                         child: Text(
                           "%",
                           textAlign: TextAlign.center,
@@ -272,7 +275,7 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
                               fontSize: 14,
                               letterSpacing: 0.0,
                               //引数
-                              color: Colors.black),
+                              color: fontColor),
                         ),
                       ),
                     ],
