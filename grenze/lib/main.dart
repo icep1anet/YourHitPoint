@@ -79,9 +79,8 @@ class _MainPageState extends State<MainPage> {
 
     context
         .read<UserDataProvider>()
-        .setTimerFunc(20, context.read<UserDataProvider>().updateUserData);
+        .setTimerFunc(900, context.read<UserDataProvider>().updateUserData);
     context.read<UserDataProvider>().initMain();
-    // context.read<UserDataProvider>().setHPspotsList(testDataList);
   }
 
   //registerページに画面遷移

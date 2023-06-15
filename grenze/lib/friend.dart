@@ -19,7 +19,6 @@ class _FriendPageState extends State<FriendPage> {
     final UserDataProvider userDataProvider =
         Provider.of<UserDataProvider>(context, listen: true);
     return
-        // padding: const EdgeInsets.all(20),
         Scaffold(
       appBar: AppBar(
         toolbarHeight: 105,
@@ -41,7 +40,6 @@ class _FriendPageState extends State<FriendPage> {
           child: Column(
             children: [
               Expanded(
-                // height: 600,
                 child: ListView.builder(
                   // shrinkWrap: true,
                   itemCount: userDataProvider.friendDataList.length,
@@ -87,7 +85,6 @@ class _ChangeIdWidgetState extends State<ChangeIdWidget> {
   Widget build(BuildContext context) {
     return Column(children: [
       TextField(
-        // scrollPadding: EdgeInsets.all(10),
         autocorrect: false,
         autofocus: false,
         controller: _userIdController,

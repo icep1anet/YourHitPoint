@@ -147,7 +147,6 @@ class UserDataProvider with ChangeNotifier {
     if (latestDataTime != null) {
       if (latestDataTime!.compareTo(hoursAgo) == 1) {
         hoursAgo = latestDataTime!;
-        logger.d("latestDataTime:$latestDataTime");
       }
     }
     var res = {};
@@ -208,7 +207,6 @@ class UserDataProvider with ChangeNotifier {
     Map befFetchedtime = calculateBeforeFetchedDatetime();
     DateTime hoursAgo = befFetchedtime["hoursAgo"];
     DateTime now = befFetchedtime["now"];
-    logger.d(userId);
     Map responseBody = await fetchFirebaseData(hoursAgo, now);
     List<FlSpot> pastTmpSpots =
         convertHPSpotsList(responseBody["past_spots"]);
@@ -224,10 +222,8 @@ class UserDataProvider with ChangeNotifier {
     activeLimitTime = responseBody["activeLimitTime"];
     Map friendResponseBody = await fetchFriendData(userId!);
     friendDataList = friendResponseBody["friendDataList"];
-    logger.d(friendDataList);
     //latestDataTimeの更新
     latestDataTime = now;
-    logger.d("update:latestdatatime");
     hpNumber = 0;
     logger.d("Done!");
     WidgetsBinding.instance.addPostFrameCallback((_) {

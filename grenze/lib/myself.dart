@@ -24,7 +24,6 @@ class MyselfPage extends StatefulWidget {
 
 // Stateを継承して使う
 class _MyselfPageState extends State<MyselfPage> {
-  // final List<FlSpot> spots;
 
   void initTest() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -39,8 +38,6 @@ class _MyselfPageState extends State<MyselfPage> {
     // context
     //     .read<UserDataProvider>()
     //     .setTimerFunc(50, context.read<UserDataProvider>().setZeroHP);
-
-    // context.read<UserDataProvider>().changeHP();
 
     context
         .read<UserDataProvider>()
@@ -373,6 +370,7 @@ class LineChartWidget extends StatelessWidget {
             HorizontalLine(
               y: 0,
               color: Colors.red,
+              strokeWidth: 1,
             ),
           ])),
     );
