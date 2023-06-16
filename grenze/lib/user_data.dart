@@ -276,9 +276,8 @@ class UserDataProvider with ChangeNotifier {
     ///ローカルのsharedpreferenceにデータを書き込み
     ///普通ならregister時にローカルにデータが書き込まれるが、今デバックでuserIdだけ無理やり書き換えてるからそれ以外のデータがローカルになく、アバター名を表示できないので一度この処理を行う
     await setItemToSharedPref(
-        ["userId", "userName", "avatarName", "avatarType"],
-        ["id_abcd", "Tom", "マルオ", "wani"]);
-    await initRemoveUserId();
+        ["userName", "avatarName", "avatarType"],
+        ["Tom", "マルオ", "wani"]);
     await getLocalData();
     if (userId != null) {
       await updateUserData();
