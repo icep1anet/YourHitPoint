@@ -50,6 +50,8 @@ class _MyselfPageState extends State<MyselfPage> {
         .select((UserDataProvider userDataProvider) => userDataProvider.imgUrl);
     final userId = context
         .select((UserDataProvider userDataProvider) => userDataProvider.userId);
+    final avatarName = context
+        .select((UserDataProvider userDataProvider) => userDataProvider.avatarName);
     return Scaffold(
         body: NestedScrollView(
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -83,7 +85,7 @@ class _MyselfPageState extends State<MyselfPage> {
                     //   ),
                     // ),
                     child: Text(
-                      "アバター名",
+                      avatarName ?? "アバター名",
                       // style: GoogleFonts.orelegaOne(
                       style: GoogleFonts.bizUDGothic(
                         fontWeight: FontWeight.bold,

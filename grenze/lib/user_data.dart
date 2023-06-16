@@ -262,10 +262,37 @@ class UserDataProvider with ChangeNotifier {
   }
 
   initMain() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await setUserId(prefs.getString("userId"));
+
+    ///アバター名表示のためデバイスで1度だけ実行したら消していいです
+    ///ローカルのsharedpreferenceにデータを書き込み
+    ///普通ならregister時にローカルにデータが書き込まれるが、今デバックでuserIdだけ無理やり書き換えてるからそれ以外のデータがローカルになく、アバター名を表示できないので一度この処理を行う
+    setItemToSharedPref([
+      "userName",
+      "avatarName",
+      "avatarType"
+    ], [
+      "Tom",
+      "マルオ",
+      "wani"
+    ]);
+    //////////////
+
+
+    await getLocalData();
     await updateUserData();
     changeHP();
+  }
+
+  //Sharedpreferenceにあるユーザデータを取得
+  Future<void> getLocalData() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    userId = prefs.getString("userId");
+    userName = prefs.getString("userName");
+    avatarName = prefs.getString("avatarName");
+    avatarType = prefs.getString("avatarType");
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
   }
 
   Future<Map> fetchFriendData() async {
