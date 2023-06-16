@@ -24,32 +24,32 @@ class MyselfPage extends StatefulWidget {
 
 // Stateを継承して使う
 class _MyselfPageState extends State<MyselfPage> {
-  // final List<FlSpot> spots;
 
   void initTest() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove("userId");
-    logger.d("delete");
+    logger.d("deleteUserId");
   }
 
   //ページ起動時に呼ばれる初期化関数
   @override
   void initState() {
     super.initState();
-    context
-        .read<UserDataProvider>()
-        .setTimerFunc(50, context.read<UserDataProvider>().setZeroHP);
+    // context
+    //     .read<UserDataProvider>()
+    //     .setTimerFunc(50, context.read<UserDataProvider>().setZeroHP);
 
     context
         .read<UserDataProvider>()
-        .setTimerFunc(10, context.read<UserDataProvider>().changeHP);
-
+        .setTimerFunc(60 , context.read<UserDataProvider>().changeHP);
   }
 
   @override
   Widget build(BuildContext context) {
     final imgUrl = context
         .select((UserDataProvider userDataProvider) => userDataProvider.imgUrl);
+    final userId = context
+        .select((UserDataProvider userDataProvider) => userDataProvider.userId);
     return Scaffold(
         body: NestedScrollView(
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -63,6 +63,7 @@ class _MyselfPageState extends State<MyselfPage> {
               child: Column(
                 children: <Widget>[
                   const SizedBox(height: 30),
+                  if (userId != null) Text(userId),
                   const SizedBox(height: 30),
                   Container(
                     alignment: Alignment.center,
@@ -104,8 +105,7 @@ class _MyselfPageState extends State<MyselfPage> {
                     width: 200,
                     decoration: BoxDecoration(
                       border: Border(
-                        bottom: BorderSide(color: Theme.of(context).focusColor
-                            ),
+                        bottom: BorderSide(color: Theme.of(context).focusColor),
                       ),
                     ),
                     // child: Text(
@@ -284,8 +284,8 @@ class WaveViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hpNumber = context.select(
-      (UserDataProvider userDataProvider) => userDataProvider.hpNumber);
+    final currentHP = context.select(
+        (UserDataProvider userDataProvider) => userDataProvider.currentHP);
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 8, top: 16),
       child: Container(
@@ -307,9 +307,7 @@ class WaveViewWidget extends StatelessWidget {
                 blurRadius: 4),
           ],
         ),
-        child: WaveView(
-            percentageValue: hpNumber.toDouble()
-            ),
+        child: WaveView(percentageValue: currentHP.toDouble()),
       ),
     );
   }
@@ -329,44 +327,52 @@ class LineChartWidget extends StatelessWidget {
         Provider.of<UserDataProvider>(context, listen: true);
     return LineChart(
       LineChartData(
-        minX: userDataProvider.minGraphX,
-        maxX: userDataProvider.maxGraphX,
-        backgroundColor: const Color(0xffd0e3ce),
-        lineBarsData: [
-          LineChartBarData(
-            isCurved: true,
-            color: Colors.red[400],
-            barWidth: 3,
-            dotData: FlDotData(show: false),
-            spots: userDataProvider.spots,
-          ),
-        ],
-        titlesData: FlTitlesData(
-          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              interval: 1,
-              getTitlesWidget: (value, meta) {
-                return bottomGraphWidgets(
-                  value,
-                  meta,
-                );
-              },
-              reservedSize: 30,
+          minX: userDataProvider.minGraphX,
+          maxX: userDataProvider.maxGraphX,
+          minY: userDataProvider.minGraphY,
+          maxY: userDataProvider.maxGraphY,
+          backgroundColor: const Color(0xffd0e3ce),
+          lineBarsData: [
+            LineChartBarData(
+              isCurved: true,
+              color: Colors.blue,
+              barWidth: 3,
+              dotData: FlDotData(show: false),
+              spots: userDataProvider.pastSpots,
+            ),
+            LineChartBarData(
+              isCurved: true,
+              color: Colors.blue[400],
+              barWidth: 3,
+              dotData: FlDotData(show: false),
+              spots: userDataProvider.futureSpots,
+              dashArray: [10, 6],
+            ),
+          ],
+          titlesData: FlTitlesData(
+            rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                interval: 1,
+                getTitlesWidget: (value, meta) {
+                  return bottomGraphWidgets(
+                    value,
+                    meta,
+                  );
+                },
+                reservedSize: 30,
+              ),
             ),
           ),
-        ),
-        extraLinesData: ExtraLinesData(
-          horizontalLines: [
+          extraLinesData: ExtraLinesData(horizontalLines: [
             HorizontalLine(
               y: 0,
-              color: Colors.blue,
-              ),
-          ]
-        )
-      ),
+              color: Colors.red,
+              strokeWidth: 1,
+            ),
+          ])),
     );
   }
 
@@ -430,6 +436,18 @@ class LineChartWidget extends StatelessWidget {
       case 32:
         text = "08:00";
         break;
+      case 34:
+        text = "10:00";
+        break;
+      case 36:
+        text = "12:00";
+        break;
+      case 38:
+        text = "14:00";
+        break;
+      case 40:
+        text = "16:00";
+        break;
 
       default:
         return Container();
@@ -449,10 +467,12 @@ class LimitTimeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final UserDataProvider userDataProvider =
+        Provider.of<UserDataProvider>(context, listen: true);
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Text("推定活動限界",
           style: GoogleFonts.roboto(fontWeight: FontWeight.w500, fontSize: 20)),
-      Text("23:43",
+      Text(userDataProvider.activeLimitTime,
           style: GoogleFonts.sourceCodePro(
               fontSize: 30,
               fontWeight: FontWeight.bold,
@@ -485,7 +505,7 @@ class HPWidget extends StatelessWidget {
             style: GoogleFonts.roboto(fontWeight: FontWeight.w500, fontSize: 20)
             // Theme.of(context).textTheme.headlineSmall
             ),
-        Text(userDataProvider.hpNumber.toString(),
+        Text(userDataProvider.currentHP.toString(),
             style: GoogleFonts.sourceCodePro(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,

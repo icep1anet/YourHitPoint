@@ -22,24 +22,28 @@ class UserDataProvider with ChangeNotifier {
   double recordHighHP = 0;
   double recordLowHP = 0;
   String? imgUrl;
-  List futureSpots = [];
-  List<FlSpot> spots = [];
+  List<FlSpot> futureSpots = [];
+  List<FlSpot> pastSpots = [];
   double fontPosition = 48.5;
   Color barColor = const Color(0xFF32cd32);
   Color fontColor = Colors.white;
   DateTime? latestDataTime;
   double? minGraphX;
   double? maxGraphX;
+  double? minGraphY;
+  double? maxGraphY;
+  String activeLimitTime = "";
+  List friendDataList = [];
 
-  void setHPspotsList(List<Map> dataList) {
-    spots = createHPSpotsList(dataList);
+  void setHPSpotsList(List<Map> dataList) {
+    pastSpots = createHPSpotsList(dataList);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       notifyListeners();
     });
   }
 
-  setTimerFunc(int time, Function func) {
-    Timer.periodic(const Duration(seconds: 20), (timer) {
+  void setTimerFunc(int time, Function func) {
+    Timer.periodic(Duration(seconds: time), (timer) {
       func();
     });
   }
@@ -54,18 +58,6 @@ class UserDataProvider with ChangeNotifier {
     });
   }
 
-  // debug
-  // useridをprefsから消す
-  void initRemoveUserId() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove("userId");
-    userId = null;
-    // for (int i = 0; i <= 10; i++) {
-    //   prefs.remove("userId" + i.toString());
-    // }
-    notifyListeners();
-  }
-
   void setPageIndex(int index) {
     pageIndex = index;
     // rebuild指示は必要ない
@@ -74,7 +66,8 @@ class UserDataProvider with ChangeNotifier {
     });
   }
 
-  void setItemToSharedPref(List<String> itemNames, List<dynamic> items) async {
+  Future<void> setItemToSharedPref(
+      List<String> itemNames, List<dynamic> items) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     for (int i = 0; i < itemNames.length; i++) {
       prefs.setString(itemNames[i], items[i]);
@@ -87,27 +80,45 @@ class UserDataProvider with ChangeNotifier {
     }
   }
 
-  //ローカルdbからuserIdを取ってくる&debug
-  void getPrefItems() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  Future<void> setUserId(newId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("userId", newId);
     userId = prefs.getString("userId");
-    String? userName = prefs.getString("userName");
-    // String? avatarName = prefs.getString("avatarName");
-    // String? avatarType = prefs.getString("avatarType");
-    if (userName != null) logger.d("userName:$userName");
     WidgetsBinding.instance.addPostFrameCallback((_) {
       notifyListeners();
     });
   }
 
+  setFriendDataList() async {    
+    Map friendResponseBody = await fetchFriendData();
+    friendDataList = friendResponseBody["friendDataList"];
+  }
+  
+
+  refreshUserID(String id) async {
+    await setUserId(id);
+    await setFriendDataList();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
+  }
+
+  // debug
+  // useridをprefsから消す
+  Future<void> initRemoveUserId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove("userId");
+    userId = null;
+    // for (int i = 0; i <= 10; i++) {
+    //   prefs.remove("userId" + i.toString());
+    // }
+    notifyListeners();
+  }
+
   //現在のHPを変える
   void changeHP() {
-    logger.d(hpNumber);
-    if (hpNumber < 100) {
-      // setState(() {
-      // currentHP = hpNumber;
-      // currentHP = hpList[hpNumber]["y"];
-      // });
+    if (hpNumber < futureSpots.length) {
+      currentHP = futureSpots[hpNumber].y.toInt();
       if (80 < currentHP) {
         barColor = const Color(0xFF32cd32);
         fontColor = Colors.white;
@@ -129,91 +140,149 @@ class UserDataProvider with ChangeNotifier {
         fontColor = Colors.black;
         fontPosition = 0;
       }
-      hpNumber += 10;
+      hpNumber += 1;
     } else {}
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      notifyListeners();
-    });
+    notifyListeners();
   }
 
-  void setUserId(newId) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("userId", newId);
-    userId = prefs.getString("userId");
-    logger.d(userId);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      notifyListeners();
-    });
-  }
-
-  Future<void> fetchFirebaseData() async {
-    logger.d("startttttt");
+  Map calculateBeforeFetchedDatetime() {
+    //リクエストのための時間計算
+    logger.d("start before fetch time");
     DateTime now = DateTime.now();
     DateTime hoursAgo = now.add(const Duration(hours: 8) * -1);
     if (latestDataTime != null) {
       if (latestDataTime!.compareTo(hoursAgo) == 1) {
         hoursAgo = latestDataTime!;
-        logger.d("latestDataTime:$latestDataTime");
       }
     }
+    var res = {};
+    res["hoursAgo"] = hoursAgo;
+    res["now"] = now;
+    return res;
+  }
+
+  void removePastSpotsData(List<FlSpot> pastTmpSpots) {
+    //spotsにすでにデータがある場合は取ってきた新しい過去データの数だけ昔のspotsのデータをremove
+    if (pastSpots.isNotEmpty && pastTmpSpots.isNotEmpty) {
+      logger.d("spots is not Empty");
+      //pastSpotsからremoveするデータの個数を計算
+      // 32個に保つために 32 = 現在の個数 + 入ってくる個数 - 取り除く個数
+      // <=> 取り除く個数 = 現在の個数 + 入ってくる個数 -32
+      int removeCount = pastTmpSpots.length + pastSpots.length - 32;
+      if (removeCount > 0) {
+        pastSpots.removeRange(0, removeCount);
+      }
+    } else {
+      logger.d("spots is Empty or tes is Empty");
+    }
+  }
+
+  void updateMinMaxSpots() {
+    //pastSpotsの0番目のデータからminxをとる
+    if (pastSpots.isNotEmpty) {
+      minGraphX = pastSpots.first.x.floor().toDouble();
+      //maxYの値を５の倍数で切り上げる(例:32.4 -> 35.0)
+      maxGraphY = pastSpots.first.y;
+      double tmpMaxY = maxGraphY!;
+      maxGraphY = ((maxGraphY! / 10).round().toDouble()) * 10;
+      if (maxGraphY! < tmpMaxY) {
+        maxGraphY = maxGraphY! + 5.0;
+      }
+    } else {
+      minGraphX = null;
+      maxGraphY = null;
+    }
+    logger.d("futureSpots: $futureSpots");
+    //futureSpotsの最後のデータからmaxXをとる
+    if (futureSpots.isNotEmpty) {
+      maxGraphX = futureSpots.last.x.ceil().toDouble();
+      //maxYの値を５の倍数で切り下げる(例:32.4 -> 30.0)
+      minGraphY = futureSpots.last.y;
+      double tmpMinY = minGraphY!;
+      minGraphY = ((minGraphY! / 10).round().toDouble()) * 10;
+      if (minGraphY! > tmpMinY) {
+        minGraphY = minGraphY! - 5.0;
+      }
+    } else {
+      maxGraphX = null;
+      minGraphY = null;
+    }
+  }
+
+  updateUserData() async {
+    Map befFetchedtime = calculateBeforeFetchedDatetime();
+    DateTime hoursAgo = befFetchedtime["hoursAgo"];
+    DateTime now = befFetchedtime["now"];
+    Map responseBody = await fetchFirebaseData(hoursAgo, now);
+    List<FlSpot> pastTmpSpots = convertHPSpotsList(responseBody["past_spots"]);
+    futureSpots = convertHPSpotsList(responseBody["future_spots"]);
+    removePastSpotsData(pastTmpSpots);
+    pastSpots += pastTmpSpots;
+    logger.d("pastSpots: $pastSpots");
+
+    updateMinMaxSpots();
+    imgUrl = responseBody["url"];
+    recordHighHP = responseBody["recordHighHP"];
+    recordLowHP = responseBody["recordLowHP"];
+    activeLimitTime = responseBody["activeLimitTime"];
+    await setFriendDataList();
+    //latestDataTimeの更新
+    latestDataTime = now;
+    hpNumber = 0;
+    logger.d("Done!");
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
+  }
+
+  initMain() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await setUserId(prefs.getString("userId"));
+    await updateUserData();
+    changeHP();
+  }
+
+  Future<Map> fetchFriendData() async {
+    //リクエスト
+    var url = Uri.https("3fk5goov13.execute-api.ap-northeast-1.amazonaws.com",
+        "/default/get_friend_data_yourHP", {
+      "userId": userId,
+    });
+    var response = await http.get(url);
+    logger.d("friendbody: ${response.body}");
+    //リクエストの返り値をマップ形式に変換
+    var responseBody = jsonDecode(response.body);
+    //リクエスト成功時
+    if (response.statusCode == 200) {
+      // リクエストが成功した場合、レスポンスの内容を取得して表示します
+      logger.d("frined成功しました!");
+    } else {
+      // リクエストが失敗した場合、エラーメッセージを表示します
+      logger.d("Request failed with status: $responseBody");
+    }
+    return responseBody;
+  }
+
+  Future<Map> fetchFirebaseData(DateTime hoursAgo, DateTime now) async {
+    //リクエスト
     var url = Uri.https("o2nr395oib.execute-api.ap-northeast-1.amazonaws.com",
         "/default/get_HP_data", {
-      "userId": "id_abcd",
+      "userId": userId,
       "startTimestamp": hoursAgo.toString(),
       "endTimestamp": now.toString()
     });
     var response = await http.get(url);
-    logger.d(response.body);
+    logger.d("response.body: ${response.body}");
+    //リクエストの返り値をマップ形式に変換
+    var responseBody = jsonDecode(response.body);
+    //リクエスト成功時
     if (response.statusCode == 200) {
       // リクエストが成功した場合、レスポンスの内容を取得して表示します
       logger.d("成功しました！");
-      logger.d(response.body);
-
-      var responseMap = jsonDecode(response.body);
-      logger.d("past:");
-      logger.d(responseMap["past_spots"]);
-      List tes1 = responseMap["past_spots"];
-      List<Map<dynamic, dynamic>> tes2 = [];
-      for (Map a in tes1) {
-        tes2.add(a);
-      }
-      logger.d("daiichidannkai");
-      List<FlSpot> tes = createHPSpotsList(tes2);
-      logger.d(tes);
-
-      logger.d("tes.length: ${tes.length}");
-      logger.d("spots.length: ${spots.length}");
-      if (spots.isNotEmpty && tes.isNotEmpty) {
-        logger.d("spots is not Empty");
-        spots.removeRange(0, tes.length - 1);
-      }
-      // for (int i = 0; i < tes.length; i++) {
-      //   spots.add(tes[i]);
-      // }
-      // spots = tes;
-      // spots.addAll(tes);
-
-      imgUrl = responseMap["url"];
-      spots = spots + tes;
-      if (spots.isNotEmpty) {
-        minGraphX = spots[0].x.toInt().toDouble();
-      } else {
-        minGraphX = null;
-      }
-      if (futureSpots.isNotEmpty) {
-        maxGraphX = futureSpots.last.x.ceil().toDouble();
-      } else {
-        maxGraphX = null;
-      }
-      recordHighHP = responseMap["recordHighHP"];
-      recordLowHP = responseMap["recordLowHP"];
-      logger.d("spotsAfter: $spots");
-      logger.d("spotsLengthAfter: ${spots.length}");
-      //latestDataTimeの更新
-      latestDataTime = now;
     } else {
       // リクエストが失敗した場合、エラーメッセージを表示します
-      logger.d("Request failed with status: ${response.statusCode}");
+      logger.d("Request failed with status: ${responseBody.statusCode}");
     }
+    return responseBody;
   }
 }
