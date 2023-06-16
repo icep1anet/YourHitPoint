@@ -51,6 +51,7 @@ class _MyselfPageState extends State<MyselfPage> {
     final imgUrl = userDataProvider.imgUrl;
     final userId = userDataProvider.userId;
     final avatarName = userDataProvider.avatarName;
+    final maxDayHP = userDataProvider.maxDayHP;
     return Scaffold(
         body: NestedScrollView(
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -64,7 +65,10 @@ class _MyselfPageState extends State<MyselfPage> {
               child: Column(
                 children: <Widget>[
                   const SizedBox(height: 30),
+                  //degug
                   if (userId != null) Text(userId),
+                  //debug
+                  Text("hpPercent: $maxDayHP"),
                   const SizedBox(height: 30),
                   Container(
                     alignment: Alignment.center,
@@ -306,8 +310,8 @@ class WaveViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentHP = context.select(
-        (UserDataProvider userDataProvider) => userDataProvider.currentHP);
+    final hpPercent = context.select(
+        (UserDataProvider userDataProvider) => userDataProvider.hpPercent);
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 8, top: 16),
       child: Container(
@@ -329,7 +333,7 @@ class WaveViewWidget extends StatelessWidget {
                 blurRadius: 4),
           ],
         ),
-        child: WaveView(percentageValue: currentHP.toDouble()),
+        child: WaveView(percentageValue: hpPercent.toDouble()),
       ),
     );
   }

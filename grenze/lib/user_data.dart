@@ -38,7 +38,7 @@ class UserDataProvider with ChangeNotifier {
   int maxSleepDuration = 0;
   int maxDayHP = 100;
   int maxTotalDaySteps = 0;
-
+  double hpPercent = 100;
   void setHPSpotsList(List<Map> dataList) {
     pastSpots = createHPSpotsList(dataList);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -120,19 +120,20 @@ class UserDataProvider with ChangeNotifier {
   void changeHP() {
     if (hpNumber < futureSpots.length) {
       currentHP = futureSpots[hpNumber].y.toInt();
-      if (80 < currentHP) {
+      hpPercent = (currentHP / maxDayHP) * 100;
+      if (80 < hpPercent) {
         barColor = const Color(0xFF32cd32);
         fontColor = Colors.white;
         fontPosition = 60;
-      } else if (40 < currentHP && currentHP <= 80) {
+      } else if (40 < hpPercent && hpPercent <= 80) {
         barColor = const Color(0xff00ff7f);
         fontColor = Colors.white;
         fontPosition = 60;
-      } else if (30 < currentHP && currentHP <= 40) {
+      } else if (30 < hpPercent && hpPercent <= 40) {
         barColor = const Color(0xff00ff7f);
         fontColor = Colors.black;
         fontPosition = 0;
-      } else if (0 < currentHP && currentHP <= 30) {
+      } else if (0 < hpPercent && hpPercent <= 30) {
         barColor = const Color(0xffffd700);
         fontColor = Colors.black;
         fontPosition = 0;
