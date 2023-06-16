@@ -8,6 +8,7 @@ import "dart:convert";
 import "package:http/http.dart" as http;
 
 var logger = Logger();
+const choices = ["猫", "犬", "フクロウ", "カブトムシ", "亀"];
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -22,9 +23,6 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController? _userNameController;
   bool _registering = false;
   TextEditingController? _avatarNameController;
-  String? imageUrl;
-  bool? hasData;
-  List<String> choices = ["猫", "犬", "フクロウ", "カブトムシ", "亀"];
   String avatarType = "猫";
   String? userId;
 
@@ -49,6 +47,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final UserDataProvider userDataProvider =
+        Provider.of<UserDataProvider>(context, listen: true);
     return Focus(
         focusNode: _focusUserNameNode,
         child: GestureDetector(
@@ -152,11 +152,11 @@ class _RegisterPageState extends State<RegisterPage> {
                               child: Text(value),
                             );
                           }).toList(),
-                          value: avatarType,
+                          value: userDataProvider.avatarType,
                           alignment: Alignment.center,
                           onChanged: (String? value) {
                             setState(() {
-                              avatarType = value!;
+                              userDataProvider.avatarType = value!;
                             });
                           },
                           icon: const Padding(
@@ -172,15 +172,46 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       const SizedBox(height: 30),
                       TextButton(
-                        onPressed: () {
+                        onPressed: () async {
                           // firstNameとlastNameは必須で入力しないと登録できないようにする
                           if (_registering == false &&
                               _userNameController!.text != "" &&
                               _avatarNameController!.text != "") {
-                            registerFirebase();
+                            FocusScope.of(context).unfocus();
+                            var response =
+                                await userDataProvider.registerFirebase(
+                                    _registering,
+                                    _userNameController!.text,
+                                    _avatarNameController!.text);
+                            if (response["isCompleted"] == true) {
+                              // メイン画面へ遷移
+                              if (context.mounted) {
+                                navigateMain();
+                              }
+                            } else {
+                              if (context.mounted) {
+                                await showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text("OK"),
+                                      ),
+                                    ],
+                                    content: Text(
+                                      response["error"],
+                                    ),
+                                    title: const Text("Error"),
+                                  ),
+                                );
+                              }
+                            }
                           }
                         },
-                        child: hasData != null
+                        child: userDataProvider.hasData != null
                             ? const Text(
                                 "プロフィール変更",
                                 style: TextStyle(fontSize: 23),
@@ -200,76 +231,6 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
             )));
-  }
-
-  //responseを送ってfirebaseにデータ登録する
-  Future<void> registerFirebase() async {
-    FocusScope.of(context).unfocus();
-    setState(() {
-      _registering = true;
-    });
-    logger.d("register start");
-    var url = Uri.https("vignp7m26e.execute-api.ap-northeast-1.amazonaws.com",
-        "/default/register_firebase_yourHP", {
-      "userName": _userNameController!.text,
-      "avatarName": _avatarNameController!.text,
-      "avatarType": avatarType
-    });
-    try {
-      var response = await http.get(url);
-      logger.d("register.body: ${response.body}");
-      if (response.statusCode == 200) {
-        // リクエストが成功した場合、レスポンスの内容を取得して表示します
-        var responseMap = jsonDecode(response.body);
-        userId = responseMap["userId"];
-        logger.d(userId);
-        // if (!mounted) return;
-        if (context.mounted) {
-          context.read<UserDataProvider>().setItemToSharedPref([
-            "userId",
-            "userName",
-            "avatarName",
-            "avatarType"
-          ], [
-            userId!,
-            _userNameController!.text,
-            _avatarNameController!.text,
-            avatarType
-          ]);
-        }
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          navigateMain();
-        });
-      } else {
-        // リクエストが失敗した場合、エラーメッセージを表示します
-        logger.d("Request failed with status: ${response.statusCode}");
-        setState(() {
-          _registering = false;
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _registering = false;
-      });
-
-      await showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("OK"),
-            ),
-          ],
-          content: Text(
-            e.toString(),
-          ),
-          title: const Text("Error"),
-        ),
-      );
-    }
   }
 
   void navigateMain() async {
