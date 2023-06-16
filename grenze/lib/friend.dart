@@ -87,7 +87,7 @@ class _ChangeIdWidgetState extends State<ChangeIdWidget> {
   @override
   void initState() {
     super.initState();
-    _userIdController = TextEditingController(text: "your id");
+    _userIdController = TextEditingController(text: "id_abcd");
   }
 
   @override
@@ -98,28 +98,33 @@ class _ChangeIdWidgetState extends State<ChangeIdWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      TextField(
-        autocorrect: false,
-        autofocus: false,
-        controller: _userIdController,
-        decoration: InputDecoration(
-          border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(8),
+    return Column(
+      children: [
+      Container(
+        padding: const EdgeInsets.all(10),
+        child: TextField(
+          autocorrect: false,
+          autofocus: false,
+          controller: _userIdController,
+          decoration: InputDecoration(
+            // contentPadding: const EdgeInsets.all(5),
+            border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(8),
+              ),
+            ),
+            labelText: "userId",
+            labelStyle: const TextStyle(fontSize: 25),
+            suffixIcon: IconButton(
+              icon: const Icon(Icons.cancel),
+              onPressed: () => _userIdController?.clear(),
             ),
           ),
-          labelText: "userId",
-          labelStyle: const TextStyle(fontSize: 25),
-          suffixIcon: IconButton(
-            icon: const Icon(Icons.cancel),
-            onPressed: () => _userIdController?.clear(),
-          ),
+          keyboardType: TextInputType.text,
+          // readOnly: _registering,
+          textCapitalization: TextCapitalization.none,
+          textInputAction: TextInputAction.next,
         ),
-        keyboardType: TextInputType.text,
-        // readOnly: _registering,
-        textCapitalization: TextCapitalization.none,
-        textInputAction: TextInputAction.next,
       ),
       TextButton(
         onPressed: () {
@@ -144,12 +149,21 @@ class FriendCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
-      margin: const EdgeInsets.symmetric(horizontal: 60, vertical: 15.0),
+      height: 120,
+      margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 15.0),
       decoration: BoxDecoration(
+        color: Colors.white,
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.grey,
+              spreadRadius: 1,
+              blurRadius: 10,
+              offset: Offset(5, 5)
+            )
+          ],
           border: Border.all(color: const Color(0xFFE0E0E0)),
           borderRadius: BorderRadius.circular(8.0)),
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(5),
       child: Row(
         children: [
           const SizedBox(
@@ -163,32 +177,37 @@ class FriendCardWidget extends StatelessWidget {
               Text(friendName,
                   style: GoogleFonts.roboto(
                       fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                      fontSize: 25,
                       color: Colors.black)
                   // style: const TextStyle(fontWeight: FontWeight.bold),
                   // maxLines: 2,
                   // overflow: TextOverflow.ellipsis,
                   ),
               const SizedBox(height: 12),
-              Text("              HP: $currentHP",
+              Text(" HP: $currentHP",
+                  textAlign: TextAlign.left,
                   style: GoogleFonts.roboto(
                       fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                      fontSize: 20,
                       color: hpFontColor)),
               const SizedBox(height: 8),
             ],
           )),
+          
           Container(
               width: 100,
               height: 100,
               decoration: BoxDecoration(
+                  shape: BoxShape.circle,
                   color: Colors.white,
                   // color: Colors.grey,
-                  borderRadius: BorderRadius.circular(8.0),
+                  // border: Border.all(color: Colors.grey ),
+                  // borderRadius: BorderRadius.circular(8.0),
                   image: DecorationImage(
                     fit: BoxFit.cover,
                     image: NetworkImage(avatarUrl),
                   ))),
+                  const SizedBox(width: 20,),
         ],
       ),
     );
