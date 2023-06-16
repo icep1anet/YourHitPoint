@@ -157,12 +157,17 @@ class FriendCardWidget extends StatelessWidget {
             BoxShadow(
               color: Colors.grey,
               spreadRadius: 1,
-              blurRadius: 10,
-              offset: Offset(5, 5)
+              blurRadius: 3,
+              offset: Offset(3, 3)
             )
           ],
           border: Border.all(color: const Color(0xFFE0E0E0)),
-          borderRadius: BorderRadius.circular(8.0)),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(8.0),
+            topRight: Radius.circular(54.0),
+            bottomLeft: Radius.circular(8.0),
+            bottomRight: Radius.circular(8.0)
+          )),
       padding: const EdgeInsets.all(5),
       child: Row(
         children: [
@@ -201,7 +206,10 @@ class FriendCardWidget extends StatelessWidget {
                   shape: BoxShape.circle,
                   color: Colors.white,
                   // color: Colors.grey,
-                  // border: Border.all(color: Colors.grey ),
+                  border: Border.all(
+                    color: hpFontColor,
+                    width: 2
+                  ),
                   // borderRadius: BorderRadius.circular(8.0),
                   image: DecorationImage(
                     fit: BoxFit.cover,
