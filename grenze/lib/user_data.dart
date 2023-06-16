@@ -265,8 +265,7 @@ class UserDataProvider with ChangeNotifier {
     });
   }
 
-  initMain() async {
-
+  Future<void> initMain() async {
     ///アバター名表示のためデバイスで1度だけ実行したら消していいです
     ///ローカルのsharedpreferenceにデータを書き込み
     ///普通ならregister時にローカルにデータが書き込まれるが、今デバックでuserIdだけ無理やり書き換えてるからそれ以外のデータがローカルになく、アバター名を表示できないので一度この処理を行う
@@ -339,7 +338,7 @@ class UserDataProvider with ChangeNotifier {
       logger.d("成功しました！");
     } else {
       // リクエストが失敗した場合、エラーメッセージを表示します
-      logger.d("Request failed with status: ${responseBody}");
+      logger.d("Request failed with status: $responseBody");
     }
     return responseBody;
   }
