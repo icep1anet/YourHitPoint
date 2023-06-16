@@ -64,7 +64,6 @@ class UserDataProvider with ChangeNotifier {
 
   void setPageIndex(int index) {
     pageIndex = index;
-    // rebuild指示は必要ない
     WidgetsBinding.instance.addPostFrameCallback((_) {
       notifyListeners();
     });
@@ -100,7 +99,7 @@ class UserDataProvider with ChangeNotifier {
 
   Future<void> refreshUserID(String id) async {
     await setUserId(id);
-    await setFriendDataList();
+    await updateUserData();
     notifyListeners();
   }
 
@@ -151,6 +150,7 @@ class UserDataProvider with ChangeNotifier {
     //リクエストのための時間計算
     logger.d("start before fetch time");
     DateTime now = DateTime.now();
+    logger.d(now);
     DateTime hoursAgo = now.add(const Duration(hours: 8) * -1);
     if (latestDataTime != null) {
       if (latestDataTime!.compareTo(hoursAgo) == 1) {
@@ -254,6 +254,7 @@ class UserDataProvider with ChangeNotifier {
 
     updateMinMaxSpots();
     imgUrl = responseBody["url"];
+    avatarName = responseBody["avatarName"];
     recordHighHP = responseBody["recordHighHP"];
     recordLowHP = responseBody["recordLowHP"];
     activeLimitTime = responseBody["activeLimitTime"];

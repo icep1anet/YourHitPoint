@@ -69,7 +69,7 @@ class _FriendPageState extends State<FriendPage> {
                     },
                   ),
                 ),
-                const ChangeIdWidget(),
+                // const ChangeIdWidget(),
               ],
             ),
           ),

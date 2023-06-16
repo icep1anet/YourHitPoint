@@ -70,9 +70,9 @@ class _MyselfPageState extends State<MyselfPage> {
                   children: <Widget>[
                     const SizedBox(height: 30),
                     //degug
-                    if (userId != null) Text(userId),
-                    //debug
-                    Text("hpPercent: $maxDayHP"),
+                    // if (userId != null) Text(userId),
+                    // //debug
+                    // Text("hpPercent: $maxDayHP"),
                     const SizedBox(height: 30),
                     Container(
                       alignment: Alignment.center,
