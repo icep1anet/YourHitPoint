@@ -83,15 +83,21 @@ class UserDataProvider with ChangeNotifier {
   Future<void> setUserId(newId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("userId", newId);
+    userId = prefs.getString("userId");
     WidgetsBinding.instance.addPostFrameCallback((_) {
       notifyListeners();
     });
   }
 
-  //ローカルdbからuserIdを取ってくる&debug
-  Future<void> getUserId() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    userId = prefs.getString("userId");
+  setFriendDataList() async {    
+    Map friendResponseBody = await fetchFriendData();
+    friendDataList = friendResponseBody["friendDataList"];
+  }
+  
+
+  refreshUserID(String id) async {
+    await setUserId(id);
+    await setFriendDataList();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       notifyListeners();
     });
@@ -208,8 +214,7 @@ class UserDataProvider with ChangeNotifier {
     DateTime hoursAgo = befFetchedtime["hoursAgo"];
     DateTime now = befFetchedtime["now"];
     Map responseBody = await fetchFirebaseData(hoursAgo, now);
-    List<FlSpot> pastTmpSpots =
-        convertHPSpotsList(responseBody["past_spots"]);
+    List<FlSpot> pastTmpSpots = convertHPSpotsList(responseBody["past_spots"]);
     futureSpots = convertHPSpotsList(responseBody["future_spots"]);
     removePastSpotsData(pastTmpSpots);
     pastSpots += pastTmpSpots;
@@ -220,8 +225,7 @@ class UserDataProvider with ChangeNotifier {
     recordHighHP = responseBody["recordHighHP"];
     recordLowHP = responseBody["recordLowHP"];
     activeLimitTime = responseBody["activeLimitTime"];
-    Map friendResponseBody = await fetchFriendData(userId!);
-    friendDataList = friendResponseBody["friendDataList"];
+    await setFriendDataList();
     //latestDataTimeの更新
     latestDataTime = now;
     hpNumber = 0;
@@ -234,12 +238,11 @@ class UserDataProvider with ChangeNotifier {
   initMain() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await setUserId(prefs.getString("userId"));
-    await getUserId();
     await updateUserData();
     changeHP();
   }
 
-  Future<Map> fetchFriendData(String userId) async {
+  Future<Map> fetchFriendData() async {
     //リクエスト
     var url = Uri.https("3fk5goov13.execute-api.ap-northeast-1.amazonaws.com",
         "/default/get_friend_data_yourHP", {
@@ -255,7 +258,7 @@ class UserDataProvider with ChangeNotifier {
       logger.d("frined成功しました!");
     } else {
       // リクエストが失敗した場合、エラーメッセージを表示します
-      logger.d("Request failed with status: ${responseBody.statusCode}");
+      logger.d("Request failed with status: $responseBody");
     }
     return responseBody;
   }
