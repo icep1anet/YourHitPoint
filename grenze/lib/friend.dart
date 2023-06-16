@@ -108,7 +108,7 @@ class _ChangeIdWidgetState extends State<ChangeIdWidget> {
       ),
       TextButton(
         onPressed: () {
-          context.read<UserDataProvider>().setUserId(_userIdController!.text);
+          context.read<UserDataProvider>().refreshUserID(_userIdController!.text);
         },
         child: const Text("Change userId"),
       )
