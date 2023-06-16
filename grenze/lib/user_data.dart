@@ -98,9 +98,7 @@ class UserDataProvider with ChangeNotifier {
   Future<void> refreshUserID(String id) async {
     await setUserId(id);
     await setFriendDataList();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      notifyListeners();
-    });
+    notifyListeners();
   }
 
   // debug
