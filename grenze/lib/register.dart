@@ -4,11 +4,8 @@ import "package:fluttericon/octicons_icons.dart";
 import "package:grenze/user_data.dart";
 import "package:provider/provider.dart";
 import "package:logger/logger.dart";
-import "dart:convert";
-import "package:http/http.dart" as http;
 
 var logger = Logger();
-const choices = ["猫", "犬", "フクロウ", "カブトムシ", "亀"];
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -21,10 +18,39 @@ class _RegisterPageState extends State<RegisterPage> {
   FocusNode? _focusUserNameNode;
   FocusNode? _focusAvatarNameNode;
   TextEditingController? _userNameController;
-  bool _registering = false;
+  final _registering = false;
   TextEditingController? _avatarNameController;
-  String avatarType = "猫";
+  // String avatarType = "猫";
+  String selectAvatarType = "neko";
   String? userId;
+  List<String> choices = ["猫", "犬", "人間男", "ワニ", "フクロウ", "カブトムシ"];
+  List<DropdownMenuItem<String>> dropdownMenuItems = const[
+        DropdownMenuItem(
+          value: "neko",
+          child: Text("猫"),
+        ),
+        DropdownMenuItem(
+            value: "inu",
+            child: Text("犬"),
+        ),
+        DropdownMenuItem(
+            value: "man",
+            child: Text("人間男"),
+        ),
+        DropdownMenuItem(
+            value: "wani",
+            child: Text("ワニ"),
+        ),
+        DropdownMenuItem(
+            value: "hukurou",
+            child: Text("フクロウ"),
+        ),
+        DropdownMenuItem(
+            value: "kabutomushi",
+            child: Text("カブトムシ"),
+        ),
+      ];
+
 
   //ページ起動時に呼ばれる初期化関数
   @override
@@ -32,7 +58,7 @@ class _RegisterPageState extends State<RegisterPage> {
     super.initState();
     _focusUserNameNode = FocusNode();
     _focusAvatarNameNode = FocusNode();
-    _userNameController = TextEditingController(text: "多喜男");
+    _userNameController = TextEditingController(text: "ボギーウッズ");
     _avatarNameController = TextEditingController(text: "ガララワニ");
   }
 
@@ -144,19 +170,12 @@ class _RegisterPageState extends State<RegisterPage> {
                         child: DropdownButton(
                           style: const TextStyle(
                               fontSize: 25, color: Colors.black),
-                          items: choices
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              alignment: Alignment.centerLeft,
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                          value: userDataProvider.avatarType,
+                          items: dropdownMenuItems,
+                          value: selectAvatarType,
                           alignment: Alignment.center,
                           onChanged: (String? value) {
                             setState(() {
-                              userDataProvider.avatarType = value!;
+                              selectAvatarType = value!;
                             });
                           },
                           icon: const Padding(
@@ -182,7 +201,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                 await userDataProvider.registerFirebase(
                                     _registering,
                                     _userNameController!.text,
-                                    _avatarNameController!.text);
+                                    _avatarNameController!.text,
+                                    selectAvatarType,
+                                    );
                             if (response["isCompleted"] == true) {
                               // メイン画面へ遷移
                               if (context.mounted) {

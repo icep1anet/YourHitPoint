@@ -35,7 +35,10 @@ class UserDataProvider with ChangeNotifier {
   String activeLimitTime = "";
   List friendDataList = [];
   bool? hasData;
-
+  int maxSleepDuration = 0;
+  int maxDayHP = 100;
+  int maxTotalDaySteps = 0;
+  double hpPercent = 100;
   void setHPSpotsList(List<Map> dataList) {
     pastSpots = createHPSpotsList(dataList);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -61,7 +64,6 @@ class UserDataProvider with ChangeNotifier {
 
   void setPageIndex(int index) {
     pageIndex = index;
-    // rebuild指示は必要ない
     WidgetsBinding.instance.addPostFrameCallback((_) {
       notifyListeners();
     });
@@ -97,7 +99,7 @@ class UserDataProvider with ChangeNotifier {
 
   Future<void> refreshUserID(String id) async {
     await setUserId(id);
-    await setFriendDataList();
+    await updateUserData();
     notifyListeners();
   }
 
@@ -117,19 +119,20 @@ class UserDataProvider with ChangeNotifier {
   void changeHP() {
     if (hpNumber < futureSpots.length) {
       currentHP = futureSpots[hpNumber].y.toInt();
-      if (80 < currentHP) {
+      hpPercent = (currentHP / maxDayHP) * 100;
+      if (80 < hpPercent) {
         barColor = const Color(0xFF32cd32);
         fontColor = Colors.white;
         fontPosition = 60;
-      } else if (40 < currentHP && currentHP <= 80) {
+      } else if (40 < hpPercent && hpPercent <= 80) {
         barColor = const Color(0xff00ff7f);
         fontColor = Colors.white;
         fontPosition = 60;
-      } else if (30 < currentHP && currentHP <= 40) {
+      } else if (30 < hpPercent && hpPercent <= 40) {
         barColor = const Color(0xff00ff7f);
         fontColor = Colors.black;
         fontPosition = 0;
-      } else if (0 < currentHP && currentHP <= 30) {
+      } else if (0 < hpPercent && hpPercent <= 30) {
         barColor = const Color(0xffffd700);
         fontColor = Colors.black;
         fontPosition = 0;
@@ -147,6 +150,7 @@ class UserDataProvider with ChangeNotifier {
     //リクエストのための時間計算
     logger.d("start before fetch time");
     DateTime now = DateTime.now();
+    logger.d(now);
     DateTime hoursAgo = now.add(const Duration(hours: 8) * -1);
     if (latestDataTime != null) {
       if (latestDataTime!.compareTo(hoursAgo) == 1) {
@@ -250,9 +254,13 @@ class UserDataProvider with ChangeNotifier {
 
     updateMinMaxSpots();
     imgUrl = responseBody["url"];
+    avatarName = responseBody["avatarName"];
     recordHighHP = responseBody["recordHighHP"];
     recordLowHP = responseBody["recordLowHP"];
     activeLimitTime = responseBody["activeLimitTime"];
+    maxSleepDuration = responseBody["maxSleepDuration"];
+    maxDayHP = responseBody["maxDayHP"];
+    maxTotalDaySteps = responseBody["maxTotalDaySteps"];
     await setFriendDataList();
     //latestDataTimeの更新
     latestDataTime = now;
@@ -267,26 +275,20 @@ class UserDataProvider with ChangeNotifier {
     ///アバター名表示のためデバイスで1度だけ実行したら消していいです
     ///ローカルのsharedpreferenceにデータを書き込み
     ///普通ならregister時にローカルにデータが書き込まれるが、今デバックでuserIdだけ無理やり書き換えてるからそれ以外のデータがローカルになく、アバター名を表示できないので一度この処理を行う
-    setItemToSharedPref([
-      "userName",
-      "avatarName",
-      "avatarType"
-    ], [
-      "Tom",
-      "マルオ",
-      "wani"
-    ]);
-
+    await setItemToSharedPref(
+        ["userId", "userName", "avatarName", "avatarType"],
+        ["id_abcd", "Tom", "マルオ", "wani"]);
+    await initRemoveUserId();
     await getLocalData();
     if (userId != null) {
       await updateUserData();
     }
-    await updateUserData();
+    // await updateUserData();
     changeHP();
   }
 
   //Sharedpreferenceにあるユーザデータを取得
-  Future<void> getLocalData() async{
+  Future<void> getLocalData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     userId = prefs.getString("userId");
     userName = prefs.getString("userName");
@@ -343,14 +345,14 @@ class UserDataProvider with ChangeNotifier {
 
 //responseを送ってfirebaseにデータ登録する
   Future<Map> registerFirebase(
-      isRegistered, inputUserName, inputAvatarName) async {
+      isRegistered, inputUserName, inputAvatarName, inputAvatarType) async {
     isRegistered = true;
     logger.d("register start");
     var url = Uri.https("vignp7m26e.execute-api.ap-northeast-1.amazonaws.com",
         "/default/register_firebase_yourHP", {
       "userName": inputUserName,
       "avatarName": inputAvatarName,
-      "avatarType": avatarType
+      "avatarType": inputAvatarType
     });
     try {
       var response = await http.get(url);
@@ -362,7 +364,7 @@ class UserDataProvider with ChangeNotifier {
         logger.d(userId);
         // if (!mounted) return;
         setItemToSharedPref(["userId", "userName", "avatarName", "avatarType"],
-            [userId!, inputUserName, inputAvatarName, avatarType]);
+            [userId!, inputUserName, inputAvatarName, inputAvatarType]);
       } else {
         // リクエストが失敗した場合、エラーメッセージを表示します
         logger.d("Request failed with status: $response");

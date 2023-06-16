@@ -36,37 +36,42 @@ class _FriendPageState extends State<FriendPage> {
         centerTitle: true,
         backgroundColor: const Color(0xff00a5bf),
       ),
-      body: Center(
-        child: SizedBox(
-          child: Column(
-            children: [
-              const SizedBox(height: 30),
-              Expanded(
-                child: ListView.builder(
-                  // shrinkWrap: true,
-                  itemCount: userDataProvider.friendDataList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    Map friendData = userDataProvider.friendDataList[index];
-                    //各フレンドのHPによって表示の色が変わるようにする
-                    int friendHP = friendData["currentHP"].toInt();
-                    if (80 < friendHP) {
-                      hpFontColor = const Color(0xFF32cd32);
-                    } else if (30 < friendHP && friendHP <= 80) {
-                      hpFontColor = const Color(0xff00ff7f);
-                    } else if (0 < friendHP && friendHP <= 30) {
-                      hpFontColor = const Color(0xffffd700);
-                    } else {
-                      hpFontColor = const Color(0xffdc143c);
-                    }
-                    return FriendCardWidget(friendHP,
-                        friendData["friendName"],
-                        friendData["avatarUrl"],
-                        hpFontColor);
-                  },
+      body: RefreshIndicator(
+        onRefresh: () async{
+          await userDataProvider.fetchFriendData();
+        },
+        child: Center(
+          child: SizedBox(
+            child: Column(
+              children: [
+                const SizedBox(height: 30),
+                Expanded(
+                  child: ListView.builder(
+                    // shrinkWrap: true,
+                    itemCount: userDataProvider.friendDataList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      Map friendData = userDataProvider.friendDataList[index];
+                      //各フレンドのHPによって表示の色が変わるようにする
+                      int friendHP = friendData["currentHP"].toInt();
+                      if (80 < friendHP) {
+                        hpFontColor = const Color(0xFF32cd32);
+                      } else if (30 < friendHP && friendHP <= 80) {
+                        hpFontColor = const Color(0xff00ff7f);
+                      } else if (0 < friendHP && friendHP <= 30) {
+                        hpFontColor = const Color(0xffffd700);
+                      } else {
+                        hpFontColor = const Color(0xffdc143c);
+                      }
+                      return FriendCardWidget(friendHP,
+                          friendData["friendName"],
+                          friendData["avatarUrl"],
+                          hpFontColor);
+                    },
+                  ),
                 ),
-              ),
-              const ChangeIdWidget(),
-            ],
+                // const ChangeIdWidget(),
+              ],
+            ),
           ),
         ),
       ),
