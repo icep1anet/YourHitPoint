@@ -98,18 +98,7 @@ class UserDataProvider with ChangeNotifier {
   Future<void> refreshUserID(String id) async {
     await setUserId(id);
     await setFriendDataList();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      notifyListeners();
-    });
-  }
-
-  Future<void> initMain() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    userId = prefs.getString("userId");
-    if (userId != null) {
-      await updateUserData();
-    }
-    changeHP();
+    notifyListeners();
   }
 
   // debug
@@ -190,8 +179,14 @@ class UserDataProvider with ChangeNotifier {
     //pastSpotsの0番目のデータからminxをとる
     if (pastSpots.isNotEmpty) {
       minGraphX = pastSpots.first.x.floor().toDouble();
-      //maxYの値を５の倍数で切り上げる(例:32.4 -> 35.0)
       maxGraphY = pastSpots.first.y;
+      //pastSpotsのyデータの最大値をmaxGraghYとする
+      for (int i = 0; i < pastSpots.length; i++) {
+        if (maxGraphY! < pastSpots[i].y) {
+          maxGraphY = pastSpots[i].y;
+        }
+      }
+      //maxYの値を５の倍数で切り上げる(例:32.4 -> 35.0)
       double tmpMaxY = maxGraphY!;
       maxGraphY = ((maxGraphY! / 10).round().toDouble()) * 10;
       if (maxGraphY! < tmpMaxY) {
@@ -205,8 +200,21 @@ class UserDataProvider with ChangeNotifier {
     //futureSpotsの最後のデータからmaxXをとる
     if (futureSpots.isNotEmpty) {
       maxGraphX = futureSpots.last.x.ceil().toDouble();
-      //maxYの値を５の倍数で切り下げる(例:32.4 -> 30.0)
       minGraphY = futureSpots.last.y;
+      //pastSpotsとfutureSpotsのyデータの最小値をminGraghYとする
+      for (int i = 0; i < futureSpots.length; i++) {
+        if (minGraphY! > futureSpots[i].y) {
+          minGraphY = futureSpots[i].y;
+        }
+      }
+      if (pastSpots.isNotEmpty) {
+        for (int i = 0; i < pastSpots.length; i++) {
+          if (minGraphY! > pastSpots[i].y) {
+            minGraphY = pastSpots[i].y;
+          }
+        }
+      }
+      //maxYの値を５の倍数で切り下げる(例:32.4 -> 30.0)
       double tmpMinY = minGraphY!;
       minGraphY = ((minGraphY! / 10).round().toDouble()) * 10;
       if (minGraphY! > tmpMinY) {
@@ -215,6 +223,14 @@ class UserDataProvider with ChangeNotifier {
     } else {
       maxGraphX = null;
       minGraphY = null;
+    }
+    //yの最大と最小に100以上の差がある時グラフが突き出す分の幅を持たせる
+    if (maxGraphY != null && minGraphY != null) {
+      if (maxGraphY! - minGraphY! >= 100) {
+        double yMargin = 20.0;
+        maxGraphY = maxGraphY! + yMargin;
+        minGraphY = minGraphY! - yMargin;
+      }
     }
   }
 
@@ -242,6 +258,40 @@ class UserDataProvider with ChangeNotifier {
     latestDataTime = now;
     hpNumber = 0;
     logger.d("Done!");
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
+  }
+
+  Future<void> initMain() async {
+    ///アバター名表示のためデバイスで1度だけ実行したら消していいです
+    ///ローカルのsharedpreferenceにデータを書き込み
+    ///普通ならregister時にローカルにデータが書き込まれるが、今デバックでuserIdだけ無理やり書き換えてるからそれ以外のデータがローカルになく、アバター名を表示できないので一度この処理を行う
+    setItemToSharedPref([
+      "userName",
+      "avatarName",
+      "avatarType"
+    ], [
+      "Tom",
+      "マルオ",
+      "wani"
+    ]);
+
+    await getLocalData();
+    if (userId != null) {
+      await updateUserData();
+    }
+    await updateUserData();
+    changeHP();
+  }
+
+  //Sharedpreferenceにあるユーザデータを取得
+  Future<void> getLocalData() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    userId = prefs.getString("userId");
+    userName = prefs.getString("userName");
+    avatarName = prefs.getString("avatarName");
+    avatarType = prefs.getString("avatarType");
     WidgetsBinding.instance.addPostFrameCallback((_) {
       notifyListeners();
     });
@@ -286,7 +336,7 @@ class UserDataProvider with ChangeNotifier {
       logger.d("成功しました！");
     } else {
       // リクエストが失敗した場合、エラーメッセージを表示します
-      logger.d("Request failed with status: ${responseBody}");
+      logger.d("Request failed with status: $responseBody");
     }
     return responseBody;
   }

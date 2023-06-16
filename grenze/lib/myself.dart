@@ -46,10 +46,11 @@ class _MyselfPageState extends State<MyselfPage> {
 
   @override
   Widget build(BuildContext context) {
-    final imgUrl = context
-        .select((UserDataProvider userDataProvider) => userDataProvider.imgUrl);
-    final userId = context
-        .select((UserDataProvider userDataProvider) => userDataProvider.userId);
+    final UserDataProvider userDataProvider = 
+      Provider.of<UserDataProvider>(context, listen: true);
+    final imgUrl = userDataProvider.imgUrl;
+    final userId = userDataProvider.userId;
+    final avatarName = userDataProvider.avatarName;
     return Scaffold(
         body: NestedScrollView(
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -83,7 +84,7 @@ class _MyselfPageState extends State<MyselfPage> {
                     //   ),
                     // ),
                     child: Text(
-                      "アバター名",
+                      avatarName ?? "アバター名",
                       // style: GoogleFonts.orelegaOne(
                       style: GoogleFonts.bizUDGothic(
                         fontWeight: FontWeight.bold,
