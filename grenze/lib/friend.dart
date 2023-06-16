@@ -87,6 +87,7 @@ class _ChangeIdWidgetState extends State<ChangeIdWidget> {
   @override
   void initState() {
     super.initState();
+    // idを変更することで別の人のデータを取り出せる
     _userIdController = TextEditingController(text: "id_abcd");
   }
 
@@ -184,9 +185,6 @@ class FriendCardWidget extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 25,
                       color: Colors.black)
-                  // style: const TextStyle(fontWeight: FontWeight.bold),
-                  // maxLines: 2,
-                  // overflow: TextOverflow.ellipsis,
                   ),
               const SizedBox(height: 12),
               Text(" HP: $currentHP",
@@ -210,7 +208,6 @@ class FriendCardWidget extends StatelessWidget {
                     color: hpFontColor,
                     width: 2
                   ),
-                  // borderRadius: BorderRadius.circular(8.0),
                   image: DecorationImage(
                     fit: BoxFit.cover,
                     image: NetworkImage(avatarUrl),
