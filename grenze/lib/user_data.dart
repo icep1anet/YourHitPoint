@@ -16,7 +16,7 @@ class UserDataProvider with ChangeNotifier {
   int currentHP = 100;
   int hpNumber = 0;
   String? avatarName;
-  String? avatarType;
+  String? avatarType = "猫";
   String? userName;
   String? userId;
   double recordHighHP = 0;
@@ -34,6 +34,7 @@ class UserDataProvider with ChangeNotifier {
   double? maxGraphY;
   String activeLimitTime = "";
   List friendDataList = [];
+  bool? hasData;
 
   void setHPSpotsList(List<Map> dataList) {
     pastSpots = createHPSpotsList(dataList);
@@ -89,18 +90,26 @@ class UserDataProvider with ChangeNotifier {
     });
   }
 
-  setFriendDataList() async {    
+  Future<void> setFriendDataList() async {
     Map friendResponseBody = await fetchFriendData();
     friendDataList = friendResponseBody["friendDataList"];
   }
-  
 
-  refreshUserID(String id) async {
+  Future<void> refreshUserID(String id) async {
     await setUserId(id);
     await setFriendDataList();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       notifyListeners();
     });
+  }
+
+  Future<void> initMain() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    userId = prefs.getString("userId");
+    if (userId != null) {
+      await updateUserData();
+    }
+    changeHP();
   }
 
   // debug
@@ -209,7 +218,7 @@ class UserDataProvider with ChangeNotifier {
     }
   }
 
-  updateUserData() async {
+  Future<void> updateUserData() async {
     Map befFetchedtime = calculateBeforeFetchedDatetime();
     DateTime hoursAgo = befFetchedtime["hoursAgo"];
     DateTime now = befFetchedtime["now"];
@@ -233,13 +242,6 @@ class UserDataProvider with ChangeNotifier {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       notifyListeners();
     });
-  }
-
-  initMain() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await setUserId(prefs.getString("userId"));
-    await updateUserData();
-    changeHP();
   }
 
   Future<Map> fetchFriendData() async {
@@ -284,5 +286,40 @@ class UserDataProvider with ChangeNotifier {
       logger.d("Request failed with status: ${responseBody.statusCode}");
     }
     return responseBody;
+  }
+
+//responseを送ってfirebaseにデータ登録する
+  Future<Map> registerFirebase(
+      isRegistered, inputUserName, inputAvatarName) async {
+    isRegistered = true;
+    logger.d("register start");
+    var url = Uri.https("vignp7m26e.execute-api.ap-northeast-1.amazonaws.com",
+        "/default/register_firebase_yourHP", {
+      "userName": inputUserName,
+      "avatarName": inputAvatarName,
+      "avatarType": avatarType
+    });
+    try {
+      var response = await http.get(url);
+      logger.d("register.body: ${response.body}");
+      if (response.statusCode == 200) {
+        // リクエストが成功した場合、レスポンスの内容を取得して表示します
+        var responseMap = jsonDecode(response.body);
+        userId = responseMap["userId"];
+        logger.d(userId);
+        // if (!mounted) return;
+        setItemToSharedPref(["userId", "userName", "avatarName", "avatarType"],
+            [userId!, inputUserName, inputAvatarName, avatarType]);
+      } else {
+        // リクエストが失敗した場合、エラーメッセージを表示します
+        logger.d("Request failed with status: $response");
+        isRegistered = false;
+        return {"isCompleted": false, "error": response};
+      }
+      return {"isCompleted": true};
+    } catch (e) {
+      isRegistered = false;
+      return {"isCompleted": false, "error": e};
+    }
   }
 }
