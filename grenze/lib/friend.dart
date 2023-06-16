@@ -14,6 +14,8 @@ class FriendPage extends StatefulWidget {
 }
 
 class _FriendPageState extends State<FriendPage> {
+  Color hpFontColor = Colors.black;
+
   @override
   Widget build(BuildContext context) {
     final UserDataProvider userDataProvider =
@@ -45,8 +47,21 @@ class _FriendPageState extends State<FriendPage> {
                   itemCount: userDataProvider.friendDataList.length,
                   itemBuilder: (BuildContext context, int index) {
                     Map friendData = userDataProvider.friendDataList[index];
-                    return FriendCardWidget(friendData["currentHP"].toInt(),
-                        friendData["friendName"], friendData["avatarUrl"]);
+                    //各フレンドのHPによって表示の色が変わるようにする
+                    int friendHP = friendData["currentHP"].toInt();
+                    if (80 < friendHP) {
+                      hpFontColor = const Color(0xFF32cd32);
+                    } else if (30 < friendHP && friendHP <= 80) {
+                      hpFontColor = const Color(0xff00ff7f);
+                    } else if (0 < friendHP && friendHP <= 30) {
+                      hpFontColor = const Color(0xffffd700);
+                    } else {
+                      hpFontColor = const Color(0xffdc143c);
+                    }
+                    return FriendCardWidget(friendHP,
+                        friendData["friendName"],
+                        friendData["avatarUrl"],
+                        hpFontColor);
                   },
                 ),
               ),
@@ -120,8 +135,9 @@ class FriendCardWidget extends StatelessWidget {
   final int currentHP;
   final String friendName;
   final String avatarUrl;
+  final Color hpFontColor;
 
-  const FriendCardWidget(this.currentHP, this.friendName, this.avatarUrl,
+  const FriendCardWidget(this.currentHP, this.friendName, this.avatarUrl,this.hpFontColor,
       {Key? key})
       : super(key: key);
 
@@ -158,7 +174,7 @@ class FriendCardWidget extends StatelessWidget {
                   style: GoogleFonts.roboto(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
-                      color: Colors.black)),
+                      color: hpFontColor)),
               const SizedBox(height: 8),
             ],
           )),
