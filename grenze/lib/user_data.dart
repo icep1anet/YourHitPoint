@@ -89,11 +89,10 @@ class UserDataProvider with ChangeNotifier {
     });
   }
 
-  setFriendDataList() async {    
+  setFriendDataList() async {
     Map friendResponseBody = await fetchFriendData();
     friendDataList = friendResponseBody["friendDataList"];
   }
-  
 
   refreshUserID(String id) async {
     await setUserId(id);
@@ -181,8 +180,14 @@ class UserDataProvider with ChangeNotifier {
     //pastSpotsの0番目のデータからminxをとる
     if (pastSpots.isNotEmpty) {
       minGraphX = pastSpots.first.x.floor().toDouble();
-      //maxYの値を５の倍数で切り上げる(例:32.4 -> 35.0)
       maxGraphY = pastSpots.first.y;
+      //pastSpotsのyデータの最大値をmaxGraghYとする
+      for (int i = 0; i < pastSpots.length; i++) {
+        if (maxGraphY! < pastSpots[i].y) {
+          maxGraphY = pastSpots[i].y;
+        }
+      }
+      //maxYの値を５の倍数で切り上げる(例:32.4 -> 35.0)
       double tmpMaxY = maxGraphY!;
       maxGraphY = ((maxGraphY! / 10).round().toDouble()) * 10;
       if (maxGraphY! < tmpMaxY) {
@@ -196,8 +201,21 @@ class UserDataProvider with ChangeNotifier {
     //futureSpotsの最後のデータからmaxXをとる
     if (futureSpots.isNotEmpty) {
       maxGraphX = futureSpots.last.x.ceil().toDouble();
-      //maxYの値を５の倍数で切り下げる(例:32.4 -> 30.0)
       minGraphY = futureSpots.last.y;
+      //pastSpotsとfutureSpotsのyデータの最小値をminGraghYとする
+      for (int i = 0; i < futureSpots.length; i++) {
+        if (minGraphY! > futureSpots[i].y) {
+          minGraphY = futureSpots[i].y;
+        }
+      }
+      if (pastSpots.isNotEmpty) {
+        for (int i = 0; i < pastSpots.length; i++) {
+          if (minGraphY! > pastSpots[i].y) {
+            minGraphY = pastSpots[i].y;
+          }
+        }
+      }
+      //maxYの値を５の倍数で切り下げる(例:32.4 -> 30.0)
       double tmpMinY = minGraphY!;
       minGraphY = ((minGraphY! / 10).round().toDouble()) * 10;
       if (minGraphY! > tmpMinY) {
@@ -206,6 +224,14 @@ class UserDataProvider with ChangeNotifier {
     } else {
       maxGraphX = null;
       minGraphY = null;
+    }
+    //yの最大と最小に100以上の差がある時グラフが突き出す分の幅を持たせる
+    if (maxGraphY != null && minGraphY != null) {
+      if (maxGraphY! - minGraphY! >= 100) {
+        double yMargin = 20.0;
+        maxGraphY = maxGraphY! + yMargin;
+        minGraphY = minGraphY! - yMargin;
+      }
     }
   }
 
