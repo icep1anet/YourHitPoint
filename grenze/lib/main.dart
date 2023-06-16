@@ -83,16 +83,6 @@ class _MainPageState extends State<MainPage> {
     context.read<UserDataProvider>().initMain();
   }
 
-  //registerページに画面遷移
-  void moveToRegister() async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        fullscreenDialog: true,
-        builder: (context) => const RegisterPage(),
-      ),
-    );
-  }
-
   //ページ移動系
   void _onItemTapped(int index) {
     setState(() {
@@ -172,6 +162,7 @@ class Register extends StatelessWidget {
           const Text("Not registered"),
           TextButton(
             onPressed: () {
+              //registerページに画面遷移
               Navigator.of(context).push(
                 MaterialPageRoute(
                   fullscreenDialog: true,
