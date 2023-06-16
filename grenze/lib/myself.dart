@@ -59,142 +59,147 @@ class _MyselfPageState extends State<MyselfPage> {
           const SliverAppBarWidget(),
         ];
       },
-      body: SingleChildScrollView(
-          child: Container(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                children: <Widget>[
-                  const SizedBox(height: 30),
-                  //degug
-                  if (userId != null) Text(userId),
-                  //debug
-                  Text("hpPercent: $maxDayHP"),
-                  const SizedBox(height: 30),
-                  Container(
-                    alignment: Alignment.center,
-                    width: 200,
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: Theme.of(context).focusColor),
-                      ),
-                    ),
-                    // child: Text(
-                    //   "Avatar name",
-                    //   // style: GoogleFonts.orelegaOne(
-                    //   style: GoogleFonts.bizUDGothic(
-                    //     fontWeight: FontWeight.bold,
-                    //     fontSize: 30,
-                    //     color: Colors.black,
-                    //   ),
-                    // ),
-                    child: Text(
-                      avatarName ?? "アバター名",
-                      // style: GoogleFonts.orelegaOne(
-                      style: GoogleFonts.bizUDGothic(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
-                        color: Theme.of(context).shadowColor,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  Row(children: [
-                    const SizedBox(width: 20),
-                    _currentmyAvatar(imgUrl),
-                    // _currentmyAvatar("assets/images/illust_normal.jpg"),
-                    WaveViewWidget(widget: widget),
-                  ]),
-                  const SizedBox(height: 30),
-                  Container(
-                    alignment: Alignment.center,
-                    width: 200,
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: Theme.of(context).focusColor),
-                      ),
-                    ),
-                    // child: Text(
-                    //   "statement",
-                    //   // style: GoogleFonts.orelegaOne(
-                    //   style: GoogleFonts.roboto(
-                    //     fontWeight: FontWeight.bold,
-                    //     fontSize: 30,
-                    //     color: Colors.black,
-                    //   ),
-                    // ),
-                    child: Text(
-                      "現在の状態",
-                      // style: GoogleFonts.orelegaOne(
-                      style: GoogleFonts.roboto(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
-                        color: Theme.of(context).shadowColor,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Container(
-                      width: 300,
-                      // width: double.infinity,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Theme.of(context).focusColor, width: 5),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      padding: const EdgeInsets.all(10),
-                      child: IntrinsicWidth(
-                        child: Column(children: [
-                          HPWidget(widget: widget),
-                          // const SizedBox(width: 20),
-                          const LimitTimeWidget(),
-                        ]),
-                      )),
-                  const SizedBox(height: 40),
-                  Container(
-                      width: 200,
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(
-                                  color: Theme.of(context).focusColor))),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text("HP グラフ",
-                            style: GoogleFonts.roboto(
-                                fontWeight: FontWeight.bold, fontSize: 30)),
-                      )),
-                  const SizedBox(height: 20),
-                  Container(
-                    padding: const EdgeInsets.only(right: 20),
-                    height: 200,
-                    child: LineChartWidget(widget: widget),
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
+      body: RefreshIndicator(
+        onRefresh: () async{
+          await userDataProvider.updateUserData();
+        },
+        child: SingleChildScrollView(
+            child: Container(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: <Widget>[
+                    const SizedBox(height: 30),
+                    //degug
+                    if (userId != null) Text(userId),
+                    //debug
+                    Text("hpPercent: $maxDayHP"),
+                    const SizedBox(height: 30),
+                    Container(
+                      alignment: Alignment.center,
                       width: 200,
                       decoration: BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(
-                                  color: Theme.of(context).focusColor,
-                                  width: 1.5))),
-                      child: Align(
-                        alignment: Alignment.center,
-                        // child: Text("HP record",
-                        //     // style: GoogleFonts.orelegaOne(
-                        //     style: GoogleFonts.roboto(
-                        //         fontWeight: FontWeight.bold,
-                        //         fontSize: 30,
-                        //         color: Colors.black)),
-                        child: Text("HP 記録",
-                            style: GoogleFonts.roboto(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 30,
-                                color: Colors.black)),
-                      )),
-                  const SizedBox(height: 10),
-                  RecordWidget(widget: widget)
-                ],
-              ))),
+                        border: Border(
+                          bottom: BorderSide(color: Theme.of(context).focusColor),
+                        ),
+                      ),
+                      // child: Text(
+                      //   "Avatar name",
+                      //   // style: GoogleFonts.orelegaOne(
+                      //   style: GoogleFonts.bizUDGothic(
+                      //     fontWeight: FontWeight.bold,
+                      //     fontSize: 30,
+                      //     color: Colors.black,
+                      //   ),
+                      // ),
+                      child: Text(
+                        avatarName ?? "アバター名",
+                        // style: GoogleFonts.orelegaOne(
+                        style: GoogleFonts.bizUDGothic(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30,
+                          color: Theme.of(context).shadowColor,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    Row(children: [
+                      const SizedBox(width: 20),
+                      _currentmyAvatar(imgUrl),
+                      // _currentmyAvatar("assets/images/illust_normal.jpg"),
+                      WaveViewWidget(widget: widget),
+                    ]),
+                    const SizedBox(height: 30),
+                    Container(
+                      alignment: Alignment.center,
+                      width: 200,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(color: Theme.of(context).focusColor),
+                        ),
+                      ),
+                      // child: Text(
+                      //   "statement",
+                      //   // style: GoogleFonts.orelegaOne(
+                      //   style: GoogleFonts.roboto(
+                      //     fontWeight: FontWeight.bold,
+                      //     fontSize: 30,
+                      //     color: Colors.black,
+                      //   ),
+                      // ),
+                      child: Text(
+                        "現在の状態",
+                        // style: GoogleFonts.orelegaOne(
+                        style: GoogleFonts.roboto(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30,
+                          color: Theme.of(context).shadowColor,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                        width: 300,
+                        // width: double.infinity,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: Theme.of(context).focusColor, width: 5),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.all(10),
+                        child: IntrinsicWidth(
+                          child: Column(children: [
+                            HPWidget(widget: widget),
+                            // const SizedBox(width: 20),
+                            const LimitTimeWidget(),
+                          ]),
+                        )),
+                    const SizedBox(height: 40),
+                    Container(
+                        width: 200,
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(
+                                    color: Theme.of(context).focusColor))),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text("HP グラフ",
+                              style: GoogleFonts.roboto(
+                                  fontWeight: FontWeight.bold, fontSize: 30)),
+                        )),
+                    const SizedBox(height: 20),
+                    Container(
+                      padding: const EdgeInsets.only(right: 20),
+                      height: 200,
+                      child: LineChartWidget(widget: widget),
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                        width: 200,
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(
+                                    color: Theme.of(context).focusColor,
+                                    width: 1.5))),
+                        child: Align(
+                          alignment: Alignment.center,
+                          // child: Text("HP record",
+                          //     // style: GoogleFonts.orelegaOne(
+                          //     style: GoogleFonts.roboto(
+                          //         fontWeight: FontWeight.bold,
+                          //         fontSize: 30,
+                          //         color: Colors.black)),
+                          child: Text("HP 記録",
+                              style: GoogleFonts.roboto(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 30,
+                                  color: Colors.black)),
+                        )),
+                    const SizedBox(height: 10),
+                    RecordWidget(widget: widget)
+                  ],
+                ))),
+      ),
     ));
   }
 
