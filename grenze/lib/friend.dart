@@ -87,6 +87,7 @@ class _ChangeIdWidgetState extends State<ChangeIdWidget> {
   @override
   void initState() {
     super.initState();
+    // idを変更することで別の人のデータを取り出せる
     _userIdController = TextEditingController(text: "id_abcd");
   }
 
@@ -157,12 +158,17 @@ class FriendCardWidget extends StatelessWidget {
             BoxShadow(
               color: Colors.grey,
               spreadRadius: 1,
-              blurRadius: 10,
-              offset: Offset(5, 5)
+              blurRadius: 3,
+              offset: Offset(3, 3)
             )
           ],
           border: Border.all(color: const Color(0xFFE0E0E0)),
-          borderRadius: BorderRadius.circular(8.0)),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(8.0),
+            topRight: Radius.circular(54.0),
+            bottomLeft: Radius.circular(8.0),
+            bottomRight: Radius.circular(8.0)
+          )),
       padding: const EdgeInsets.all(5),
       child: Row(
         children: [
@@ -179,9 +185,6 @@ class FriendCardWidget extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 25,
                       color: Colors.black)
-                  // style: const TextStyle(fontWeight: FontWeight.bold),
-                  // maxLines: 2,
-                  // overflow: TextOverflow.ellipsis,
                   ),
               const SizedBox(height: 12),
               Text(" HP: $currentHP",
@@ -201,8 +204,10 @@ class FriendCardWidget extends StatelessWidget {
                   shape: BoxShape.circle,
                   color: Colors.white,
                   // color: Colors.grey,
-                  // border: Border.all(color: Colors.grey ),
-                  // borderRadius: BorderRadius.circular(8.0),
+                  border: Border.all(
+                    color: hpFontColor,
+                    width: 2
+                  ),
                   image: DecorationImage(
                     fit: BoxFit.cover,
                     image: NetworkImage(avatarUrl),

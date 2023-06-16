@@ -223,6 +223,9 @@ class UserDataProvider with ChangeNotifier {
     DateTime hoursAgo = befFetchedtime["hoursAgo"];
     DateTime now = befFetchedtime["now"];
     Map responseBody = await fetchFirebaseData(hoursAgo, now);
+    if (!responseBody.containsKey("past_spots")) {
+      return;
+    }
     List<FlSpot> pastTmpSpots = convertHPSpotsList(responseBody["past_spots"]);
     futureSpots = convertHPSpotsList(responseBody["future_spots"]);
     removePastSpotsData(pastTmpSpots);
@@ -283,7 +286,7 @@ class UserDataProvider with ChangeNotifier {
       logger.d("成功しました！");
     } else {
       // リクエストが失敗した場合、エラーメッセージを表示します
-      logger.d("Request failed with status: ${responseBody.statusCode}");
+      logger.d("Request failed with status: ${responseBody}");
     }
     return responseBody;
   }

@@ -178,14 +178,18 @@ class _RegisterPageState extends State<RegisterPage> {
                               _userNameController!.text != "" &&
                               _avatarNameController!.text != "") {
                             FocusScope.of(context).unfocus();
-                            var response = await userDataProvider.registerFirebase(_registering, _userNameController!.text, _avatarNameController!.text);
+                            var response =
+                                await userDataProvider.registerFirebase(
+                                    _registering,
+                                    _userNameController!.text,
+                                    _avatarNameController!.text);
                             if (response["isCompleted"] == true) {
                               // メイン画面へ遷移
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                              if (context.mounted) {
                                 navigateMain();
-                              });
+                              }
                             } else {
-                              if (context.mounted){
+                              if (context.mounted) {
                                 await showDialog(
                                   context: context,
                                   builder: (context) => AlertDialog(
@@ -204,7 +208,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                   ),
                                 );
                               }
-                              
                             }
                           }
                         },
@@ -229,8 +232,6 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             )));
   }
-
-
 
   void navigateMain() async {
     await Navigator.pushNamedAndRemoveUntil(
