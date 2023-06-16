@@ -1,7 +1,7 @@
 name: grenze
 description: A new Flutter project.
 publish_to: "none"
-version: 0.1.0
+version: 0.1.1
 
 environment:
   sdk: ">=3.0.0-431.0.dev <4.0.0"
@@ -27,6 +27,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  flutter_launcher_icons: ^0.13.1
 
 flutter:
   uses-material-design: true
@@ -36,4 +37,9 @@ flutter:
     - assets/images/heartshock.png
     - assets/images/heartshock2.jpg
     - assets/images/illust_normal.jpg
-    
+
+flutter_icons:
+  android: true 
+  ios: true
+  image_path: "lib/assets/yourHP_icon.jpg"
+
