@@ -48,10 +48,6 @@ class _MyselfPageState extends State<MyselfPage> {
   Widget build(BuildContext context) {
     final UserDataProvider userDataProvider = 
       Provider.of<UserDataProvider>(context, listen: true);
-    final imgUrl = userDataProvider.imgUrl;
-    final userId = userDataProvider.userId;
-    final avatarName = userDataProvider.avatarName;
-    final maxDayHP = userDataProvider.maxDayHP;
     return Scaffold(
         body: NestedScrollView(
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -92,7 +88,7 @@ class _MyselfPageState extends State<MyselfPage> {
                       //   ),
                       // ),
                       child: Text(
-                        avatarName ?? "アバター名",
+                        userDataProvider.avatarName ?? "アバター名",
                         // style: GoogleFonts.orelegaOne(
                         style: GoogleFonts.bizUDGothic(
                           fontWeight: FontWeight.bold,
@@ -104,7 +100,7 @@ class _MyselfPageState extends State<MyselfPage> {
                     const SizedBox(height: 30),
                     Row(children: [
                       const SizedBox(width: 20),
-                      _currentmyAvatar(imgUrl),
+                      _currentmyAvatar(userDataProvider.imgUrl),
                       // _currentmyAvatar("assets/images/illust_normal.jpg"),
                       WaveViewWidget(widget: widget),
                     ]),

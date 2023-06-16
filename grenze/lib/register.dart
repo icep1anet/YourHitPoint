@@ -22,35 +22,33 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController? _avatarNameController;
   // String avatarType = "猫";
   String selectAvatarType = "neko";
-  String? userId;
   List<String> choices = ["猫", "犬", "人間男", "ワニ", "フクロウ", "カブトムシ"];
-  List<DropdownMenuItem<String>> dropdownMenuItems = const[
-        DropdownMenuItem(
-          value: "neko",
-          child: Text("猫"),
-        ),
-        DropdownMenuItem(
-            value: "inu",
-            child: Text("犬"),
-        ),
-        DropdownMenuItem(
-            value: "man",
-            child: Text("人間男"),
-        ),
-        DropdownMenuItem(
-            value: "wani",
-            child: Text("ワニ"),
-        ),
-        DropdownMenuItem(
-            value: "hukurou",
-            child: Text("フクロウ"),
-        ),
-        DropdownMenuItem(
-            value: "kabutomushi",
-            child: Text("カブトムシ"),
-        ),
-      ];
-
+  List<DropdownMenuItem<String>> dropdownMenuItems = const [
+    DropdownMenuItem(
+      value: "neko",
+      child: Text("猫"),
+    ),
+    DropdownMenuItem(
+      value: "inu",
+      child: Text("犬"),
+    ),
+    DropdownMenuItem(
+      value: "man",
+      child: Text("人間男"),
+    ),
+    DropdownMenuItem(
+      value: "wani",
+      child: Text("ワニ"),
+    ),
+    DropdownMenuItem(
+      value: "hukurou",
+      child: Text("フクロウ"),
+    ),
+    DropdownMenuItem(
+      value: "kabutomushi",
+      child: Text("カブトムシ"),
+    ),
+  ];
 
   //ページ起動時に呼ばれる初期化関数
   @override
@@ -96,6 +94,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   padding: const EdgeInsets.only(top: 40, left: 24, right: 24),
                   child: Column(
                     children: [
+                      if (userDataProvider.hasData) const ChangeIdWidget(),
                       TextField(
                         style: const TextStyle(fontSize: 20),
                         autocorrect: false,
@@ -197,13 +196,22 @@ class _RegisterPageState extends State<RegisterPage> {
                               _userNameController!.text != "" &&
                               _avatarNameController!.text != "") {
                             FocusScope.of(context).unfocus();
-                            var response =
-                                await userDataProvider.registerFirebase(
-                                    _registering,
-                                    _userNameController!.text,
-                                    _avatarNameController!.text,
-                                    selectAvatarType,
-                                    );
+                            Map response = {"isCompleted": false};
+                            if (userDataProvider.hasData) {
+                              userDataProvider.setItemToSharedPref(
+                                ["userName", "avatarName", "avatarType"],
+                                [_userNameController!.text,
+                                 _avatarNameController!.text, selectAvatarType,]
+                              );
+                            } else {
+                              response =
+                                  await userDataProvider.registerFirebase(
+                                _registering,
+                                _userNameController!.text,
+                                _avatarNameController!.text,
+                                selectAvatarType,
+                              );
+                            }
                             if (response["isCompleted"] == true) {
                               // メイン画面へ遷移
                               if (context.mounted) {
@@ -232,7 +240,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             }
                           }
                         },
-                        child: userDataProvider.hasData != null
+                        child: userDataProvider.hasData
                             ? const Text(
                                 "プロフィール変更",
                                 style: TextStyle(fontSize: 23),
@@ -246,7 +254,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       //ローディング
                       if (_registering == true)
                         const CircularProgressIndicator(),
-                      if (userId != null) Text(userId!),
+                      if (userDataProvider.userId != null)
+                        Text(userDataProvider.userId!),
                     ],
                   ),
                 ),
@@ -260,5 +269,69 @@ class _RegisterPageState extends State<RegisterPage> {
       "/home",
       (route) => false,
     );
+  }
+}
+
+class ChangeIdWidget extends StatefulWidget {
+  const ChangeIdWidget({Key? key}) : super(key: key);
+
+  @override
+  State<ChangeIdWidget> createState() => _ChangeIdWidgetState();
+}
+
+class _ChangeIdWidgetState extends State<ChangeIdWidget> {
+  TextEditingController? _userIdController;
+
+  @override
+  void initState() {
+    super.initState();
+    // idを変更することで別の人のデータを取り出せる
+    _userIdController = TextEditingController(text: "id_abcd");
+  }
+
+  @override
+  void dispose() {
+    _userIdController?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      Container(
+        padding: const EdgeInsets.all(10),
+        child: TextField(
+          autocorrect: false,
+          autofocus: false,
+          controller: _userIdController,
+          decoration: InputDecoration(
+            // contentPadding: const EdgeInsets.all(5),
+            border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(8),
+              ),
+            ),
+            labelText: "userId",
+            labelStyle: const TextStyle(fontSize: 25),
+            suffixIcon: IconButton(
+              icon: const Icon(Icons.cancel),
+              onPressed: () => _userIdController?.clear(),
+            ),
+          ),
+          keyboardType: TextInputType.text,
+          // readOnly: _registering,
+          textCapitalization: TextCapitalization.none,
+          textInputAction: TextInputAction.next,
+        ),
+      ),
+      TextButton(
+        onPressed: () {
+          context
+              .read<UserDataProvider>()
+              .refreshUserID(_userIdController!.text);
+        },
+        child: const Text("Change userId"),
+      )
+    ]);
   }
 }

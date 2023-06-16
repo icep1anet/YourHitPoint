@@ -34,7 +34,7 @@ class UserDataProvider with ChangeNotifier {
   double? maxGraphY;
   String activeLimitTime = "";
   List friendDataList = [];
-  bool? hasData;
+  bool hasData = false;
   int maxSleepDuration = 0;
   int maxDayHP = 100;
   int maxTotalDaySteps = 0;
@@ -254,6 +254,7 @@ class UserDataProvider with ChangeNotifier {
 
     updateMinMaxSpots();
     imgUrl = responseBody["url"];
+    avatarType = responseBody["avatarType"];
     avatarName = responseBody["avatarName"];
     recordHighHP = responseBody["recordHighHP"];
     recordLowHP = responseBody["recordLowHP"];
@@ -275,10 +276,9 @@ class UserDataProvider with ChangeNotifier {
     ///アバター名表示のためデバイスで1度だけ実行したら消していいです
     ///ローカルのsharedpreferenceにデータを書き込み
     ///普通ならregister時にローカルにデータが書き込まれるが、今デバックでuserIdだけ無理やり書き換えてるからそれ以外のデータがローカルになく、アバター名を表示できないので一度この処理を行う
-    await setItemToSharedPref(
-        ["userId", "userName", "avatarName", "avatarType"],
-        ["id_abcd", "Tom", "マルオ", "wani"]);
-    await initRemoveUserId();
+    // await setItemToSharedPref(
+    //     ["userId", "userName", "avatarName", "avatarType"],
+    //     ["id_abcd", "Tom", "マルオ", "wani"]);
     await getLocalData();
     if (userId != null) {
       await updateUserData();
@@ -291,9 +291,13 @@ class UserDataProvider with ChangeNotifier {
   Future<void> getLocalData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     userId = prefs.getString("userId");
+    if (userId != null) {
+      hasData = true;
+    }
     userName = prefs.getString("userName");
     avatarName = prefs.getString("avatarName");
     avatarType = prefs.getString("avatarType");
+    avatarType ??= "猫";
     WidgetsBinding.instance.addPostFrameCallback((_) {
       notifyListeners();
     });
@@ -363,15 +367,16 @@ class UserDataProvider with ChangeNotifier {
         userId = responseMap["userId"];
         logger.d(userId);
         // if (!mounted) return;
-        setItemToSharedPref(["userId", "userName", "avatarName", "avatarType"],
+        await setItemToSharedPref(
+            ["userId", "userName", "avatarName", "avatarType"],
             [userId!, inputUserName, inputAvatarName, inputAvatarType]);
+        return {"isCompleted": true};
       } else {
         // リクエストが失敗した場合、エラーメッセージを表示します
         logger.d("Request failed with status: $response");
         isRegistered = false;
         return {"isCompleted": false, "error": response};
       }
-      return {"isCompleted": true};
     } catch (e) {
       isRegistered = false;
       return {"isCompleted": false, "error": e};

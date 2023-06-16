@@ -77,10 +77,10 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
 
+    context.read<UserDataProvider>().initMain();
     context
         .read<UserDataProvider>()
         .setTimerFunc(900, context.read<UserDataProvider>().updateUserData);
-    context.read<UserDataProvider>().initMain();
   }
 
   //ページ移動系

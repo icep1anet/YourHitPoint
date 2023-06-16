@@ -79,68 +79,6 @@ class _FriendPageState extends State<FriendPage> {
   }
 }
 
-class ChangeIdWidget extends StatefulWidget {
-  const ChangeIdWidget({Key? key}) : super(key: key);
-
-  @override
-  State<ChangeIdWidget> createState() => _ChangeIdWidgetState();
-}
-
-class _ChangeIdWidgetState extends State<ChangeIdWidget> {
-  TextEditingController? _userIdController;
-
-  @override
-  void initState() {
-    super.initState();
-    // idを変更することで別の人のデータを取り出せる
-    _userIdController = TextEditingController(text: "id_abcd");
-  }
-
-  @override
-  void dispose() {
-    _userIdController?.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-      Container(
-        padding: const EdgeInsets.all(10),
-        child: TextField(
-          autocorrect: false,
-          autofocus: false,
-          controller: _userIdController,
-          decoration: InputDecoration(
-            // contentPadding: const EdgeInsets.all(5),
-            border: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(8),
-              ),
-            ),
-            labelText: "userId",
-            labelStyle: const TextStyle(fontSize: 25),
-            suffixIcon: IconButton(
-              icon: const Icon(Icons.cancel),
-              onPressed: () => _userIdController?.clear(),
-            ),
-          ),
-          keyboardType: TextInputType.text,
-          // readOnly: _registering,
-          textCapitalization: TextCapitalization.none,
-          textInputAction: TextInputAction.next,
-        ),
-      ),
-      TextButton(
-        onPressed: () {
-          context.read<UserDataProvider>().refreshUserID(_userIdController!.text);
-        },
-        child: const Text("Change userId"),
-      )
-    ]);
-  }
-}
 
 class FriendCardWidget extends StatelessWidget {
   final int currentHP;
