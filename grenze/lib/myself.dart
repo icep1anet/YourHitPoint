@@ -232,6 +232,9 @@ class RecordWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final UserDataProvider userDataProvider =
         Provider.of<UserDataProvider>(context, listen: true);
+    Duration msDuration = Duration(milliseconds: userDataProvider.maxSleepDuration);
+    int msHours = msDuration.inHours;
+    int msMinutes = msDuration.inMinutes.remainder(60);
     return Container(
       width: 300,
       // width: double.infinity,
@@ -256,9 +259,17 @@ class RecordWidget extends StatelessWidget {
             Text("過去最低 HP",
                 style: GoogleFonts.roboto(
                     fontWeight: FontWeight.w500, fontSize: 23)),
+            const SizedBox(height: 7),
+            Text("最大睡眠時間",
+                style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w500, fontSize: 23)),
+            const SizedBox(height: 7),
+            Text("最大歩数",
+                style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w500, fontSize: 23)),
           ],
         ),
-        const SizedBox(width: 30),
+        const SizedBox(width: 15),
         Column(children: [
           Text(userDataProvider.recordHighHP.round().toString(),
               style: GoogleFonts.sourceCodePro(
@@ -267,6 +278,16 @@ class RecordWidget extends StatelessWidget {
                   color: Theme.of(context).hintColor)),
           // const SizedBox(height: 10),
           Text(userDataProvider.recordLowHP.round().toString(),
+              style: GoogleFonts.sourceCodePro(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).hintColor)),
+          Text("${msHours}h${msMinutes}m",
+              style: GoogleFonts.sourceCodePro(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).hintColor)),
+          Text("${userDataProvider.maxTotalDaySteps}歩",
               style: GoogleFonts.sourceCodePro(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,

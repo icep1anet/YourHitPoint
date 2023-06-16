@@ -35,6 +35,9 @@ class UserDataProvider with ChangeNotifier {
   String activeLimitTime = "";
   List friendDataList = [];
   bool? hasData;
+  int maxSleepDuration = 0;
+  int maxDayHP = 100;
+  int maxTotalDaySteps = 0;
 
   void setHPSpotsList(List<Map> dataList) {
     pastSpots = createHPSpotsList(dataList);
@@ -253,6 +256,9 @@ class UserDataProvider with ChangeNotifier {
     recordHighHP = responseBody["recordHighHP"];
     recordLowHP = responseBody["recordLowHP"];
     activeLimitTime = responseBody["activeLimitTime"];
+    maxSleepDuration = responseBody["maxSleepDuration"];
+    maxDayHP = responseBody["maxDayHP"];
+    maxTotalDaySteps = responseBody["maxTotalDaySteps"];
     await setFriendDataList();
     //latestDataTimeの更新
     latestDataTime = now;
@@ -267,21 +273,21 @@ class UserDataProvider with ChangeNotifier {
     ///アバター名表示のためデバイスで1度だけ実行したら消していいです
     ///ローカルのsharedpreferenceにデータを書き込み
     ///普通ならregister時にローカルにデータが書き込まれるが、今デバックでuserIdだけ無理やり書き換えてるからそれ以外のデータがローカルになく、アバター名を表示できないので一度この処理を行う
-    setItemToSharedPref([
-      "userName",
-      "avatarName",
-      "avatarType"
-    ], [
-      "Tom",
-      "マルオ",
-      "wani"
-    ]);
+    // await setItemToSharedPref([
+    //   "userName",
+    //   "avatarName",
+    //   "avatarType"
+    // ], [
+    //   "Tom",
+    //   "マルオ",
+    //   "wani"
+    // ]);
 
     await getLocalData();
     if (userId != null) {
       await updateUserData();
     }
-    await updateUserData();
+    // await updateUserData();
     changeHP();
   }
 
