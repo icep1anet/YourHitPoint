@@ -7,7 +7,13 @@
         {
             "name": "grenze",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "args": [
+                "-t",
+                "lib/main.dart",
+                "--flavor",
+                "dev"
+            ]
         },
         {
             "name": "grenze (profile mode)",

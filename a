@@ -1,0 +1,11 @@
+if["${CONFIGURATION}" = "Debug-prod"] || ["${CONFIGURATION}" == "Release-prod"] || ["${CONFIGURATION}" == "Release"]; then
+cp -r "${PROJECT_DIR}/Runner/Firebase/prod/GoogleService-Info.plist" "${PROJECT_DIR}/Runner/GoogleService-Info.plist"
+
+echo "Producition plist copied"
+
+elif ["${CONFIGURATION}" == "Debug-dev"] || ["${CONFIGURATION}" == "Release-dev"] || ["${CONFIGURATION}" == "Debug"]; then
+
+cp -r "${PROJECT_DIR}/Runner/Firebase/dev/GoogleService-Info.plist" "${PROJECT_DIR}/Runner/GoogleService-Info.plist"
+
+echo "Development plist copied"
+fi

@@ -6,15 +6,15 @@
     "configurations": [
         
         {
-            "name": "Flutter Debug-Development",
+            "name": "Flutter-dev",
             "request": "launch",
             "type": "dart",
             "program": "grenze/lib/main.dart",
             "args": [
-                "--debug",
+                "-t",
+                "lib/main.dart",
                 "--flavor",
-                "develop",
-                "--no-build"
+                "dev"
             ]
         },
         {
