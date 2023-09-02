@@ -11,6 +11,7 @@ import "package:logger/logger.dart";
 import "main.dart";
 import "wave_view.dart";
 import "register.dart";
+import "utils.dart";
 
 var logger = Logger();
 
@@ -48,6 +49,7 @@ class _MyselfPageState extends State<MyselfPage> {
   Widget build(BuildContext context) {
     final UserDataProvider userDataProvider = 
       Provider.of<UserDataProvider>(context, listen: true);
+    final Utils utils = Utils();
     final imgUrl = userDataProvider.imgUrl;
     final userId = userDataProvider.userId;
     final avatarName = userDataProvider.avatarName;
@@ -104,7 +106,7 @@ class _MyselfPageState extends State<MyselfPage> {
                     const SizedBox(height: 30),
                     Row(children: [
                       const SizedBox(width: 20),
-                      _currentmyAvatar(imgUrl),
+                      utils.currentmyAvatar(context, imgUrl, 100),
                       // _currentmyAvatar("assets/images/illust_normal.jpg"),
                       WaveViewWidget(widget: widget),
                     ]),
@@ -201,31 +203,6 @@ class _MyselfPageState extends State<MyselfPage> {
                 ))),
       ),
     ));
-  }
-
-  Widget _currentmyAvatar(String? imgUrl) {
-    var color = const Color(0xffd9d9d9);
-    final hasImage = imgUrl != null;
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(width: 5, color: Theme.of(context).focusColor),
-      ),
-      child: CircleAvatar(
-        backgroundColor: hasImage ? Colors.transparent : color,
-        backgroundImage: hasImage ? NetworkImage(imgUrl) : null,
-        radius: 100,
-        child: !hasImage
-            ? Text("No image",
-                // style: GoogleFonts.orelegaOne(
-                style: GoogleFonts.roboto(
-                  color: const Color(0xff1e90ff),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 26,
-                ))
-            : null,
-      ),
-    );
   }
 }
 
@@ -559,6 +536,9 @@ class SliverAppBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final UserDataProvider userDataProvider =
+        Provider.of<UserDataProvider>(context, listen: true);
+    final Utils utils = Utils();
     return SliverAppBar(
       expandedHeight: 300.0,
       floating: true,
@@ -590,7 +570,9 @@ class SliverAppBarWidget extends StatelessWidget {
                 ),
               );
             },
-            icon: const Icon(Icons.settings_applications))
+            icon: utils.currentmyAvatar(context, userDataProvider.imgUrl, 20),
+            // icon: const Icon(Icons.settings_applications),
+        )
       ],
     );
   }
