@@ -1,17 +1,16 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-// import 'package:grenze/user_data.dart';
 // import 'package:provider/provider.dart';
 // import 'package:vector_math/vector_math.dart' as vector;
 
 import "main.dart";
 
 
-class MediterranesnDietView extends StatelessWidget {
+class HealthlevelView extends StatelessWidget {
   final AnimationController? animationController;
   final Animation<double>? animation;
 
-  const MediterranesnDietView(
+  const HealthlevelView(
       {Key? key, this.animationController, this.animation})
       : super(key: key);
 
@@ -25,24 +24,6 @@ class MediterranesnDietView extends StatelessWidget {
           child: Transform(
             transform: Matrix4.translationValues(
                 0.0, 30 * (1.0 - animation!.value), 0.0),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 24, right: 24, top: 16, bottom: 18),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(8.0),
-                      bottomLeft: Radius.circular(8.0),
-                      bottomRight: Radius.circular(8.0),
-                      topRight: Radius.circular(68.0)),
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        offset: const Offset(1.1, 1.1),
-                        blurRadius: 10.0),
-                  ],
-                ),
                 child: Column(
                   children: <Widget>[
                     Padding(
@@ -134,9 +115,7 @@ class MediterranesnDietView extends StatelessWidget {
                       ),
                     ),
                   ],
-                ),
               ),
-            ),
           ),
         );
       },

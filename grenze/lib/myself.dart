@@ -3,7 +3,7 @@ import "package:fl_chart/fl_chart.dart";
 import "package:flutter/material.dart";
 import "package:fluttericon/iconic_icons.dart";
 import "package:google_fonts/google_fonts.dart";
-// import "package:grenze/health_level.dart";
+import "package:grenze/health_level.dart";
 import "package:grenze/user_data.dart";
 import "package:provider/provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
@@ -13,7 +13,7 @@ import "main.dart";
 import "wave_view.dart";
 import "register.dart";
 import "utils.dart";
-import "health_level.dart";
+// import "health_level.dart";
 
 var logger = Logger();
 
@@ -118,7 +118,7 @@ class _MyselfPageState extends State<MyselfPage>with TickerProviderStateMixin {
                       WaveViewWidget(widget: widget),
                     ]),
                     const SizedBox(height: 30),
-                    MediterranesnDietView(
+                    HealthlevelView(
                       animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
                           parent: animationController!,
                           curve:
@@ -300,6 +300,53 @@ class RecordWidget extends StatelessWidget {
     );
   }
 }
+
+class HealthlevelWidget extends StatelessWidget {
+  const HealthlevelWidget({super.key, required this.widget});
+
+  final MyselfPage widget;
+  // final int barColor;
+//  MediterranesnDietView(
+//                       animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+//                           parent: animationController!,
+//                           curve:
+//                               const Interval((1 / 9) * 1, 1.0, curve: Curves.fastOutSlowIn))),
+//                       animationController: animationController!,
+//                     ),
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    // final hpPercent = context.select(
+    //     (UserDataProvider userDataProvider) => userDataProvider.hpPercent);
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 8, top: 16),
+      child: Container(
+        width: 60,
+        height: 160,
+        decoration: BoxDecoration(
+          //ここがhpの上部分
+          color: HexColor("#E8EDFE"),
+          // color: HexColor("#0087aa"),
+          borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(80.0),
+              bottomLeft: Radius.circular(80.0),
+              bottomRight: Radius.circular(80.0),
+              topRight: Radius.circular(80.0)),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+                color: const Color(0xFF3A5160).withOpacity(0.4),
+                offset: const Offset(2, 2),
+                blurRadius: 4),
+          ],
+        ),
+        child: const HealthlevelView(),
+      ),
+    );
+  }
+}
+
 
 class WaveViewWidget extends StatelessWidget {
   const WaveViewWidget({super.key, required this.widget});
