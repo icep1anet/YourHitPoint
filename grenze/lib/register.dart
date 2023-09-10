@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:fluttericon/octicons_icons.dart";
 import "package:grenze/user_data.dart";
 import "package:provider/provider.dart";
 import "package:logger/logger.dart";
@@ -15,59 +14,29 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  FocusNode? _focusUserNameNode;
-  FocusNode? _focusAvatarNameNode;
-  TextEditingController? _userNameController;
-  final _registering = false;
-  TextEditingController? _avatarNameController;
-  // String avatarType = "猫";
-  String selectAvatarType = "neko";
+  FocusNode? _focusEmailNode;
+  FocusNode? _focusPasswordNode;
+  TextEditingController? _emailController;
+  bool _registering = false;
+  TextEditingController? _passwordController;
   String? userId;
-  List<String> choices = ["猫", "犬", "人間男", "ワニ", "フクロウ", "カブトムシ"];
-  List<DropdownMenuItem<String>> dropdownMenuItems = const[
-        DropdownMenuItem(
-          value: "neko",
-          child: Text("猫"),
-        ),
-        DropdownMenuItem(
-            value: "inu",
-            child: Text("犬"),
-        ),
-        DropdownMenuItem(
-            value: "man",
-            child: Text("人間男"),
-        ),
-        DropdownMenuItem(
-            value: "wani",
-            child: Text("ワニ"),
-        ),
-        DropdownMenuItem(
-            value: "hukurou",
-            child: Text("フクロウ"),
-        ),
-        DropdownMenuItem(
-            value: "kabutomushi",
-            child: Text("カブトムシ"),
-        ),
-      ];
-
 
   //ページ起動時に呼ばれる初期化関数
   @override
   void initState() {
     super.initState();
-    _focusUserNameNode = FocusNode();
-    _focusAvatarNameNode = FocusNode();
-    _userNameController = TextEditingController(text: "ボギーウッズ");
-    _avatarNameController = TextEditingController(text: "ガララワニ");
+    _focusEmailNode = FocusNode();
+    _focusPasswordNode = FocusNode();
+    _emailController = TextEditingController(text: "abcde@gmail.com");
+    _passwordController = TextEditingController(text: "asdfgh");
   }
 
   @override
   void dispose() {
-    _focusUserNameNode?.dispose();
-    _focusAvatarNameNode?.dispose();
-    _userNameController?.dispose();
-    _avatarNameController?.dispose();
+    _focusEmailNode?.dispose();
+    _focusPasswordNode?.dispose();
+    _emailController?.dispose();
+    _passwordController?.dispose();
     super.dispose();
   }
 
@@ -76,10 +45,10 @@ class _RegisterPageState extends State<RegisterPage> {
     final UserDataProvider userDataProvider =
         Provider.of<UserDataProvider>(context, listen: true);
     return Focus(
-        focusNode: _focusUserNameNode,
+        focusNode: _focusEmailNode,
         child: GestureDetector(
             onTap: () {
-              _focusUserNameNode?.requestFocus();
+              _focusEmailNode?.requestFocus();
             },
             child: Scaffold(
               resizeToAvoidBottomInset: false,
@@ -87,7 +56,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 backgroundColor: const Color(0xff00a5bf),
                 systemOverlayStyle: SystemUiOverlayStyle.light,
                 title: const Text(
-                  "Profile settings",
+                  "Register",
                   style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
               ),
@@ -100,23 +69,23 @@ class _RegisterPageState extends State<RegisterPage> {
                         style: const TextStyle(fontSize: 20),
                         autocorrect: false,
                         autofocus: false,
-                        controller: _userNameController,
+                        controller: _emailController,
                         decoration: InputDecoration(
                           border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(8),
                             ),
                           ),
-                          labelText: "ユーザーネーム",
+                          labelText: "E-mail",
                           labelStyle: const TextStyle(fontSize: 25),
                           suffixIcon: IconButton(
                             icon: const Icon(Icons.cancel),
-                            onPressed: () => _userNameController?.clear(),
+                            onPressed: () => _emailController?.clear(),
                           ),
                         ),
                         keyboardType: TextInputType.text,
                         onEditingComplete: () {
-                          _focusAvatarNameNode?.requestFocus();
+                          _focusPasswordNode?.requestFocus();
                         },
                         readOnly: _registering,
                         textCapitalization: TextCapitalization.none,
@@ -128,65 +97,27 @@ class _RegisterPageState extends State<RegisterPage> {
                         child: TextField(
                           style: const TextStyle(fontSize: 20),
                           autocorrect: false,
-                          controller: _avatarNameController,
+                          controller: _passwordController,
                           decoration: InputDecoration(
                             border: const OutlineInputBorder(
                               borderRadius: BorderRadius.all(
                                 Radius.circular(8),
                               ),
                             ),
-                            labelText: "アバターネーム",
+                            labelText: "Password",
                             labelStyle: const TextStyle(fontSize: 25),
                             suffixIcon: IconButton(
                               icon: const Icon(Icons.cancel),
-                              onPressed: () => _avatarNameController?.clear(),
+                              onPressed: () => _passwordController?.clear(),
                             ),
                           ),
-                          focusNode: _focusAvatarNameNode,
+                          focusNode: _focusPasswordNode,
                           keyboardType: TextInputType.text,
                           onEditingComplete: () {
-                            _focusAvatarNameNode?.unfocus();
+                            _focusPasswordNode?.unfocus();
                           },
                           textCapitalization: TextCapitalization.none,
                           textInputAction: TextInputAction.done,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      Container(
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.only(right: 10, top: 10),
-                        child: const Text("アバタータイプ",
-                            style: TextStyle(
-                                fontSize: 18, color: Color(0xff696969))),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              color: const Color(0xff696969), width: 1),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: DropdownButton(
-                          style: const TextStyle(
-                              fontSize: 25, color: Colors.black),
-                          items: dropdownMenuItems,
-                          value: selectAvatarType,
-                          alignment: Alignment.center,
-                          onChanged: (String? value) {
-                            setState(() {
-                              selectAvatarType = value!;
-                            });
-                          },
-                          icon: const Padding(
-                              padding: EdgeInsets.only(left: 20),
-                              child: Icon(
-                                Octicons.triangle_down,
-                                size: 15,
-                              )),
-                          iconEnabledColor: const Color(0xff696969),
-                          dropdownColor: Colors.white,
-                          underline: Container(),
                         ),
                       ),
                       const SizedBox(height: 30),
@@ -194,23 +125,29 @@ class _RegisterPageState extends State<RegisterPage> {
                         onPressed: () async {
                           // firstNameとlastNameは必須で入力しないと登録できないようにする
                           if (_registering == false &&
-                              _userNameController!.text != "" &&
-                              _avatarNameController!.text != "") {
+                              _emailController!.text != "" &&
+                              _passwordController!.text != "") {
+                            setState(() {
+                              _registering = true;
+                            });
                             FocusScope.of(context).unfocus();
                             var response =
                                 await userDataProvider.registerFirebase(
-                                    _registering,
-                                    _userNameController!.text,
-                                    _avatarNameController!.text,
-                                    selectAvatarType,
-                                    );
+                              _registering,
+                              _emailController!.text,
+                              _passwordController!.text,
+                            );
                             if (response["isCompleted"] == true) {
                               // メイン画面へ遷移
                               if (context.mounted) {
                                 navigateMain();
                               }
                             } else {
+                              logger.d(response);
                               if (context.mounted) {
+                                setState(() {
+                                  _registering = false;
+                                });
                                 await showDialog(
                                   context: context,
                                   builder: (context) => AlertDialog(
@@ -223,7 +160,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       ),
                                     ],
                                     content: Text(
-                                      response["error"],
+                                      response["error"].toString(),
                                     ),
                                     title: const Text("Error"),
                                   ),

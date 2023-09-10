@@ -1,10 +1,11 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:grenze/user_data.dart';
+// import 'package:grenze/user_data.dart';
 // import 'package:provider/provider.dart';
 // import 'package:vector_math/vector_math.dart' as vector;
-import 'package:flutter/material.dart';
-import 'dart:math' as math;
+
+import "main.dart";
+
 
 class MediterranesnDietView extends StatelessWidget {
   final AnimationController? animationController;
@@ -29,7 +30,7 @@ class MediterranesnDietView extends StatelessWidget {
                   left: 24, right: 24, top: 16, bottom: 18),
               child: Container(
                 decoration: BoxDecoration(
-                  color: FitnessAppTheme.white,
+                  color: Colors.white,
                   borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(8.0),
                       bottomLeft: Radius.circular(8.0),
@@ -37,7 +38,7 @@ class MediterranesnDietView extends StatelessWidget {
                       topRight: Radius.circular(68.0)),
                   boxShadow: <BoxShadow>[
                     BoxShadow(
-                        color: FitnessAppTheme.grey.withOpacity(0.2),
+                        color: Colors.grey.withOpacity(0.2),
                         offset: const Offset(1.1, 1.1),
                         blurRadius: 10.0),
                   ],
@@ -61,14 +62,14 @@ class MediterranesnDietView extends StatelessWidget {
                                       width: 100,
                                       height: 100,
                                       decoration: BoxDecoration(
-                                        color: FitnessAppTheme.white,
+                                        color: Colors.white,
                                         borderRadius: const BorderRadius.all(
                                           Radius.circular(100.0),
                                         ),
                                         border: Border.all(
                                             width: 4,
-                                            color: FitnessAppTheme
-                                                .nearlyDarkBlue
+                                            color: Colors
+                                                .indigo
                                                 .withOpacity(0.2)),
                                       ),
                                       child: Column(
@@ -80,26 +81,26 @@ class MediterranesnDietView extends StatelessWidget {
                                           Text(
                                             '${(1503 * animation!.value).toInt()}',
                                             textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontFamily:
-                                                  FitnessAppTheme.fontName,
+                                            style: const TextStyle(
+                                              // fontFamily:
+                                              //     context.fontName,
                                               fontWeight: FontWeight.normal,
                                               fontSize: 24,
                                               letterSpacing: 0.0,
-                                              color: FitnessAppTheme
-                                                  .nearlyDarkBlue,
+                                              color: Colors
+                                                  .indigo,
                                             ),
                                           ),
                                           Text(
                                             'Kcal left',
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
-                                              fontFamily:
-                                                  FitnessAppTheme.fontName,
+                                              // fontFamily:
+                                              //     FitnessAppTheme.fontName,
                                               fontWeight: FontWeight.bold,
                                               fontSize: 12,
                                               letterSpacing: 0.0,
-                                              color: FitnessAppTheme.grey
+                                              color: Colors.grey
                                                   .withOpacity(0.5),
                                             ),
                                           ),
@@ -112,7 +113,7 @@ class MediterranesnDietView extends StatelessWidget {
                                     child: CustomPaint(
                                       painter: CurvePainter(
                                           colors: [
-                                            FitnessAppTheme.nearlyDarkBlue,
+                                            Colors.indigo,
                                             HexColor("#8A98E8"),
                                             HexColor("#8A98E8")
                                           ],
@@ -258,3 +259,4 @@ class CurvePainter extends CustomPainter {
     return redian;
   }
 }
+

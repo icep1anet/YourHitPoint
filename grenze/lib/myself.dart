@@ -3,6 +3,7 @@ import "package:fl_chart/fl_chart.dart";
 import "package:flutter/material.dart";
 import "package:fluttericon/iconic_icons.dart";
 import "package:google_fonts/google_fonts.dart";
+// import "package:grenze/health_level.dart";
 import "package:grenze/user_data.dart";
 import "package:provider/provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
@@ -12,6 +13,7 @@ import "main.dart";
 import "wave_view.dart";
 import "register.dart";
 import "utils.dart";
+import "health_level.dart";
 
 var logger = Logger();
 
@@ -24,8 +26,8 @@ class MyselfPage extends StatefulWidget {
 }
 
 // Stateを継承して使う
-class _MyselfPageState extends State<MyselfPage> {
-
+class _MyselfPageState extends State<MyselfPage>with TickerProviderStateMixin {
+  AnimationController? animationController;
   void initTest() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove("userId");
@@ -39,21 +41,25 @@ class _MyselfPageState extends State<MyselfPage> {
     // context
     //     .read<UserDataProvider>()
     //     .setTimerFunc(50, context.read<UserDataProvider>().setZeroHP);
-
+    animationController = AnimationController(
+        duration: const Duration(milliseconds: 2000), vsync: this);
     context
         .read<UserDataProvider>()
-        .setTimerFunc(60 , context.read<UserDataProvider>().changeHP);
+        .setTimerFunc(60, context.read<UserDataProvider>().changeHP);
+
   }
 
   @override
   Widget build(BuildContext context) {
-    final UserDataProvider userDataProvider = 
-      Provider.of<UserDataProvider>(context, listen: true);
+    final UserDataProvider userDataProvider =
+        Provider.of<UserDataProvider>(context, listen: true);
     final Utils utils = Utils();
     final imgUrl = userDataProvider.imgUrl;
-    final userId = userDataProvider.userId;
+    // final userId = userDataProvider.userId;
     final avatarName = userDataProvider.avatarName;
-    final maxDayHP = userDataProvider.maxDayHP;
+    // final maxDayHP = userDataProvider.maxDayHP;
+    // final AnimationController animationController = AnimationController(
+    //     duration: const Duration(milliseconds: 2000), vsync: this);
     return Scaffold(
         body: NestedScrollView(
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -62,7 +68,7 @@ class _MyselfPageState extends State<MyselfPage> {
         ];
       },
       body: RefreshIndicator(
-        onRefresh: () async{
+        onRefresh: () async {
           await userDataProvider.updateUserData();
         },
         child: SingleChildScrollView(
@@ -81,7 +87,8 @@ class _MyselfPageState extends State<MyselfPage> {
                       width: 200,
                       decoration: BoxDecoration(
                         border: Border(
-                          bottom: BorderSide(color: Theme.of(context).focusColor),
+                          bottom:
+                              BorderSide(color: Theme.of(context).focusColor),
                         ),
                       ),
                       // child: Text(
@@ -111,12 +118,21 @@ class _MyselfPageState extends State<MyselfPage> {
                       WaveViewWidget(widget: widget),
                     ]),
                     const SizedBox(height: 30),
+                    MediterranesnDietView(
+                      animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+                          parent: animationController!,
+                          curve:
+                              const Interval((1 / 9) * 1, 1.0, curve: Curves.fastOutSlowIn))),
+                      animationController: animationController!,
+                    ),
+                    const SizedBox(height: 30),
                     Container(
                       alignment: Alignment.center,
                       width: 200,
                       decoration: BoxDecoration(
                         border: Border(
-                          bottom: BorderSide(color: Theme.of(context).focusColor),
+                          bottom:
+                              BorderSide(color: Theme.of(context).focusColor),
                         ),
                       ),
                       // child: Text(
@@ -218,7 +234,8 @@ class RecordWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final UserDataProvider userDataProvider =
         Provider.of<UserDataProvider>(context, listen: true);
-    Duration msDuration = Duration(milliseconds: userDataProvider.maxSleepDuration);
+    Duration msDuration =
+        Duration(milliseconds: userDataProvider.maxSleepDuration);
     int msHours = msDuration.inHours;
     int msMinutes = msDuration.inMinutes.remainder(60);
     return Container(
@@ -562,16 +579,16 @@ class SliverAppBarWidget extends StatelessWidget {
           )),
       actions: [
         IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  fullscreenDialog: true,
-                  builder: (context) => const RegisterPage(),
-                ),
-              );
-            },
-            icon: utils.currentmyAvatar(context, userDataProvider.imgUrl, 20),
-            // icon: const Icon(Icons.settings_applications),
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                fullscreenDialog: true,
+                builder: (context) => const RegisterPage(),
+              ),
+            );
+          },
+          icon: utils.currentmyAvatar(context, userDataProvider.imgUrl, 20),
+          // icon: const Icon(Icons.settings_applications),
         )
       ],
     );

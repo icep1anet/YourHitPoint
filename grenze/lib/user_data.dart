@@ -15,9 +15,9 @@ class UserDataProvider with ChangeNotifier {
   int pageIndex = 0;
   int currentHP = 100;
   int hpNumber = 0;
-  String? avatarName;
-  String? avatarType = "猫";
-  String? userName;
+  String? avatarName = "Pochi";
+  String? avatarType = "hukurou";
+  String? userName = "Yamada";
   String? userId;
   double recordHighHP = 0;
   double recordLowHP = 0;
@@ -39,6 +39,7 @@ class UserDataProvider with ChangeNotifier {
   int maxDayHP = 100;
   int maxTotalDaySteps = 0;
   double hpPercent = 100;
+  bool finishMain = false;
   void setHPSpotsList(List<Map> dataList) {
     pastSpots = createHPSpotsList(dataList);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -284,8 +285,13 @@ class UserDataProvider with ChangeNotifier {
       logger.d("userId != null");
       await updateUserData();
       changeHP();
+    } else {
+      logger.d("userId == null");
     }
-    logger.d("userID == null");
+    finishMain = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
     // await updateUserData();
     // changeHP();
   }
@@ -347,15 +353,16 @@ class UserDataProvider with ChangeNotifier {
   }
 
 //responseを送ってfirebaseにデータ登録する
-  Future<Map> registerFirebase(
-      isRegistered, inputUserName, inputAvatarName, inputAvatarType) async {
+  Future<Map> registerFirebase(isRegistered, inputEmail, inputPassword) async {
     isRegistered = true;
     logger.d("register start");
     var url = Uri.https("vignp7m26e.execute-api.ap-northeast-1.amazonaws.com",
         "/default/register_firebase_yourHP", {
-      "userName": inputUserName,
-      "avatarName": inputAvatarName,
-      "avatarType": inputAvatarType
+      "email": inputEmail,
+      "password": inputPassword,
+      "userName": userName,
+      "avatarName": avatarName,
+      "avatarType": avatarType
     });
     try {
       var response = await http.get(url);
@@ -367,7 +374,7 @@ class UserDataProvider with ChangeNotifier {
         logger.d(userId);
         // if (!mounted) return;
         setItemToSharedPref(["userId", "userName", "avatarName", "avatarType"],
-            [userId!, inputUserName, inputAvatarName, inputAvatarType]);
+            [userId!, userName, avatarName, avatarType]);
       } else {
         // リクエストが失敗した場合、エラーメッセージを表示します
         logger.d("Request failed with status: $response");
