@@ -37,7 +37,7 @@ class _FriendPageState extends State<FriendPage> {
         backgroundColor: const Color(0xff00a5bf),
       ),
       body: RefreshIndicator(
-        onRefresh: () async{
+        onRefresh: () async {
           await userDataProvider.fetchFriendData();
         },
         child: Center(
@@ -62,7 +62,8 @@ class _FriendPageState extends State<FriendPage> {
                       } else {
                         hpFontColor = const Color(0xffdc143c);
                       }
-                      return FriendCardWidget(friendHP,
+                      return FriendCardWidget(
+                          friendHP,
                           friendData["friendName"],
                           friendData["avatarUrl"],
                           hpFontColor);
@@ -104,8 +105,7 @@ class _ChangeIdWidgetState extends State<ChangeIdWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
+    return Column(children: [
       Container(
         padding: const EdgeInsets.all(10),
         child: TextField(
@@ -134,7 +134,9 @@ class _ChangeIdWidgetState extends State<ChangeIdWidget> {
       ),
       TextButton(
         onPressed: () {
-          context.read<UserDataProvider>().refreshUserID(_userIdController!.text);
+          context
+              .read<UserDataProvider>()
+              .refreshUserID(_userIdController!.text);
         },
         child: const Text("Change userId"),
       )
@@ -148,7 +150,8 @@ class FriendCardWidget extends StatelessWidget {
   final String avatarUrl;
   final Color hpFontColor;
 
-  const FriendCardWidget(this.currentHP, this.friendName, this.avatarUrl,this.hpFontColor,
+  const FriendCardWidget(
+      this.currentHP, this.friendName, this.avatarUrl, this.hpFontColor,
       {Key? key})
       : super(key: key);
 
@@ -158,22 +161,20 @@ class FriendCardWidget extends StatelessWidget {
       height: 120,
       margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 15.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+          color: Colors.white,
           boxShadow: const [
             BoxShadow(
-              color: Colors.grey,
-              spreadRadius: 1,
-              blurRadius: 3,
-              offset: Offset(3, 3)
-            )
+                color: Colors.grey,
+                spreadRadius: 1,
+                blurRadius: 3,
+                offset: Offset(3, 3))
           ],
           border: Border.all(color: const Color(0xFFE0E0E0)),
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(8.0),
-            topRight: Radius.circular(54.0),
-            bottomLeft: Radius.circular(8.0),
-            bottomRight: Radius.circular(8.0)
-          )),
+              topLeft: Radius.circular(8.0),
+              topRight: Radius.circular(54.0),
+              bottomLeft: Radius.circular(8.0),
+              bottomRight: Radius.circular(8.0))),
       padding: const EdgeInsets.all(5),
       child: Row(
         children: [
@@ -189,8 +190,7 @@ class FriendCardWidget extends StatelessWidget {
                   style: GoogleFonts.roboto(
                       fontWeight: FontWeight.bold,
                       fontSize: 25,
-                      color: Colors.black)
-                  ),
+                      color: Colors.black)),
               const SizedBox(height: 12),
               Text(" HP: $currentHP",
                   textAlign: TextAlign.left,
@@ -201,7 +201,6 @@ class FriendCardWidget extends StatelessWidget {
               const SizedBox(height: 8),
             ],
           )),
-          
           Container(
               width: 100,
               height: 100,
@@ -209,15 +208,14 @@ class FriendCardWidget extends StatelessWidget {
                   shape: BoxShape.circle,
                   color: Colors.white,
                   // color: Colors.grey,
-                  border: Border.all(
-                    color: hpFontColor,
-                    width: 2
-                  ),
+                  border: Border.all(color: hpFontColor, width: 2),
                   image: DecorationImage(
                     fit: BoxFit.cover,
                     image: NetworkImage(avatarUrl),
                   ))),
-                  const SizedBox(width: 20,),
+          const SizedBox(
+            width: 20,
+          ),
         ],
       ),
     );

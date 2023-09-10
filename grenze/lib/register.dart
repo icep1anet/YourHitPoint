@@ -21,13 +21,10 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController? _passwordController;
   String? userId;
 
-
-
   //ページ起動時に呼ばれる初期化関数
   @override
   void initState() {
     super.initState();
-    logger.d("ohayou!");
     _focusEmailNode = FocusNode();
     _focusPasswordNode = FocusNode();
     _emailController = TextEditingController(text: "abcde@gmail.com");
@@ -136,10 +133,10 @@ class _RegisterPageState extends State<RegisterPage> {
                             FocusScope.of(context).unfocus();
                             var response =
                                 await userDataProvider.registerFirebase(
-                                    _registering,
-                                    _emailController!.text,
-                                    _passwordController!.text,
-                                    );
+                              _registering,
+                              _emailController!.text,
+                              _passwordController!.text,
+                            );
                             if (response["isCompleted"] == true) {
                               // メイン画面へ遷移
                               if (context.mounted) {

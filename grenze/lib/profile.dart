@@ -24,33 +24,32 @@ class _ProfilePageState extends State<ProfilePage> {
   String? selectAvatarType;
   String? userId;
   // List<String> choices = ["猫", "犬", "人間男", "ワニ", "フクロウ", "カブトムシ"];
-  List<DropdownMenuItem<String>> dropdownMenuItems = const[
-        DropdownMenuItem(
-          value: "neko",
-          child: Text("猫"),
-        ),
-        DropdownMenuItem(
-            value: "inu",
-            child: Text("犬"),
-        ),
-        DropdownMenuItem(
-            value: "man",
-            child: Text("人間男"),
-        ),
-        DropdownMenuItem(
-            value: "wani",
-            child: Text("ワニ"),
-        ),
-        DropdownMenuItem(
-            value: "hukurou",
-            child: Text("フクロウ"),
-        ),
-        DropdownMenuItem(
-            value: "kabutomushi",
-            child: Text("カブトムシ"),
-        ),
-      ];
-
+  List<DropdownMenuItem<String>> dropdownMenuItems = const [
+    DropdownMenuItem(
+      value: "neko",
+      child: Text("猫"),
+    ),
+    DropdownMenuItem(
+      value: "inu",
+      child: Text("犬"),
+    ),
+    DropdownMenuItem(
+      value: "man",
+      child: Text("人間男"),
+    ),
+    DropdownMenuItem(
+      value: "wani",
+      child: Text("ワニ"),
+    ),
+    DropdownMenuItem(
+      value: "hukurou",
+      child: Text("フクロウ"),
+    ),
+    DropdownMenuItem(
+      value: "kabutomushi",
+      child: Text("カブトムシ"),
+    ),
+  ];
 
   //ページ起動時に呼ばれる初期化関数
   @override

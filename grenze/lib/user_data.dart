@@ -39,6 +39,7 @@ class UserDataProvider with ChangeNotifier {
   int maxDayHP = 100;
   int maxTotalDaySteps = 0;
   double hpPercent = 100;
+  bool finishMain = false;
   void setHPSpotsList(List<Map> dataList) {
     pastSpots = createHPSpotsList(dataList);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -284,7 +285,13 @@ class UserDataProvider with ChangeNotifier {
       logger.d("userId != null");
       await updateUserData();
       changeHP();
+    } else {
+      logger.d("userId == null");
     }
+    finishMain = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
     // await updateUserData();
     // changeHP();
   }
@@ -346,8 +353,7 @@ class UserDataProvider with ChangeNotifier {
   }
 
 //responseを送ってfirebaseにデータ登録する
-  Future<Map> registerFirebase(
-      isRegistered, inputEmail, inputPassword) async {
+  Future<Map> registerFirebase(isRegistered, inputEmail, inputPassword) async {
     isRegistered = true;
     logger.d("register start");
     var url = Uri.https("vignp7m26e.execute-api.ap-northeast-1.amazonaws.com",
@@ -364,11 +370,11 @@ class UserDataProvider with ChangeNotifier {
       if (response.statusCode == 200) {
         // リクエストが成功した場合、レスポンスの内容を取得して表示します
         var responseMap = jsonDecode(response.body);
-          userId = responseMap["userId"];
-          logger.d(userId);
-          // if (!mounted) return;
-          setItemToSharedPref(["userId", "userName", "avatarName", "avatarType"],
-              [userId!, userName, avatarName, avatarType]);
+        userId = responseMap["userId"];
+        logger.d(userId);
+        // if (!mounted) return;
+        setItemToSharedPref(["userId", "userName", "avatarName", "avatarType"],
+            [userId!, userName, avatarName, avatarType]);
       } else {
         // リクエストが失敗した場合、エラーメッセージを表示します
         logger.d("Request failed with status: $response");
