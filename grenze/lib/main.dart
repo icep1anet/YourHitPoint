@@ -1,6 +1,5 @@
 import 'package:provider/provider.dart';
 import "package:flutter/material.dart";
-import "package:flutter/services.dart";
 import "package:logger/logger.dart";
 import "package:salomon_bottom_bar/salomon_bottom_bar.dart";
 import "package:google_fonts/google_fonts.dart";
@@ -96,14 +95,16 @@ class _MainPageState extends State<MainPage> {
     final UserDataProvider userDataProvider =
         Provider.of<UserDataProvider>(context, listen: true);
     if (userDataProvider.userId == null) {
-      return Scaffold(
-          appBar: AppBar(
-            //オーバーレイが明るいカラースキームになります。
-            systemOverlayStyle: SystemUiOverlayStyle.light,
-            title: const Text("Register"),
-            centerTitle: true,
-          ),
-          body: const Register());
+      Future.microtask(() => 
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  fullscreenDialog: true,
+                  builder: (context) => const RegisterPage(),
+                ),
+              )    
+      );
+
+              return Container();
     } else {
       return Scaffold(
         body: PageView(

@@ -15,9 +15,9 @@ class UserDataProvider with ChangeNotifier {
   int pageIndex = 0;
   int currentHP = 100;
   int hpNumber = 0;
-  String? avatarName;
-  String? avatarType = "猫";
-  String? userName;
+  String? avatarName = "Pochi";
+  String? avatarType = "hukurou";
+  String? userName = "Yamada";
   String? userId;
   double recordHighHP = 0;
   double recordLowHP = 0;
@@ -285,7 +285,6 @@ class UserDataProvider with ChangeNotifier {
       await updateUserData();
       changeHP();
     }
-    logger.d("userID == null");
     // await updateUserData();
     // changeHP();
   }
@@ -348,14 +347,16 @@ class UserDataProvider with ChangeNotifier {
 
 //responseを送ってfirebaseにデータ登録する
   Future<Map> registerFirebase(
-      isRegistered, inputUserName, inputAvatarName, inputAvatarType) async {
+      isRegistered, inputEmail, inputPassword) async {
     isRegistered = true;
     logger.d("register start");
     var url = Uri.https("vignp7m26e.execute-api.ap-northeast-1.amazonaws.com",
         "/default/register_firebase_yourHP", {
-      "userName": inputUserName,
-      "avatarName": inputAvatarName,
-      "avatarType": inputAvatarType
+      "email": inputEmail,
+      "password": inputPassword,
+      "userName": userName,
+      "avatarName": avatarName,
+      "avatarType": avatarType
     });
     try {
       var response = await http.get(url);
@@ -363,11 +364,11 @@ class UserDataProvider with ChangeNotifier {
       if (response.statusCode == 200) {
         // リクエストが成功した場合、レスポンスの内容を取得して表示します
         var responseMap = jsonDecode(response.body);
-        userId = responseMap["userId"];
-        logger.d(userId);
-        // if (!mounted) return;
-        setItemToSharedPref(["userId", "userName", "avatarName", "avatarType"],
-            [userId!, inputUserName, inputAvatarName, inputAvatarType]);
+          userId = responseMap["userId"];
+          logger.d(userId);
+          // if (!mounted) return;
+          setItemToSharedPref(["userId", "userName", "avatarName", "avatarType"],
+              [userId!, userName, avatarName, avatarType]);
       } else {
         // リクエストが失敗した場合、エラーメッセージを表示します
         logger.d("Request failed with status: $response");

@@ -51,9 +51,9 @@ class _MyselfPageState extends State<MyselfPage> {
       Provider.of<UserDataProvider>(context, listen: true);
     final Utils utils = Utils();
     final imgUrl = userDataProvider.imgUrl;
-    final userId = userDataProvider.userId;
+    // final userId = userDataProvider.userId;
     final avatarName = userDataProvider.avatarName;
-    final maxDayHP = userDataProvider.maxDayHP;
+    // final maxDayHP = userDataProvider.maxDayHP;
     return Scaffold(
         body: NestedScrollView(
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
