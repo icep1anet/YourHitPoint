@@ -26,8 +26,11 @@ class MyselfPage extends StatefulWidget {
 }
 
 // Stateを継承して使う
-class _MyselfPageState extends State<MyselfPage>with TickerProviderStateMixin {
+class _MyselfPageState extends State<MyselfPage> with SingleTickerProviderStateMixin {
   AnimationController? animationController;
+  Animation<double>? animation;
+  late Tween<double> tween;
+  final Curve curve = Curves.ease;
   void initTest() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove("userId");
@@ -43,6 +46,9 @@ class _MyselfPageState extends State<MyselfPage>with TickerProviderStateMixin {
     //     .setTimerFunc(50, context.read<UserDataProvider>().setZeroHP);
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
+    tween = Tween<double>(begin: 0.0, end: 1.0);
+    tween.chain(CurveTween(curve: curve));
+    animation = animationController!.drive(tween);
     context
         .read<UserDataProvider>()
         .setTimerFunc(60, context.read<UserDataProvider>().changeHP);
@@ -118,11 +124,16 @@ class _MyselfPageState extends State<MyselfPage>with TickerProviderStateMixin {
                       WaveViewWidget(widget: widget),
                     ]),
                     const SizedBox(height: 30),
+
+                    ElevatedButton(
+                      onPressed: () {
+                        animationController!.forward();
+                      },
+                      child: const Text('click here'),
+                    ),
+
                     MediterranesnDietView(
-                      animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-                          parent: animationController!,
-                          curve:
-                              const Interval((1 / 9) * 1, 1.0, curve: Curves.fastOutSlowIn))),
+                      animation: animation,
                       animationController: animationController!,
                     ),
                     const SizedBox(height: 30),
