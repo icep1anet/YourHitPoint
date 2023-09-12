@@ -113,6 +113,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           focusNode: _focusPasswordNode,
                           keyboardType: TextInputType.text,
+                          obscureText: true,
                           onEditingComplete: () {
                             _focusPasswordNode?.unfocus();
                           },

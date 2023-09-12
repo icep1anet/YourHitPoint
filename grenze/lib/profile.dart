@@ -57,14 +57,6 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
     _focusUserNameNode = FocusNode();
     _focusAvatarNameNode = FocusNode();
-    String userName = context.select(
-        (UserDataProvider userDataProvider) => userDataProvider.userName!);
-    _userNameController = TextEditingController(text: userName);
-    String avatarName = context.select(
-        (UserDataProvider userDataProvider) => userDataProvider.avatarName!);
-    _avatarNameController = TextEditingController(text: avatarName);
-    selectAvatarType = context.select(
-        (UserDataProvider userDataProvider) => userDataProvider.userName!);
   }
 
   @override
@@ -105,7 +97,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         style: const TextStyle(fontSize: 20),
                         autocorrect: false,
                         autofocus: false,
-                        controller: _userNameController,
+                        controller: _userNameController = TextEditingController(
+                            text: userDataProvider.userName),
                         decoration: InputDecoration(
                           border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(
@@ -133,7 +126,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: TextField(
                           style: const TextStyle(fontSize: 20),
                           autocorrect: false,
-                          controller: _avatarNameController,
+                          controller: _avatarNameController =
+                              TextEditingController(
+                                  text: userDataProvider.avatarName),
                           decoration: InputDecoration(
                             border: const OutlineInputBorder(
                               borderRadius: BorderRadius.all(
@@ -176,7 +171,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           style: const TextStyle(
                               fontSize: 25, color: Colors.black),
                           items: dropdownMenuItems,
-                          value: selectAvatarType,
+                          value: selectAvatarType = userDataProvider.avatarType,
                           alignment: Alignment.center,
                           onChanged: (String? value) {
                             setState(() {
@@ -237,15 +232,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             // }
                           }
                         },
-                        child: userDataProvider.hasData != null
-                            ? const Text(
-                                "プロフィール変更",
-                                style: TextStyle(fontSize: 23),
-                              )
-                            : const Text(
-                                "プロフィール登録",
-                                style: TextStyle(fontSize: 23),
-                              ),
+                        child: const Text(
+                          "プロフィール変更",
+                          style: TextStyle(fontSize: 23),
+                        ),
                       ),
                       const SizedBox(height: 5),
                       //ローディング

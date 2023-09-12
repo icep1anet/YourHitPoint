@@ -3,7 +3,7 @@ import "package:fl_chart/fl_chart.dart";
 import "package:flutter/material.dart";
 import "package:fluttericon/iconic_icons.dart";
 import "package:google_fonts/google_fonts.dart";
-// import "package:grenze/health_level.dart";
+import "package:grenze/profile.dart";
 import "package:grenze/user_data.dart";
 import "package:provider/provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
@@ -11,7 +11,6 @@ import "package:logger/logger.dart";
 
 import "main.dart";
 import "wave_view.dart";
-import "register.dart";
 import "utils.dart";
 import "health_level.dart";
 
@@ -594,7 +593,7 @@ class SliverAppBarWidget extends StatelessWidget {
             Navigator.of(context).push(
               MaterialPageRoute(
                 fullscreenDialog: true,
-                builder: (context) => const RegisterPage(),
+                builder: (context) => const ProfilePage(),
               ),
             );
           },
