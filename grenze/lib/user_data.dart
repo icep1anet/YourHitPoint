@@ -255,7 +255,6 @@ class UserDataProvider with ChangeNotifier {
 
     updateMinMaxSpots();
     imgUrl = responseBody["url"];
-    avatarName = responseBody["avatarName"];
     recordHighHP = responseBody["recordHighHP"].toDouble();
     recordLowHP = responseBody["recordLowHP"].toDouble();
     activeLimitTime = responseBody["activeLimitTime"];

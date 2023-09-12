@@ -95,7 +95,10 @@ class _MainPageState extends State<MainPage> {
     final UserDataProvider userDataProvider =
         Provider.of<UserDataProvider>(context, listen: true);
     if (userDataProvider.finishMain == false) {
-      return const CircularProgressIndicator() ;
+      return const Scaffold(
+          body: Center(
+        child: CircularProgressIndicator(),
+      ));
     } else {
       if (userDataProvider.userId == null) {
         Future.microtask(() => Navigator.of(context).push(
