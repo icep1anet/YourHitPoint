@@ -26,7 +26,8 @@ class MyselfPage extends StatefulWidget {
 }
 
 // Stateを継承して使う
-class _MyselfPageState extends State<MyselfPage> with SingleTickerProviderStateMixin {
+class _MyselfPageState extends State<MyselfPage>
+    with SingleTickerProviderStateMixin {
   AnimationController? animationController;
   Animation<double>? animation;
   late Tween<double> tween;
@@ -45,14 +46,14 @@ class _MyselfPageState extends State<MyselfPage> with SingleTickerProviderStateM
     //     .read<UserDataProvider>()
     //     .setTimerFunc(50, context.read<UserDataProvider>().setZeroHP);
     animationController = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
+        duration: const Duration(milliseconds: 5000), vsync: this);
     tween = Tween<double>(begin: 0.0, end: 1.0);
     tween.chain(CurveTween(curve: curve));
     animation = animationController!.drive(tween);
     context
         .read<UserDataProvider>()
         .setTimerFunc(60, context.read<UserDataProvider>().changeHP);
-
+    animationController!.forward();
   }
 
   @override
@@ -125,13 +126,12 @@ class _MyselfPageState extends State<MyselfPage> with SingleTickerProviderStateM
                     ]),
                     const SizedBox(height: 30),
 
-                    ElevatedButton(
-                      onPressed: () {
-                        animationController!.forward();
-                      },
-                      child: const Text('click here'),
-                    ),
-
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //     animationController!.forward();
+                    //   },
+                    //   child: const Text('click here'),
+                    // ),
                     MediterranesnDietView(
                       animation: animation,
                       animationController: animationController!,
