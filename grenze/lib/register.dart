@@ -122,63 +122,116 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                       const SizedBox(height: 30),
-                      TextButton(
-                        onPressed: () async {
-                          // firstNameとlastNameは必須で入力しないと登録できないようにする
-                          if (_registering == false &&
-                              _emailController!.text != "" &&
-                              _passwordController!.text != "") {
-                            setState(() {
-                              _registering = true;
-                            });
-                            FocusScope.of(context).unfocus();
-                            var response =
-                                await userDataProvider.registerFirebase(
-                              _registering,
-                              _emailController!.text,
-                              _passwordController!.text,
-                            );
-                            if (response["isCompleted"] == true) {
-                              // メイン画面へ遷移
-                              if (context.mounted) {
-                                navigateMain();
-                              }
-                            } else {
-                              logger.d(response);
-                              if (context.mounted) {
+                      Row(
+                        children: [
+                          TextButton(
+                            onPressed: () async {
+                              // emailとpasswordは必須で入力しないと登録できないようにする
+                              if (_registering == false &&
+                                  _emailController!.text != "" &&
+                                  _passwordController!.text != "") {
                                 setState(() {
-                                  _registering = false;
+                                  _registering = true;
                                 });
-                                await showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: const Text("OK"),
-                                      ),
-                                    ],
-                                    content: Text(
-                                      response["error"].toString(),
-                                    ),
-                                    title: const Text("Error"),
-                                  ),
+                                FocusScope.of(context).unfocus();
+                                var response =
+                                    await userDataProvider.loginFirebase(
+                                  _registering,
+                                  _emailController!.text,
+                                  _passwordController!.text,
                                 );
+                                if (response["isCompleted"] == true) {
+                                  // メイン画面へ遷移
+                                  if (context.mounted) {
+                                    navigateMain();
+                                  }
+                                } else {
+                                  logger.d(response);
+                                  if (context.mounted) {
+                                    setState(() {
+                                      _registering = false;
+                                    });
+                                    await showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text("OK"),
+                                          ),
+                                        ],
+                                        content: Text(
+                                          response["error"].toString(),
+                                        ),
+                                        title: const Text("Error"),
+                                      ),
+                                    );
+                                  }
+                                }
                               }
-                            }
-                          }
-                        },
-                        child: userDataProvider.hasData != null
-                            ? const Text(
-                                "プロフィール変更",
-                                style: TextStyle(fontSize: 23),
-                              )
-                            : const Text(
-                                "プロフィール登録",
-                                style: TextStyle(fontSize: 23),
-                              ),
+                            },
+                            child: const Text(
+                                    "ログイン",
+                                    style: TextStyle(fontSize: 23),
+                                  ),
+                          ),
+                          const SizedBox(width: 30),
+                          TextButton(
+                            onPressed: () async {
+                              // emailとpasswordは必須で入力しないと登録できないようにする
+                              if (_registering == false &&
+                                  _emailController!.text != "" &&
+                                  _passwordController!.text != "") {
+                                setState(() {
+                                  _registering = true;
+                                });
+                                FocusScope.of(context).unfocus();
+                                var response =
+                                    await userDataProvider.registerFirebase(
+                                  _registering,
+                                  _emailController!.text,
+                                  _passwordController!.text,
+                                );
+                                if (response["isCompleted"] == true) {
+                                  // メイン画面へ遷移
+                                  if (context.mounted) {
+                                    navigateMain();
+                                  }
+                                } else {
+                                  logger.d(response);
+                                  if (context.mounted) {
+                                    setState(() {
+                                      _registering = false;
+                                    });
+                                    await showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text("OK"),
+                                          ),
+                                        ],
+                                        content: Text(
+                                          response["error"].toString(),
+                                        ),
+                                        title: const Text("Error"),
+                                      ),
+                                    );
+                                  }
+                                }
+                              }
+                            },
+                            child: const Text(
+                                    "新規登録",
+                                    style: TextStyle(fontSize: 23),
+                                  ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 5),
                       //ローディング
