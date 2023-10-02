@@ -41,7 +41,7 @@ class UserDataProvider with ChangeNotifier {
   double hpPercent = 100;
   bool finishMain = false;
   int experienceLevel = 15;
-  int experiencePoint = 380;
+  int experiencePoint = 360;
 
   void setHPSpotsList(List<Map> dataList) {
     pastSpots = createHPSpotsList(dataList);
@@ -265,6 +265,8 @@ class UserDataProvider with ChangeNotifier {
     maxDayHP = responseBody["maxDayHP"];
     maxTotalDaySteps = responseBody["maxTotalDaySteps"];
     maxSleepDuration = responseBody["maxSleepDuration"];
+    experienceLevel = responseBody["experienceLevel"];
+    experiencePoint = responseBody["experiencePoint"];
     experiencePoint = experiencePoint % 360;
     await setFriendDataList();
     //latestDataTimeの更新
