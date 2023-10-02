@@ -224,7 +224,7 @@ class _MyselfPageState extends State<MyselfPage>
                                   color: Colors.black)),
                         )),
                     const SizedBox(height: 10),
-                    RecordWidget(widget: widget)
+                    RecordWidget(widget: widget),
                   ],
                 ))),
       ),
@@ -490,7 +490,10 @@ class LineChartWidget extends StatelessWidget {
 
     return SideTitleWidget(
       axisSide: meta.axisSide,
-      child: Text(text, style: style, ),
+      child: Text(
+        text,
+        style: style,
+      ),
     );
   }
 }
@@ -587,6 +590,12 @@ class SliverAppBarWidget extends StatelessWidget {
             "assets/images/heartshock2.jpg",
             fit: BoxFit.cover,
           )),
+      leading: IconButton(
+        onPressed: () {
+          userDataProvider.initRemoveUserId();
+        },
+        icon: const Icon(Icons.logout),
+      ),
       actions: [
         IconButton(
           onPressed: () {
