@@ -124,6 +124,10 @@ class UserDataProvider with ChangeNotifier {
     if (hpNumber < futureSpots.length) {
       currentHP = futureSpots[hpNumber].y.toInt();
       hpPercent = (currentHP / maxDayHP) * 100;
+      if (currentHP < 0) {
+        // currentHP = 0;
+        hpPercent = 0;
+      }
       if (80 < hpPercent) {
         barColor = const Color(0xFF32cd32);
         fontColor = Colors.white;
