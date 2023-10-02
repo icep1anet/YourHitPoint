@@ -268,6 +268,10 @@ class UserDataProvider with ChangeNotifier {
     experienceLevel = responseBody["experienceLevel"];
     experiencePoint = responseBody["experiencePoint"];
     experiencePoint = experiencePoint % 360;
+    userName = responseBody["userName"];
+    avatarName = responseBody["avatarName"];
+    avatarType = responseBody["avatarType"];
+
     await setFriendDataList();
     //latestDataTimeの更新
     latestDataTime = now;
