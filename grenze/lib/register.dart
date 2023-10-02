@@ -135,7 +135,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 });
                                 FocusScope.of(context).unfocus();
                                 var response =
-                                    await userDataProvider.loginFirebase(
+                                    await userDataProvider.registerFirebase(
                                   _registering,
                                   _emailController!.text,
                                   _passwordController!.text,

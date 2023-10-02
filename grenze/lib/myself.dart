@@ -12,7 +12,7 @@ import "package:logger/logger.dart";
 import "main.dart";
 import "wave_view.dart";
 import "utils.dart";
-import "health_level.dart";
+import "health_level2.dart";
 
 var logger = Logger();
 
@@ -27,10 +27,10 @@ class MyselfPage extends StatefulWidget {
 // Stateを継承して使う
 class _MyselfPageState extends State<MyselfPage>
     with SingleTickerProviderStateMixin {
-  AnimationController? animationController;
-  Animation<double>? animation;
-  late Tween<double> tween;
-  final Curve curve = Curves.ease;
+  // AnimationController? animationController;
+  // Animation<double>? animation;
+  // late Tween<double> tween;
+  // final Curve curve = Curves.ease;
   void initTest() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove("userId");
@@ -44,15 +44,15 @@ class _MyselfPageState extends State<MyselfPage>
     // context
     //     .read<UserDataProvider>()
     //     .setTimerFunc(50, context.read<UserDataProvider>().setZeroHP);
-    animationController = AnimationController(
-        duration: const Duration(milliseconds: 5000), vsync: this);
-    tween = Tween<double>(begin: 0.0, end: 1.0);
-    tween.chain(CurveTween(curve: curve));
-    animation = animationController!.drive(tween);
+    // animationController = AnimationController(
+    //     duration: const Duration(milliseconds: 5), vsync: this);
+    // tween = Tween<double>(begin: 0.0, end: 1.0);
+    // tween.chain(CurveTween(curve: curve));
+    // animation = animationController!.drive(tween);
     context
         .read<UserDataProvider>()
         .setTimerFunc(60, context.read<UserDataProvider>().changeHP);
-    animationController!.forward();
+    // animationController!.forward();
   }
 
   @override
@@ -132,8 +132,8 @@ class _MyselfPageState extends State<MyselfPage>
                     //   child: const Text('click here'),
                     // ),
                     MediterranesnDietView(
-                      animation: animation,
-                      animationController: animationController!,
+                      experienceLevel: userDataProvider.experienceLevel,
+                      experiencePoint: userDataProvider.experiencePoint,
                     ),
                     const SizedBox(height: 30),
                     Container(
@@ -282,7 +282,7 @@ class RecordWidget extends StatelessWidget {
                     fontWeight: FontWeight.w500, fontSize: 23)),
           ],
         ),
-        const SizedBox(width: 15),
+        const SizedBox(width: 10),
         Column(children: [
           Text(userDataProvider.recordHighHP.round().toString(),
               style: GoogleFonts.sourceCodePro(
@@ -490,7 +490,7 @@ class LineChartWidget extends StatelessWidget {
 
     return SideTitleWidget(
       axisSide: meta.axisSide,
-      child: Text(text, style: style),
+      child: Text(text, style: style, ),
     );
   }
 }

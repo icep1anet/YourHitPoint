@@ -101,7 +101,7 @@ class _MainPageState extends State<MainPage> {
       ));
     } else {
       if (userDataProvider.userId == null) {
-        Future.microtask(() => Navigator.of(context).push(
+        Future.microtask(() => Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 fullscreenDialog: true,
                 builder: (context) => const RegisterPage(),

@@ -40,6 +40,9 @@ class UserDataProvider with ChangeNotifier {
   int maxTotalDaySteps = 0;
   double hpPercent = 100;
   bool finishMain = false;
+  int experienceLevel = 15;
+  int experiencePoint = 380;
+
   void setHPSpotsList(List<Map> dataList) {
     pastSpots = createHPSpotsList(dataList);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -261,6 +264,8 @@ class UserDataProvider with ChangeNotifier {
     maxSleepDuration = responseBody["maxSleepDuration"];
     maxDayHP = responseBody["maxDayHP"];
     maxTotalDaySteps = responseBody["maxTotalDaySteps"];
+    maxSleepDuration = responseBody["maxSleepDuration"];
+    experiencePoint = experiencePoint % 360;
     await setFriendDataList();
     //latestDataTimeの更新
     latestDataTime = now;

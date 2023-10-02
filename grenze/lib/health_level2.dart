@@ -7,96 +7,84 @@ import 'package:flutter/material.dart';
 import "main.dart";
 
 class MediterranesnDietView extends StatelessWidget {
-  final AnimationController? animationController;
-  final Animation<double>? animation;
+  final int? experienceLevel;
+  final int? experiencePoint;
 
   const MediterranesnDietView(
-      {Key? key, this.animationController, this.animation})
+      {Key? key, this.experienceLevel, this.experiencePoint})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: animationController!,
-      builder: (BuildContext context, Widget? child) {
-        return FadeTransition(
-          opacity: animation!,
-          child: Transform(
-            transform: Matrix4.translationValues(
-                0.0, 30 * (1.0 - animation!.value), 0.0),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 24, right: 24, top: 16, bottom: 18),
-              child: Center(
-                child: Stack(
-                  clipBehavior: Clip.none,
+    return Padding(
+      padding: const EdgeInsets.only(
+          left: 24, right: 24, top: 16, bottom: 18),
+      child: Center(
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(100.0),
+                  ),
+                  border: Border.all(
+                      width: 4, color: Colors.indigo.withOpacity(0.2)),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(100.0),
-                          ),
-                          border: Border.all(
-                              width: 4, color: Colors.indigo.withOpacity(0.2)),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              '${(15 * animation!.value).toInt()}',
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                // fontFamily:
-                                //     context.fontName,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 24,
-                                letterSpacing: 0.0,
-                                color: Colors.indigo,
-                              ),
-                            ),
-                            Text(
-                              'Level',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                // fontFamily:
-                                //     FitnessAppTheme.fontName,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                                letterSpacing: 0.0,
-                                color: Colors.grey.withOpacity(0.5),
-                              ),
-                            ),
-                          ],
-                        ),
+                    Text(
+                      experienceLevel.toString(),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        // fontFamily:
+                        //     context.fontName,
+                        fontWeight: FontWeight.normal,
+                        fontSize: 24,
+                        letterSpacing: 0.0,
+                        color: Colors.indigo,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: CustomPaint(
-                        painter: CurvePainter(colors: [
-                          Colors.indigo,
-                          HexColor("#8A98E8"),
-                          HexColor("#8A98E8")
-                        ], angle: 140 + (360 - 140) * (1.0 - animation!.value)),
-                        child: const SizedBox(
-                          width: 108,
-                          height: 108,
-                        ),
+                    Text(
+                      'Level',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        // fontFamily:
+                        //     FitnessAppTheme.fontName,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                        letterSpacing: 0.0,
+                        color: Colors.grey.withOpacity(0.5),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
             ),
-          ),
-        );
-      },
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: CustomPaint(
+                painter: CurvePainter(colors: [
+                  Colors.indigo,
+                  HexColor("#8A98E8"),
+                  HexColor("#8A98E8")
+                ], angle: experiencePoint!.toDouble()),
+                child: const SizedBox(
+                  width: 108,
+                  height: 108,
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
