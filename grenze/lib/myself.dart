@@ -606,7 +606,8 @@ class SliverAppBarWidget extends StatelessWidget {
               ),
             );
           },
-          icon: utils.currentmyAvatar(context, userDataProvider.imgUrl, 20),
+          // icon: utils.currentmyAvatar(context, userDataProvider.imgUrl, 20),
+          icon: const Icon(Icons.settings),
           // icon: const Icon(Icons.settings_applications),
         )
       ],
