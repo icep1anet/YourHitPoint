@@ -15,9 +15,9 @@ class UserDataProvider with ChangeNotifier {
   int pageIndex = 0;
   int currentHP = 100;
   int hpNumber = 0;
-  String? avatarName;
-  String? avatarType = "猫";
-  String? userName;
+  String? avatarName = "Pochi";
+  String? avatarType = "hukurou";
+  String? userName = "Yamada";
   String? userId;
   double recordHighHP = 0;
   double recordLowHP = 0;
@@ -39,6 +39,10 @@ class UserDataProvider with ChangeNotifier {
   int maxDayHP = 100;
   int maxTotalDaySteps = 0;
   double hpPercent = 100;
+  bool finishMain = false;
+  int experienceLevel = 15;
+  int experiencePoint = 360;
+
   void setHPSpotsList(List<Map> dataList) {
     pastSpots = createHPSpotsList(dataList);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -120,6 +124,10 @@ class UserDataProvider with ChangeNotifier {
     if (hpNumber < futureSpots.length) {
       currentHP = futureSpots[hpNumber].y.toInt();
       hpPercent = (currentHP / maxDayHP) * 100;
+      if (currentHP < 0) {
+        // currentHP = 0;
+        hpPercent = 0;
+      }
       if (80 < hpPercent) {
         barColor = const Color(0xFF32cd32);
         fontColor = Colors.white;
@@ -254,13 +262,20 @@ class UserDataProvider with ChangeNotifier {
 
     updateMinMaxSpots();
     imgUrl = responseBody["url"];
-    avatarName = responseBody["avatarName"];
-    recordHighHP = responseBody["recordHighHP"];
-    recordLowHP = responseBody["recordLowHP"];
+    recordHighHP = responseBody["recordHighHP"].toDouble();
+    recordLowHP = responseBody["recordLowHP"].toDouble();
     activeLimitTime = responseBody["activeLimitTime"];
     maxSleepDuration = responseBody["maxSleepDuration"];
     maxDayHP = responseBody["maxDayHP"];
     maxTotalDaySteps = responseBody["maxTotalDaySteps"];
+    maxSleepDuration = responseBody["maxSleepDuration"];
+    experienceLevel = responseBody["experienceLevel"];
+    experiencePoint = responseBody["experiencePoint"];
+    experiencePoint = experiencePoint % 360;
+    userName = responseBody["userName"];
+    avatarName = responseBody["avatarName"];
+    avatarType = responseBody["avatarType"];
+
     await setFriendDataList();
     //latestDataTimeの更新
     latestDataTime = now;
@@ -275,16 +290,24 @@ class UserDataProvider with ChangeNotifier {
     ///アバター名表示のためデバイスで1度だけ実行したら消していいです
     ///ローカルのsharedpreferenceにデータを書き込み
     ///普通ならregister時にローカルにデータが書き込まれるが、今デバックでuserIdだけ無理やり書き換えてるからそれ以外のデータがローカルになく、アバター名を表示できないので一度この処理を行う
-    await setItemToSharedPref(
-        ["userId", "userName", "avatarName", "avatarType"],
-        ["id_abcd", "Tom", "マルオ", "wani"]);
-    await initRemoveUserId();
+    // await setItemToSharedPref(
+    //     ["userId", "userName", "avatarName", "avatarType"],
+    //     ["id_abcd", "Tom", "マルオ", "wani"]);
+    // await initRemoveUserId();
     await getLocalData();
     if (userId != null) {
+      logger.d("userId != null");
       await updateUserData();
+      changeHP();
+    } else {
+      logger.d("userId == null");
     }
+    finishMain = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
     // await updateUserData();
-    changeHP();
+    // changeHP();
   }
 
   //Sharedpreferenceにあるユーザデータを取得
@@ -344,15 +367,16 @@ class UserDataProvider with ChangeNotifier {
   }
 
 //responseを送ってfirebaseにデータ登録する
-  Future<Map> registerFirebase(
-      isRegistered, inputUserName, inputAvatarName, inputAvatarType) async {
+  Future<Map> registerFirebase(isRegistered, inputEmail, inputPassword) async {
     isRegistered = true;
     logger.d("register start");
     var url = Uri.https("vignp7m26e.execute-api.ap-northeast-1.amazonaws.com",
         "/default/register_firebase_yourHP", {
-      "userName": inputUserName,
-      "avatarName": inputAvatarName,
-      "avatarType": inputAvatarType
+      "email": inputEmail,
+      "password": inputPassword,
+      "userName": userName,
+      "avatarName": avatarName,
+      "avatarType": avatarType
     });
     try {
       var response = await http.get(url);
@@ -364,7 +388,7 @@ class UserDataProvider with ChangeNotifier {
         logger.d(userId);
         // if (!mounted) return;
         setItemToSharedPref(["userId", "userName", "avatarName", "avatarType"],
-            [userId!, inputUserName, inputAvatarName, inputAvatarType]);
+            [userId!, userName, avatarName, avatarType]);
       } else {
         // リクエストが失敗した場合、エラーメッセージを表示します
         logger.d("Request failed with status: $response");
@@ -377,4 +401,39 @@ class UserDataProvider with ChangeNotifier {
       return {"isCompleted": false, "error": e};
     }
   }
+
+
+  Future<Map> loginFirebase(isRegistered, inputEmail, inputPassword) async {
+    isRegistered = true;
+    logger.d("login start");
+    var url = Uri.https("vignp7m26e.execute-api.ap-northeast-1.amazonaws.com",
+        "/default/firebase_login_yourHP", {
+      "email": inputEmail,
+      "password": inputPassword,
+    });
+    try {
+      var response = await http.get(url);
+      logger.d("register.body: ${response.body}");
+      if (response.statusCode == 200) {
+        // リクエストが成功した場合、レスポンスの内容を取得して表示します
+        var responseMap = jsonDecode(response.body);
+        userId = responseMap["userId"];
+        logger.d(userId);
+        // if (!mounted) return;
+        setItemToSharedPref(["userId", "userName", "avatarName", "avatarType"],
+            [userId!, userName, avatarName, avatarType]);
+      } else {
+        // リクエストが失敗した場合、エラーメッセージを表示します
+        logger.d("Request failed with status: $response");
+        isRegistered = false;
+        return {"isCompleted": false, "error": response};
+      }
+      return {"isCompleted": true};
+    } catch (e) {
+      isRegistered = false;
+      return {"isCompleted": false, "error": e};
+    }
+  }
+
+
 }

@@ -1,6 +1,5 @@
 import 'package:provider/provider.dart';
 import "package:flutter/material.dart";
-import "package:flutter/services.dart";
 import "package:logger/logger.dart";
 import "package:salomon_bottom_bar/salomon_bottom_bar.dart";
 import "package:google_fonts/google_fonts.dart";
@@ -95,51 +94,58 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     final UserDataProvider userDataProvider =
         Provider.of<UserDataProvider>(context, listen: true);
-    if (userDataProvider.userId == null) {
-      return Scaffold(
-          appBar: AppBar(
-            //オーバーレイが明るいカラースキームになります。
-            systemOverlayStyle: SystemUiOverlayStyle.light,
-            title: const Text("Register"),
-            centerTitle: true,
-          ),
-          body: const Register());
+    if (userDataProvider.finishMain == false) {
+      return const Scaffold(
+          body: Center(
+        child: CircularProgressIndicator(),
+      ));
     } else {
-      return Scaffold(
-        body: PageView(
-          controller: _pageViewController,
-          children: const <Widget>[
-            MyselfPage(),
-            FriendPage(),
-          ],
-          onPageChanged: (index) {
-            userDataProvider.setPageIndex(index);
-          },
-        ),
-        bottomNavigationBar: SalomonBottomBar(
-            backgroundColor: const Color.fromARGB(255, 178, 211, 244),
-            currentIndex: userDataProvider.pageIndex,
-            selectedItemColor: const Color(0xff6200ee),
-            unselectedItemColor: const Color(0xff757575),
-            onTap: _onItemTapped,
-            items: [
-              SalomonBottomBarItem(
-                icon: const Icon(Icons.person),
-                title: Text(
-                  "Myself",
-                  //iconが真ん中startなのでできない
-                  // textAlign: TextAlign.left,
-                  style: GoogleFonts.orelegaOne(fontSize: 20),
-                ),
-                selectedColor: const Color.fromARGB(255, 2, 179, 8),
+      if (userDataProvider.userId == null) {
+        Future.microtask(() => Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                fullscreenDialog: true,
+                builder: (context) => const RegisterPage(),
               ),
-              SalomonBottomBarItem(
-                  icon: const Icon(Icons.people),
-                  title: Text("Friends",
-                      style: GoogleFonts.orelegaOne(fontSize: 20)),
-                  selectedColor: Colors.pink)
-            ]),
-      );
+            ));
+
+        return Container();
+      } else {
+        return Scaffold(
+          body: PageView(
+            controller: _pageViewController,
+            children: const <Widget>[
+              MyselfPage(),
+              FriendPage(),
+            ],
+            onPageChanged: (index) {
+              userDataProvider.setPageIndex(index);
+            },
+          ),
+          bottomNavigationBar: SalomonBottomBar(
+              backgroundColor: const Color.fromARGB(255, 178, 211, 244),
+              currentIndex: userDataProvider.pageIndex,
+              selectedItemColor: const Color(0xff6200ee),
+              unselectedItemColor: const Color(0xff757575),
+              onTap: _onItemTapped,
+              items: [
+                SalomonBottomBarItem(
+                  icon: const Icon(Icons.person),
+                  title: Text(
+                    "Myself",
+                    //iconが真ん中startなのでできない
+                    // textAlign: TextAlign.left,
+                    style: GoogleFonts.orelegaOne(fontSize: 20),
+                  ),
+                  selectedColor: const Color.fromARGB(255, 2, 179, 8),
+                ),
+                SalomonBottomBarItem(
+                    icon: const Icon(Icons.people),
+                    title: Text("Friends",
+                        style: GoogleFonts.orelegaOne(fontSize: 20)),
+                    selectedColor: Colors.pink)
+              ]),
+        );
+      }
     }
   }
 }

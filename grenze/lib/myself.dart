@@ -3,6 +3,7 @@ import "package:fl_chart/fl_chart.dart";
 import "package:flutter/material.dart";
 import "package:fluttericon/iconic_icons.dart";
 import "package:google_fonts/google_fonts.dart";
+import "package:grenze/profile.dart";
 import "package:grenze/user_data.dart";
 import "package:provider/provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
@@ -10,7 +11,8 @@ import "package:logger/logger.dart";
 
 import "main.dart";
 import "wave_view.dart";
-import "register.dart";
+import "utils.dart";
+import "health_level2.dart";
 
 var logger = Logger();
 
@@ -23,8 +25,12 @@ class MyselfPage extends StatefulWidget {
 }
 
 // Stateを継承して使う
-class _MyselfPageState extends State<MyselfPage> {
-
+class _MyselfPageState extends State<MyselfPage>
+    with SingleTickerProviderStateMixin {
+  // AnimationController? animationController;
+  // Animation<double>? animation;
+  // late Tween<double> tween;
+  // final Curve curve = Curves.ease;
   void initTest() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove("userId");
@@ -38,20 +44,28 @@ class _MyselfPageState extends State<MyselfPage> {
     // context
     //     .read<UserDataProvider>()
     //     .setTimerFunc(50, context.read<UserDataProvider>().setZeroHP);
-
+    // animationController = AnimationController(
+    //     duration: const Duration(milliseconds: 5), vsync: this);
+    // tween = Tween<double>(begin: 0.0, end: 1.0);
+    // tween.chain(CurveTween(curve: curve));
+    // animation = animationController!.drive(tween);
     context
         .read<UserDataProvider>()
-        .setTimerFunc(60 , context.read<UserDataProvider>().changeHP);
+        .setTimerFunc(60, context.read<UserDataProvider>().changeHP);
+    // animationController!.forward();
   }
 
   @override
   Widget build(BuildContext context) {
-    final UserDataProvider userDataProvider = 
-      Provider.of<UserDataProvider>(context, listen: true);
+    final UserDataProvider userDataProvider =
+        Provider.of<UserDataProvider>(context, listen: true);
+    final Utils utils = Utils();
     final imgUrl = userDataProvider.imgUrl;
-    final userId = userDataProvider.userId;
+    // final userId = userDataProvider.userId;
     final avatarName = userDataProvider.avatarName;
-    final maxDayHP = userDataProvider.maxDayHP;
+    // final maxDayHP = userDataProvider.maxDayHP;
+    // final AnimationController animationController = AnimationController(
+    //     duration: const Duration(milliseconds: 2000), vsync: this);
     return Scaffold(
         body: NestedScrollView(
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -60,7 +74,7 @@ class _MyselfPageState extends State<MyselfPage> {
         ];
       },
       body: RefreshIndicator(
-        onRefresh: () async{
+        onRefresh: () async {
           await userDataProvider.updateUserData();
         },
         child: SingleChildScrollView(
@@ -79,7 +93,8 @@ class _MyselfPageState extends State<MyselfPage> {
                       width: 200,
                       decoration: BoxDecoration(
                         border: Border(
-                          bottom: BorderSide(color: Theme.of(context).focusColor),
+                          bottom:
+                              BorderSide(color: Theme.of(context).focusColor),
                         ),
                       ),
                       // child: Text(
@@ -104,17 +119,30 @@ class _MyselfPageState extends State<MyselfPage> {
                     const SizedBox(height: 30),
                     Row(children: [
                       const SizedBox(width: 20),
-                      _currentmyAvatar(imgUrl),
+                      utils.currentmyAvatar(context, imgUrl, 100),
                       // _currentmyAvatar("assets/images/illust_normal.jpg"),
                       WaveViewWidget(widget: widget),
                     ]),
+                    const SizedBox(height: 30),
+
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //     animationController!.forward();
+                    //   },
+                    //   child: const Text('click here'),
+                    // ),
+                    MediterranesnDietView(
+                      experienceLevel: userDataProvider.experienceLevel,
+                      experiencePoint: userDataProvider.experiencePoint,
+                    ),
                     const SizedBox(height: 30),
                     Container(
                       alignment: Alignment.center,
                       width: 200,
                       decoration: BoxDecoration(
                         border: Border(
-                          bottom: BorderSide(color: Theme.of(context).focusColor),
+                          bottom:
+                              BorderSide(color: Theme.of(context).focusColor),
                         ),
                       ),
                       // child: Text(
@@ -196,36 +224,11 @@ class _MyselfPageState extends State<MyselfPage> {
                                   color: Colors.black)),
                         )),
                     const SizedBox(height: 10),
-                    RecordWidget(widget: widget)
+                    RecordWidget(widget: widget),
                   ],
                 ))),
       ),
     ));
-  }
-
-  Widget _currentmyAvatar(String? imgUrl) {
-    var color = const Color(0xffd9d9d9);
-    final hasImage = imgUrl != null;
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(width: 5, color: Theme.of(context).focusColor),
-      ),
-      child: CircleAvatar(
-        backgroundColor: hasImage ? Colors.transparent : color,
-        backgroundImage: hasImage ? NetworkImage(imgUrl) : null,
-        radius: 100,
-        child: !hasImage
-            ? Text("No image",
-                // style: GoogleFonts.orelegaOne(
-                style: GoogleFonts.roboto(
-                  color: const Color(0xff1e90ff),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 26,
-                ))
-            : null,
-      ),
-    );
   }
 }
 
@@ -241,7 +244,8 @@ class RecordWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final UserDataProvider userDataProvider =
         Provider.of<UserDataProvider>(context, listen: true);
-    Duration msDuration = Duration(milliseconds: userDataProvider.maxSleepDuration);
+    Duration msDuration =
+        Duration(milliseconds: userDataProvider.maxSleepDuration);
     int msHours = msDuration.inHours;
     int msMinutes = msDuration.inMinutes.remainder(60);
     return Container(
@@ -278,7 +282,7 @@ class RecordWidget extends StatelessWidget {
                     fontWeight: FontWeight.w500, fontSize: 23)),
           ],
         ),
-        const SizedBox(width: 15),
+        const SizedBox(width: 10),
         Column(children: [
           Text(userDataProvider.recordHighHP.round().toString(),
               style: GoogleFonts.sourceCodePro(
@@ -486,7 +490,10 @@ class LineChartWidget extends StatelessWidget {
 
     return SideTitleWidget(
       axisSide: meta.axisSide,
-      child: Text(text, style: style),
+      child: Text(
+        text,
+        style: style,
+      ),
     );
   }
 }
@@ -559,6 +566,9 @@ class SliverAppBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final UserDataProvider userDataProvider =
+        Provider.of<UserDataProvider>(context, listen: true);
+    final Utils utils = Utils();
     return SliverAppBar(
       expandedHeight: 300.0,
       floating: true,
@@ -580,17 +590,26 @@ class SliverAppBarWidget extends StatelessWidget {
             "assets/images/heartshock2.jpg",
             fit: BoxFit.cover,
           )),
+      leading: IconButton(
+        onPressed: () {
+          userDataProvider.initRemoveUserId();
+        },
+        icon: const Icon(Icons.logout),
+      ),
       actions: [
         IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  fullscreenDialog: true,
-                  builder: (context) => const RegisterPage(),
-                ),
-              );
-            },
-            icon: const Icon(Icons.settings_applications))
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                fullscreenDialog: true,
+                builder: (context) => const ProfilePage(),
+              ),
+            );
+          },
+          // icon: utils.currentmyAvatar(context, userDataProvider.imgUrl, 20),
+          icon: const Icon(Icons.settings),
+          // icon: const Icon(Icons.settings_applications),
+        )
       ],
     );
   }
