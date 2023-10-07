@@ -34,7 +34,10 @@ class MediterranesnDietView extends StatelessWidget {
                     Radius.circular(100.0),
                   ),
                   border: Border.all(
-                      width: 4, color: Colors.indigo.withOpacity(0.2)),
+                      width: 4, 
+                      color: Colors.indigo.withOpacity(0.2)
+                      // color: Theme.of(context).focusColor.withOpacity(0.2)
+                      ),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -46,22 +49,22 @@ class MediterranesnDietView extends StatelessWidget {
                       style: const TextStyle(
                         // fontFamily:
                         //     context.fontName,
-                        fontWeight: FontWeight.normal,
-                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
                         letterSpacing: 0.0,
                         color: Colors.indigo,
                       ),
                     ),
-                    Text(
+                    const Text(
                       'Level',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         // fontFamily:
                         //     FitnessAppTheme.fontName,
                         fontWeight: FontWeight.bold,
-                        fontSize: 12,
+                        fontSize: 15,
                         letterSpacing: 0.0,
-                        color: Colors.grey.withOpacity(0.5),
+                        color: Colors.black,
                       ),
                     ),
                   ],
@@ -72,9 +75,12 @@ class MediterranesnDietView extends StatelessWidget {
               padding: const EdgeInsets.all(4.0),
               child: CustomPaint(
                 painter: CurvePainter(colors: [
-                  Colors.indigo,
-                  HexColor("#8A98E8"),
-                  HexColor("#8A98E8")
+                  // Theme.of(context).focusColor,
+                  const Color.fromARGB(255, 148, 63, 200),
+                  const Color.fromARGB(255, 68, 63, 200),
+                  const Color.fromARGB(255, 63, 170, 200),
+                  // HexColor("#2A98E7"),
+                  // HexColor("2698E8"),
                 ], angle: experiencePoint!.toDouble()),
                 child: const SizedBox(
                   width: 108,
