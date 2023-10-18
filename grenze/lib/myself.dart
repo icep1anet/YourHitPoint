@@ -249,7 +249,7 @@ class RecordWidget extends StatelessWidget {
     int msHours = msDuration.inHours;
     int msMinutes = msDuration.inMinutes.remainder(60);
     return Container(
-      width: 300,
+      width: 350,
       // width: double.infinity,
       decoration: BoxDecoration(
         border: Border.all(color: Theme.of(context).focusColor, width: 5),
