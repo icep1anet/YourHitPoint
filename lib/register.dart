@@ -174,9 +174,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               }
                             },
                             child: const Text(
-                                    "ログイン",
-                                    style: TextStyle(fontSize: 23),
-                                  ),
+                              "ログイン",
+                              style: TextStyle(fontSize: 23),
+                            ),
                           ),
                           const SizedBox(width: 30),
                           TextButton(
@@ -228,9 +228,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               }
                             },
                             child: const Text(
-                                    "新規登録",
-                                    style: TextStyle(fontSize: 23),
-                                  ),
+                              "新規登録",
+                              style: TextStyle(fontSize: 23),
+                            ),
                           ),
                         ],
                       ),
