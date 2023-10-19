@@ -5,9 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "grenze",
+            "name": "Flutter Debug-Development",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "program": "grenze/lib/main.dart",
+            "args": [
+                "--debug",
+                "--flavor",
+                "develop",
+                "--no-build"
+            ]
         },
         {
             "name": "grenze (profile mode)",

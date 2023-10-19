@@ -1,7 +1,7 @@
-name: grenze
-description: A new Flutter project.
+name: your_hit_point
+description: visualize your hitpoint.
 publish_to: "none"
-version: 0.1.2
+version: 0.2.0
 
 assets:
   -.env
