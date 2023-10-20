@@ -63,5 +63,3 @@ pubspec.lock
 *.js.map
 
 ephemeral
-
-.vscode/
