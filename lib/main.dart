@@ -9,6 +9,7 @@ import "friend.dart";
 import "myself.dart";
 import "register.dart";
 import 'user_data.dart';
+import 'oauth_fitbit.dart';
 
 const locale = Locale("ja", "JP");
 var logger = Logger();
@@ -43,7 +44,8 @@ class MyApp extends StatelessWidget {
         splashColor: const Color(0xff00ff7f),
         dividerColor: const Color(0xffffd700),
       ),
-      home: const MainPage(),
+      // home: const MainPage(),
+      home: const OAuthPage(),
       //画面遷移するときのルート追加
       routes: {
         "/home": (context) => const MainPage(),
@@ -75,7 +77,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-
+    
     context
         .read<UserDataProvider>()
         .setTimerFunc(900, context.read<UserDataProvider>().updateUserData);

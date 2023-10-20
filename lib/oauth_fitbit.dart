@@ -1,43 +1,66 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:pkce/pkce.dart';
+import "package:logger/logger.dart";
+import 'package:uni_links/uni_links.dart';
 import 'package:uuid/uuid.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:oauth2/oauth2.dart' as oauth2;
 
-Future<String> oAuthRequest() async {
-  // applinkの実装
-  // https://qiita.com/noboru_i/items/fd4634ecb326b3749ac0
-  // ひとまずコピーできる臨時サイト作って、アプリに戻って貼り付け？
-  await dotenv.load(fileName: ".env");
-  final clientId = dotenv.env["CLIENT_ID"];
-  var baseUrl = "https://www.fitbit.com/oauth2/authorize";
-  final pkcePair = PkcePair.generate();
-  final pkce = pkcePair.codeChallenge;
-  const uuid = Uuid();
-  final state = uuid.v4().toString();
-  baseUrl =
-      "$baseUrl?response_type=code&client_id=$clientId&scope=activity+profile+sleep+social+temperature&code_challenge=$pkce&code_challenge_method=S256&state=$state";
+var logger = Logger();
 
-  return baseUrl;
-}
+final authorizationEndpoint =
+    Uri.parse('https://www.fitbit.com/oauth2/authorize');
+final tokenEndpoint = Uri.parse('http://www.fitbit.com/oauth2/token');
 
-class OAuthApp extends StatelessWidget {
-  const OAuthApp({Key? key}) : super(key: key);
+const identifier = '23R5R4';
+const redirectUrl = 'https://your-hit-point-backend-2ledkxm6ta-an.a.run.app';
+final redirectUri =
+    Uri.parse('https://your-hit-point-backend-2ledkxm6ta-an.a.run.app');
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(),
-    );
+class OAuthPage extends StatelessWidget {
+  const OAuthPage({Key? key}) : super(key: key);
+
+  Future<oauth2.Client> createClient() async {
+    // If we don't have OAuth2 credentials yet, we need to get the resource owner
+    // to authorize us. We're assuming here that we're a command-line application.
+    var grant = oauth2.AuthorizationCodeGrant(
+        identifier, authorizationEndpoint, tokenEndpoint);
+
+    const uuid = Uuid();
+    final state = uuid.v4().toString();
+    const scopes = ["activity", "profile", "sleep", "social", "temperature"];
+    // A URL on the authorization server (authorizationEndpoint with some additional
+    // query parameters). Scopes and state can optionally be passed into this method.
+
+    var authorizationUrl =
+        grant.getAuthorizationUrl(redirectUri, scopes: scopes, state: state);
+    if (await canLaunchUrl(Uri.parse(authorizationUrl.toString()))) {
+      await launchUrl(Uri.parse(authorizationUrl.toString()));
+    }
+
+    // ------- 8< -------
+    var responseUrl = await listen();
+
+    // Once the user is redirected to `redirectUrl`, pass the query parameters to
+    // the AuthorizationCodeGrant. It will validate them and extract the
+    // authorization code to create a new Client.
+    return await grant.handleAuthorizationResponse(responseUrl.queryParameters);
   }
-}
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+  Future<Uri> listen() async {
+    StreamSubscription _sub;
+    Uri? responseUrl;
+    _sub = linkStream.listen((String? uri) {
+      if (uri.toString().startsWith(redirectUrl)) {
+        logger.d(uri);
+        responseUrl = Uri.parse(uri!);
+      }
+    });
+    logger.d(responseUrl);
+    return responseUrl!;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +74,7 @@ class MyHomePage extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () async {
-                final oauthUrl = await oAuthRequest();
-                final url = Uri.parse(oauthUrl);
-                launchUrl(url);
+                var client = await createClient();
                 // if (await canLaunchUrl(url)) {
                 //   launchUrl(url);
                 // } else {
