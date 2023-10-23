@@ -34,7 +34,7 @@ if (keystorePropertiesFile.exists()) {
 }
 android {
     namespace "com.yourhitpoint"
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 34
     ndkVersion flutter.ndkVersion
     flavorDimensions "default"
     productFlavors {
