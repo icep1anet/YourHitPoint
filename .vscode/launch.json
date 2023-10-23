@@ -2,14 +2,13 @@
     // IntelliSense を使用して利用可能な属性を学べます。
     // 既存の属性の説明をホバーして表示します。
     // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.1.1",
+    "version": "0.2.0",
     "configurations": [
-        
         {
             "name": "Flutter Debug-Development",
             "request": "launch",
             "type": "dart",
-            "program": "grenze/lib/main.dart",
+            "program": "lib/main.dart",
             "args": [
                 "--debug",
                 "--flavor",
@@ -18,15 +17,13 @@
             ]
         },
         {
-            "name": "grenze (profile mode)",
-            "cwd": "grenze",
+            "name": "your Hit Point (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "grenze (release mode)",
-            "cwd": "grenze",
+            "name": "your Hit Point (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
