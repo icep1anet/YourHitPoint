@@ -63,3 +63,4 @@ pubspec.lock
 *.js.map
 
 ephemeral
+android/local.properties
