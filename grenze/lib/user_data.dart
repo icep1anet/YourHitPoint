@@ -6,7 +6,7 @@ import "package:shared_preferences/shared_preferences.dart";
 import "dart:convert";
 import "package:http/http.dart" as http;
 
-import 'hp_graph.dart';
+import 'utils/hp_graph.dart';
 
 var logger = Logger();
 const Map test = {"x": 3, "y": 4};
