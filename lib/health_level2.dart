@@ -76,9 +76,10 @@ class MediterranesnDietView extends StatelessWidget {
               child: CustomPaint(
                 painter: CurvePainter(colors: [
                   // Theme.of(context).focusColor,
-                  const Color.fromARGB(255, 148, 63, 200),
-                  const Color.fromARGB(255, 68, 63, 200),
-                  const Color.fromARGB(255, 63, 170, 200),
+                  const Color.fromARGB(255, 90, 224, 242),
+                  HexColor("#2ad6f7"),
+                  const Color.fromARGB(255, 17, 194, 238),
+                  // Color.fromARGB(255, 156, 95, 194),
                   // HexColor("#2A98E7"),
                   // HexColor("2698E8"),
                 ], angle: experiencePoint!.toDouble()),

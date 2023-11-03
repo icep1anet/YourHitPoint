@@ -13,11 +13,7 @@ import 'user_data.dart';
 const locale = Locale("ja", "JP");
 var logger = Logger();
 
-const testDataList = [
-  {"x": 1.0, "y": 2.0},
-  {"x": 3.0, "y": 4.0},
-  {"x": 5.0, "y": 6.0},
-];
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(ChangeNotifierProvider<UserDataProvider>(

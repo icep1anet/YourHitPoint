@@ -266,7 +266,7 @@ class UserDataProvider with ChangeNotifier {
     recordLowHP = responseBody["recordLowHP"].toDouble();
     activeLimitTime = responseBody["activeLimitTime"];
     maxSleepDuration = responseBody["maxSleepDuration"];
-    maxDayHP = responseBody["maxDayHP"];
+    maxDayHP = responseBody["maxDayHP"].toInt();
     maxTotalDaySteps = responseBody["maxTotalDaySteps"];
     maxSleepDuration = responseBody["maxSleepDuration"];
     experienceLevel = responseBody["experienceLevel"];

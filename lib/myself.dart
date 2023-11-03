@@ -82,11 +82,7 @@ class _MyselfPageState extends State<MyselfPage>
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: <Widget>[
-                    const SizedBox(height: 30),
-                    //degug
-                    // if (userId != null) Text(userId),
-                    // //debug
-                    // Text("hpPercent: $maxDayHP"),
+                    hpWarning(userDataProvider.currentHP),
                     const SizedBox(height: 30),
                     Container(
                       alignment: Alignment.center,
@@ -249,7 +245,7 @@ class RecordWidget extends StatelessWidget {
     int msHours = msDuration.inHours;
     int msMinutes = msDuration.inMinutes.remainder(60);
     return Container(
-      width: 300,
+      width: 350,
       // width: double.infinity,
       decoration: BoxDecoration(
         border: Border.all(color: Theme.of(context).focusColor, width: 5),
@@ -568,7 +564,6 @@ class SliverAppBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final UserDataProvider userDataProvider =
         Provider.of<UserDataProvider>(context, listen: true);
-    final Utils utils = Utils();
     return SliverAppBar(
       expandedHeight: 300.0,
       floating: true,
@@ -613,4 +608,47 @@ class SliverAppBarWidget extends StatelessWidget {
       ],
     );
   }
+}
+
+
+Widget hpWarning(int currentHP) {
+  double fontSize = 20;
+  var fontstyle = GoogleFonts.bizUDGothic(
+    fontWeight: FontWeight.bold,
+    fontSize: fontSize,
+  );
+  dynamic warnignText;
+  if (30 <= currentHP) {
+    return Container();
+  } else if (0 < currentHP && currentHP < 30) {
+    warnignText = "適度に休息をとりましょう";
+  } else {
+    warnignText = "速やかに休息をとってください";
+  }
+  return Container(
+      width: 320,
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 242, 220, 19),
+        border: Border.all(color: Colors.black, width: 5),
+        // borderRadius: BorderRadius.circular(8),
+      ),
+      padding: const EdgeInsets.all(10),
+      child: Column(children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("あなたのＨＰは ", style: fontstyle),
+            Text(
+              "$currentHP",
+              style: GoogleFonts.bizUDGothic(
+                fontWeight: FontWeight.bold,
+                fontSize: 35,
+                color: Colors.red,
+              ),
+            ),
+            Text(" です", style: fontstyle),
+          ],
+        ),
+        Text(warnignText, style: fontstyle),
+      ]));
 }
