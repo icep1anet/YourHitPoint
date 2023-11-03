@@ -4,6 +4,7 @@ import "package:provider/provider.dart";
 import "package:logger/logger.dart";
 
 import "user_data.dart";
+import "oauth_fitbit.dart";
 
 var logger = Logger();
 
@@ -234,11 +235,48 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         ],
                       ),
+                      const SizedBox(height: 60),
+                      ElevatedButton(
+                          onPressed: () async {
+                            if (_registering == false) {
+                              setState(() {
+                                _registering = true;
+                              });
+                              await FitbitAPI.callOAuth();
+                              userDataProvider.accessToken =
+                                  await FitbitAPI.getToken();
+                              if (userDataProvider.accessToken != null) {
+                                logger.d("認証できましたよ");
+                                var profile = await FitbitAPI.getProfile();
+                                userDataProvider.userId = profile["user"]["encodedId"];
+                                userDataProvider.userName = profile["user"]["displayName"];
+                                userDataProvider.gender = profile["user"]["gender"];
+                                profile["fitbit_id"] = userDataProvider.userId;
+                                profile["avatar_name"] = userDataProvider.avatarName;
+                                profile["avatar_type"] = userDataProvider.avatarType;
+                                // firebase登録のためのrequestを送る
+
+                                navigateMain();
+                              } else {
+                                logger.d("認証できませんでした泣");
+                              }
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color.fromARGB(255, 65, 186, 227),
+                            elevation: 16,
+                          ),
+                          child: const Text("calloauth",
+                              style: TextStyle(
+                                fontSize: 30,
+                                color: Color.fromARGB(255, 0, 0, 0),
+                                fontWeight: FontWeight.bold,
+                                fontStyle: FontStyle.italic,
+                              ))),
                       const SizedBox(height: 5),
                       //ローディング
                       if (_registering == true)
                         const CircularProgressIndicator(),
-                      if (userId != null) Text(userId!),
                     ],
                   ),
                 ),

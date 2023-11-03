@@ -6,7 +6,8 @@ import "package:shared_preferences/shared_preferences.dart";
 import "dart:convert";
 import "package:http/http.dart" as http;
 
-import 'hp_graph.dart';
+import 'utils/hp_graph.dart';
+import "oauth_fitbit.dart";
 
 var logger = Logger();
 const Map test = {"x": 3, "y": 4};
@@ -17,7 +18,7 @@ class UserDataProvider with ChangeNotifier {
   int hpNumber = 0;
   String? avatarName = "Pochi";
   String? avatarType = "hukurou";
-  String? userName = "Yamada";
+  String? userName;
   String? userId;
   double recordHighHP = 0;
   double recordLowHP = 0;
@@ -42,6 +43,8 @@ class UserDataProvider with ChangeNotifier {
   bool finishMain = false;
   int experienceLevel = 15;
   int experiencePoint = 360;
+  String? accessToken;
+  String? gender;
 
   void setHPSpotsList(List<Map> dataList) {
     pastSpots = createHPSpotsList(dataList);
@@ -287,20 +290,18 @@ class UserDataProvider with ChangeNotifier {
   }
 
   Future<void> initMain() async {
-    ///アバター名表示のためデバイスで1度だけ実行したら消していいです
-    ///ローカルのsharedpreferenceにデータを書き込み
-    ///普通ならregister時にローカルにデータが書き込まれるが、今デバックでuserIdだけ無理やり書き換えてるからそれ以外のデータがローカルになく、アバター名を表示できないので一度この処理を行う
-    // await setItemToSharedPref(
-    //     ["userId", "userName", "avatarName", "avatarType"],
-    //     ["id_abcd", "Tom", "マルオ", "wani"]);
-    // await initRemoveUserId();
-    await getLocalData();
-    if (userId != null) {
-      logger.d("userId != null");
+
+    // debug
+    // FitbitAPI.deleteStorage();
+    //
+    //accessTokenがあるか確認
+    accessToken = await FitbitAPI.getToken();
+    if (accessToken != null) {
+      logger.d("accessToken != null");
       await updateUserData();
       changeHP();
     } else {
-      logger.d("userId == null");
+      logger.d("accessToken == null");
     }
     finishMain = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {

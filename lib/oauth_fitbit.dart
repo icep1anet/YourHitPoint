@@ -55,12 +55,16 @@ class FitbitAPI {
     return;
   }
 
-  static Future<String> getToken({String key = "access_token"}) async {
+  static Future<String?> getToken({String key = "access_token"}) async {
     // secure領域に保存したtokenを取得する
     final storage = new FlutterSecureStorage();
     String? tokenJson = await storage.read(key: "fitbitToken");
-    Map token = json.decode(tokenJson!);
-    return token[key];
+    if (tokenJson == null) {
+      return null;
+    } else {
+      Map token = json.decode(tokenJson);
+      return token[key];
+    }
   }
 
   static Future<Map> request(
@@ -105,7 +109,14 @@ class FitbitAPI {
     final endpoint = Uri.https("api.fitbit.com", "/1/user/-/profile.json");
     final token = await getToken();
     final headers = {'Authorization': "Bearer $token"};
-    final data = request(url: endpoint, type: "get", headers: headers);
+    final data = await request(url: endpoint, type: "get", headers: headers);
     return data;
+  }
+
+  // debug
+  // secure storageの中身全消し
+  static void deleteStorage()  {
+    const storage = FlutterSecureStorage();
+    storage.deleteAll();
   }
 }
