@@ -96,7 +96,7 @@ class _MainPageState extends State<MainPage> {
         child: CircularProgressIndicator(),
       ));
     } else {
-      if (userDataProvider.userId == null) {
+      if (userDataProvider.accessToken == null) {
         Future.microtask(() => Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 fullscreenDialog: true,
@@ -180,14 +180,3 @@ class Register extends StatelessWidget {
   }
 }
 
-class HexColor extends Color {
-  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
-
-  static int _getColorFromHex(String hexColor) {
-    hexColor = hexColor.toUpperCase().replaceAll("#", "");
-    if (hexColor.length == 6) {
-      hexColor = "FF$hexColor";
-    }
-    return int.parse(hexColor, radix: 16);
-  }
-}

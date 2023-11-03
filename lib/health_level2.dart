@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 // import 'package:provider/provider.dart';
 // import 'package:vector_math/vector_math.dart' as vector;
 
-import "main.dart";
+import "utils/hex_color.dart";
 
 class MediterranesnDietView extends StatelessWidget {
   final int? experienceLevel;

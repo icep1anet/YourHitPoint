@@ -7,9 +7,9 @@ import "package:provider/provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:logger/logger.dart";
 
-import "main.dart";
 import "wave_view.dart";
-import "utils.dart";
+import "utils/hex_color.dart";
+import "utils/avatar.dart";
 import "profile.dart";
 import "user_data.dart";
 import "health_level2.dart";
@@ -59,7 +59,6 @@ class _MyselfPageState extends State<MyselfPage>
   Widget build(BuildContext context) {
     final UserDataProvider userDataProvider =
         Provider.of<UserDataProvider>(context, listen: true);
-    final Utils utils = Utils();
     final imgUrl = userDataProvider.imgUrl;
     // final userId = userDataProvider.userId;
     final avatarName = userDataProvider.avatarName;
@@ -115,7 +114,7 @@ class _MyselfPageState extends State<MyselfPage>
                     const SizedBox(height: 30),
                     Row(children: [
                       const SizedBox(width: 20),
-                      utils.currentmyAvatar(context, imgUrl, 100),
+                      currentmyAvatar(context, imgUrl, 100),
                       // _currentmyAvatar("assets/images/illust_normal.jpg"),
                       WaveViewWidget(widget: widget),
                     ]),
