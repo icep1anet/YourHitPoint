@@ -25,7 +25,7 @@ class UserDataProvider with ChangeNotifier {
   List<FlSpot> futureSpots = [];
   List<FlSpot> pastSpots = [];
   double fontPosition = 48.5;
-  Color barColor = const Color(0xFF32cd32);
+  Color barColor = const Color.fromARGB(255, 0, 226, 113);
   Color fontColor = Colors.white;
   DateTime? latestDataTime;
   double? minGraphX;
@@ -133,11 +133,11 @@ class UserDataProvider with ChangeNotifier {
         fontColor = Colors.white;
         fontPosition = 60;
       } else if (40 < hpPercent && hpPercent <= 80) {
-        barColor = const Color(0xff00ff7f);
+        barColor = const Color.fromARGB(255, 0, 226, 113);
         fontColor = Colors.white;
         fontPosition = 60;
       } else if (30 < hpPercent && hpPercent <= 40) {
-        barColor = const Color(0xff00ff7f);
+        barColor = const Color.fromARGB(255, 0, 226, 113);
         fontColor = Colors.black;
         fontPosition = 0;
       } else if (0 < hpPercent && hpPercent <= 30) {
