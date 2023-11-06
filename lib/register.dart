@@ -242,12 +242,12 @@ class _RegisterPageState extends State<RegisterPage> {
                               setState(() {
                                 _registering = true;
                               });
-                              await FitbitAPI.callOAuth();
+                              await callOAuth();
                               userDataProvider.accessToken =
-                                  await FitbitAPI.getToken();
+                                await getToken();
                               if (userDataProvider.accessToken != null) {
                                 logger.d("認証できましたよ");
-                                var profile = await FitbitAPI.getProfile();
+                                var profile = await getProfile();
                                 userDataProvider.userId = profile["user"]["encodedId"];
                                 userDataProvider.userName = profile["user"]["displayName"];
                                 userDataProvider.gender = profile["user"]["gender"];
