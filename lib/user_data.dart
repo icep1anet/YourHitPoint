@@ -292,10 +292,9 @@ class UserDataProvider with ChangeNotifier {
   Future<void> initMain() async {
 
     // debug
-    // FitbitAPI.deleteStorage();
-    //
+    // deleteSecureStorage();
     //accessTokenがあるか確認
-    accessToken = await FitbitAPI.getToken();
+    accessToken = await getToken();
     if (accessToken != null) {
       logger.d("accessToken != null");
       await updateUserData();

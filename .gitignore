@@ -37,6 +37,7 @@ migrate_working_dir/
 .project
 .settings/
 .vscode/*
+!.vscode/launch.json
 
 # Flutter repo-specific
 /bin/cache/
