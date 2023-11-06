@@ -1,21 +1,21 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:fluttericon/octicons_icons.dart";
-import "package:provider/provider.dart";
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import "package:logger/logger.dart";
 
-import "user_data.dart";
+import "package:your_hit_point/view_model/user_data_notifier.dart";
 
 var logger = Logger();
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class ProfilePage extends ConsumerStatefulWidget {
+  const ProfilePage({Key? key}) : super(key:key);
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  ProfilePageState createState() => ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class ProfilePageState extends ConsumerState<ProfilePage> {
   FocusNode? _focusUserNameNode;
   FocusNode? _focusAvatarNameNode;
   TextEditingController? _userNameController;
@@ -71,8 +71,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final UserDataProvider userDataProvider =
-        Provider.of<UserDataProvider>(context, listen: true);
     return Focus(
         focusNode: _focusUserNameNode,
         child: GestureDetector(
@@ -99,7 +97,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         autocorrect: false,
                         autofocus: false,
                         controller: _userNameController = TextEditingController(
-                            text: userDataProvider.userName),
+                            text: ref.watch(userDataProvider).userName),
                         decoration: InputDecoration(
                           border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(
@@ -129,7 +127,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           autocorrect: false,
                           controller: _avatarNameController =
                               TextEditingController(
-                                  text: userDataProvider.avatarName),
+                                  text: ref.watch(userDataProvider).avatarName),
                           decoration: InputDecoration(
                             border: const OutlineInputBorder(
                               borderRadius: BorderRadius.all(
@@ -172,7 +170,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           style: const TextStyle(
                               fontSize: 25, color: Colors.black),
                           items: dropdownMenuItems,
-                          value: selectAvatarType = userDataProvider.avatarType,
+                          value: selectAvatarType = ref.watch(userDataProvider).avatarType,
                           alignment: Alignment.center,
                           onChanged: (String? value) {
                             setState(() {

@@ -1,26 +1,25 @@
 import "package:flutter/material.dart";
-import "package:provider/provider.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:logger/logger.dart";
 import "package:flutter/services.dart";
 import "package:google_fonts/google_fonts.dart";
+import "package:your_hit_point/view_model/HP_notifier.dart";
 
-import "user_data.dart";
+import "package:your_hit_point/view_model/user_data_notifier.dart";
 
 var logger = Logger();
 
-class FriendPage extends StatefulWidget {
+class FriendPage extends ConsumerStatefulWidget {
   const FriendPage({Key? key}) : super(key: key);
   @override
-  State<FriendPage> createState() => _FriendPageState();
+  FriendPageState createState() => FriendPageState();
 }
 
-class _FriendPageState extends State<FriendPage> {
+class FriendPageState extends ConsumerState<FriendPage> {
   Color hpFontColor = Colors.black;
 
   @override
   Widget build(BuildContext context) {
-    final UserDataProvider userDataProvider =
-        Provider.of<UserDataProvider>(context, listen: true);
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 105,
@@ -39,7 +38,7 @@ class _FriendPageState extends State<FriendPage> {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          await userDataProvider.fetchFriendData();
+          await ref.read(userDataProvider.notifier).fetchFriendData();
         },
         child: Center(
           child: SizedBox(
@@ -49,9 +48,11 @@ class _FriendPageState extends State<FriendPage> {
                 Expanded(
                   child: ListView.builder(
                     // shrinkWrap: true,
-                    itemCount: userDataProvider.friendDataList.length,
+                    itemCount:
+                        ref.watch(userDataProvider).friendDataList.length,
                     itemBuilder: (BuildContext context, int index) {
-                      Map friendData = userDataProvider.friendDataList[index];
+                      Map friendData =
+                          ref.watch(userDataProvider).friendDataList[index];
                       //各フレンドのHPによって表示の色が変わるようにする
                       int friendHP = friendData["currentHP"].toInt();
                       if (80 < friendHP) {
@@ -81,14 +82,14 @@ class _FriendPageState extends State<FriendPage> {
   }
 }
 
-class ChangeIdWidget extends StatefulWidget {
+class ChangeIdWidget extends ConsumerStatefulWidget {
   const ChangeIdWidget({Key? key}) : super(key: key);
 
   @override
-  State<ChangeIdWidget> createState() => _ChangeIdWidgetState();
+  ChangeIdWidgetState createState() => ChangeIdWidgetState();
 }
 
-class _ChangeIdWidgetState extends State<ChangeIdWidget> {
+class ChangeIdWidgetState extends ConsumerState<ChangeIdWidget> {
   TextEditingController? _userIdController;
 
   @override
@@ -135,9 +136,10 @@ class _ChangeIdWidgetState extends State<ChangeIdWidget> {
       ),
       TextButton(
         onPressed: () {
-          context
-              .read<UserDataProvider>()
+          ref
+              .read(userDataProvider.notifier)
               .refreshUserID(_userIdController!.text);
+          ref.read(hpProvider.notifier).updateUserData(ref);
         },
         child: const Text("Change userId"),
       )
