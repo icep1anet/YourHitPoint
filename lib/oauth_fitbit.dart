@@ -112,6 +112,38 @@ Future<Map> getProfile() async {
   return data;
 }
 
+
+Future<Map> getSteps() async {
+  final endpoint = Uri.https("api.fitbit.com",
+      "/1/user/-/activities/steps/date/2023-11-03/1d/15min.json");
+  final token = await getToken();
+  final headers = {'Authorization': "Bearer $token"};
+  final data = await fitbitRequest(url: endpoint, type: "get", headers: headers);
+  return data;
+}
+
+Future<Map> getCalories() async {
+  final endpoint = Uri.https("api.fitbit.com",
+      "/1/user/-/activities/calories/date/today/1d/15min.json");
+  final token = await getToken();
+  final headers = {'Authorization': "Bearer $token"};
+  logger.d("c");
+  final data = await fitbitRequest(url: endpoint, type: "get", headers: headers);
+  logger.d("d");
+  return data;
+}
+
+Future<Map> getSleeps() async {
+  final endpoint = Uri.https("api.fitbit.com",
+      "/1.2/user/-/sleep/date/today.json");
+  final token = await getToken();
+  final headers = {'Authorization': "Bearer $token"};
+  logger.d("c");
+  final data = await fitbitRequest(url: endpoint, type: "get", headers: headers);
+  logger.d("d");
+  return data;
+}
+
 // debug
 // secure storageの中身全消し
 void deleteSecureStorage() {
