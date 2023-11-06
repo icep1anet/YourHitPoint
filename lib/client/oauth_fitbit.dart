@@ -5,10 +5,13 @@ import "package:logger/logger.dart";
 import 'package:pkce/pkce.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:your_hit_point/api.dart';
+import 'package:your_hit_point/client/api.dart';
 
 var logger = Logger();
+
+final accessTokenProvider = StateProvider<String?>((ref) => null);
 
 const identifier = '23R5R4';
 const scopes = "activity heartrate profile sleep social temperature";

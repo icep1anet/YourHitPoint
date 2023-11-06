@@ -1,31 +1,33 @@
 import "dart:math";
 import "package:fl_chart/fl_chart.dart";
 import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:fluttericon/iconic_icons.dart";
 import "package:google_fonts/google_fonts.dart";
-import "package:provider/provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:logger/logger.dart";
 
-import "wave_view.dart";
-import "utils/hex_color.dart";
-import "utils/avatar.dart";
-import "profile.dart";
-import "user_data.dart";
-import "health_level2.dart";
+import 'package:your_hit_point/components/wave_view.dart';
+import 'package:your_hit_point/utils/hex_color.dart';
+import 'package:your_hit_point/utils/avatar.dart';
+import 'package:your_hit_point/components/profile.dart';
+import 'package:your_hit_point/components/health_level2.dart';
+import "package:your_hit_point/utils/timer_func.dart";
+import "package:your_hit_point/view_model/HP_notifier.dart";
+import "package:your_hit_point/view_model/user_data_notifier.dart";
 
 var logger = Logger();
 
-class MyselfPage extends StatefulWidget {
+class MyselfPage extends ConsumerStatefulWidget {
   // MyselfPage({Key? key}) : super(key: key);
   const MyselfPage({Key? key}) : super(key: key);
   // 使用するStateを指定
   @override
-  State createState() => _MyselfPageState();
+  MyselfPageState createState() => MyselfPageState();
 }
 
 // Stateを継承して使う
-class _MyselfPageState extends State<MyselfPage>
+class MyselfPageState extends ConsumerState<MyselfPage>
     with SingleTickerProviderStateMixin {
   // AnimationController? animationController;
   // Animation<double>? animation;
@@ -41,27 +43,20 @@ class _MyselfPageState extends State<MyselfPage>
   @override
   void initState() {
     super.initState();
-    // context
-    //     .read<UserDataProvider>()
-    //     .setTimerFunc(50, context.read<UserDataProvider>().setZeroHP);
     // animationController = AnimationController(
     //     duration: const Duration(milliseconds: 5), vsync: this);
     // tween = Tween<double>(begin: 0.0, end: 1.0);
     // tween.chain(CurveTween(curve: curve));
     // animation = animationController!.drive(tween);
-    context
-        .read<UserDataProvider>()
-        .setTimerFunc(60, context.read<UserDataProvider>().changeHP);
+    setTimerFunc(60, ref.read(hpProvider.notifier).changeHP, ref);
     // animationController!.forward();
   }
 
   @override
   Widget build(BuildContext context) {
-    final UserDataProvider userDataProvider =
-        Provider.of<UserDataProvider>(context, listen: true);
-    final imgUrl = userDataProvider.imgUrl;
+    final imgUrl = ref.watch(hpProvider).imgUrl;
     // final userId = userDataProvider.userId;
-    final avatarName = userDataProvider.avatarName;
+    String? avatarName = ref.watch(userDataProvider).avatarName;
     // final maxDayHP = userDataProvider.maxDayHP;
     // final AnimationController animationController = AnimationController(
     //     duration: const Duration(milliseconds: 2000), vsync: this);
@@ -74,14 +69,14 @@ class _MyselfPageState extends State<MyselfPage>
       },
       body: RefreshIndicator(
         onRefresh: () async {
-          await userDataProvider.updateUserData();
+          await ref.read(hpProvider.notifier).updateUserData(ref);
         },
         child: SingleChildScrollView(
             child: Container(
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: <Widget>[
-                    hpWarning(userDataProvider.currentHP),
+                    hpWarning(ref.watch(hpProvider).currentHP),
                     const SizedBox(height: 30),
                     Container(
                       alignment: Alignment.center,
@@ -127,8 +122,8 @@ class _MyselfPageState extends State<MyselfPage>
                     //   child: const Text('click here'),
                     // ),
                     MediterranesnDietView(
-                      experienceLevel: userDataProvider.experienceLevel,
-                      experiencePoint: userDataProvider.experiencePoint,
+                      experienceLevel: ref.watch(userDataProvider).experienceLevel,
+                      experiencePoint: ref.watch(userDataProvider).experiencePoint,
                     ),
                     const SizedBox(height: 30),
                     Container(
@@ -227,7 +222,7 @@ class _MyselfPageState extends State<MyselfPage>
   }
 }
 
-class RecordWidget extends StatelessWidget {
+class RecordWidget extends ConsumerWidget {
   const RecordWidget({
     super.key,
     required this.widget,
@@ -236,11 +231,9 @@ class RecordWidget extends StatelessWidget {
   final MyselfPage widget;
 
   @override
-  Widget build(BuildContext context) {
-    final UserDataProvider userDataProvider =
-        Provider.of<UserDataProvider>(context, listen: true);
+  Widget build(BuildContext context, WidgetRef ref) {
     Duration msDuration =
-        Duration(milliseconds: userDataProvider.maxSleepDuration);
+        Duration(milliseconds: ref.watch(userDataProvider).maxSleepDuration);
     int msHours = msDuration.inHours;
     int msMinutes = msDuration.inMinutes.remainder(60);
     return Container(
@@ -279,13 +272,13 @@ class RecordWidget extends StatelessWidget {
         ),
         const SizedBox(width: 10),
         Column(children: [
-          Text(userDataProvider.recordHighHP.round().toString(),
+          Text(ref.watch(hpProvider).recordHighHP.round().toString(),
               style: GoogleFonts.sourceCodePro(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).hintColor)),
           // const SizedBox(height: 10),
-          Text(userDataProvider.recordLowHP.round().toString(),
+          Text(ref.watch(hpProvider).recordLowHP.round().toString(),
               style: GoogleFonts.sourceCodePro(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
@@ -295,7 +288,7 @@ class RecordWidget extends StatelessWidget {
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).hintColor)),
-          Text("${userDataProvider.maxTotalDaySteps}歩",
+          Text("${ref.watch(userDataProvider).maxTotalDaySteps}歩",
               style: GoogleFonts.sourceCodePro(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
@@ -306,16 +299,14 @@ class RecordWidget extends StatelessWidget {
   }
 }
 
-class WaveViewWidget extends StatelessWidget {
+class WaveViewWidget extends ConsumerWidget {
   const WaveViewWidget({super.key, required this.widget});
 
   final MyselfPage widget;
   // final int barColor;
 
   @override
-  Widget build(BuildContext context) {
-    final hpPercent = context.select(
-        (UserDataProvider userDataProvider) => userDataProvider.hpPercent);
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 8, top: 16),
       child: Container(
@@ -337,13 +328,13 @@ class WaveViewWidget extends StatelessWidget {
                 blurRadius: 4),
           ],
         ),
-        child: WaveView(percentageValue: hpPercent.toDouble()),
+        child: WaveView(percentageValue: (ref.watch(hpProvider).currentHP / ref.watch(hpProvider).maxDayHP) * 100),
       ),
     );
   }
 }
 
-class LineChartWidget extends StatelessWidget {
+class LineChartWidget extends ConsumerWidget {
   const LineChartWidget({
     super.key,
     required this.widget,
@@ -352,15 +343,13 @@ class LineChartWidget extends StatelessWidget {
   final MyselfPage widget;
 
   @override
-  Widget build(BuildContext context) {
-    final UserDataProvider userDataProvider =
-        Provider.of<UserDataProvider>(context, listen: true);
+  Widget build(BuildContext context, WidgetRef ref) {
     return LineChart(
       LineChartData(
-          minX: userDataProvider.minGraphX,
-          maxX: userDataProvider.maxGraphX,
-          minY: userDataProvider.minGraphY,
-          maxY: userDataProvider.maxGraphY,
+          minX: ref.watch(hpProvider).minGraphX,
+          maxX: ref.watch(hpProvider).maxGraphX,
+          minY: ref.watch(hpProvider).minGraphY,
+          maxY: ref.watch(hpProvider).maxGraphY,
           backgroundColor: const Color(0xffd0e3ce),
           lineBarsData: [
             LineChartBarData(
@@ -368,14 +357,14 @@ class LineChartWidget extends StatelessWidget {
               color: Colors.blue,
               barWidth: 3,
               dotData: FlDotData(show: false),
-              spots: userDataProvider.pastSpots,
+              spots: ref.watch(hpProvider).pastSpots,
             ),
             LineChartBarData(
               isCurved: true,
               color: Colors.blue[400],
               barWidth: 3,
               dotData: FlDotData(show: false),
-              spots: userDataProvider.futureSpots,
+              spots: ref.watch(hpProvider).futureSpots,
               dashArray: [10, 6],
             ),
           ],
@@ -493,19 +482,17 @@ class LineChartWidget extends StatelessWidget {
   }
 }
 
-class LimitTimeWidget extends StatelessWidget {
+class LimitTimeWidget extends ConsumerWidget {
   const LimitTimeWidget({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
-    final UserDataProvider userDataProvider =
-        Provider.of<UserDataProvider>(context, listen: true);
+  Widget build(BuildContext context, WidgetRef ref) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Text("推定活動限界",
           style: GoogleFonts.roboto(fontWeight: FontWeight.w500, fontSize: 20)),
-      Text(userDataProvider.activeLimitTime,
+      Text(ref.watch(hpProvider).activeLimitTime,
           style: GoogleFonts.sourceCodePro(
               fontSize: 30,
               fontWeight: FontWeight.bold,
@@ -518,7 +505,7 @@ class LimitTimeWidget extends StatelessWidget {
   }
 }
 
-class HPWidget extends StatelessWidget {
+class HPWidget extends ConsumerWidget {
   const HPWidget({
     super.key,
     required this.widget,
@@ -527,9 +514,7 @@ class HPWidget extends StatelessWidget {
   final MyselfPage widget;
 
   @override
-  Widget build(BuildContext context) {
-    final UserDataProvider userDataProvider =
-        Provider.of<UserDataProvider>(context, listen: true);
+  Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -538,7 +523,7 @@ class HPWidget extends StatelessWidget {
             style: GoogleFonts.roboto(fontWeight: FontWeight.w500, fontSize: 20)
             // Theme.of(context).textTheme.headlineSmall
             ),
-        Text(userDataProvider.currentHP.toString(),
+        Text(ref.watch(hpProvider).currentHP.toString(),
             style: GoogleFonts.sourceCodePro(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
@@ -561,8 +546,6 @@ class SliverAppBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final UserDataProvider userDataProvider =
-        Provider.of<UserDataProvider>(context, listen: true);
     return SliverAppBar(
       expandedHeight: 300.0,
       floating: true,
@@ -586,7 +569,7 @@ class SliverAppBarWidget extends StatelessWidget {
           )),
       leading: IconButton(
         onPressed: () {
-          userDataProvider.initRemoveUserId();
+          // userDataProvider.initRemoveUserId();
         },
         icon: const Icon(Icons.logout),
       ),

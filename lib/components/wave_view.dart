@@ -1,11 +1,11 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart' as provider;
 import 'package:vector_math/vector_math.dart' as vector;
+import 'package:your_hit_point/view_model/HP_notifier.dart';
 
-import 'user_data.dart';
-
-class WaveView extends StatefulWidget {
+class WaveView extends ConsumerStatefulWidget{
   final double percentageValue;
 
   const WaveView({
@@ -16,7 +16,7 @@ class WaveView extends StatefulWidget {
   WaveViewState createState() => WaveViewState();
 }
 
-class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
+class WaveViewState extends ConsumerState<WaveView> with TickerProviderStateMixin {
   AnimationController? animationController;
   AnimationController? waveAnimationController;
   Offset bottleOffset1 = const Offset(0, 0);
@@ -83,16 +83,13 @@ class WaveViewState extends State<WaveView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final barcolor = context.select(
-        (UserDataProvider userDataProvider) => userDataProvider.barColor);
-    final fontposition = context.select(
-        (UserDataProvider userDataProvider) => userDataProvider.fontPosition);
-    final fontColor = context.select(
-        (UserDataProvider userDataProvider) => userDataProvider.fontColor);
+    final barcolor = ref.watch(hpProvider).barColor;
+    final fontposition = ref.watch(hpProvider).fontPosition;
+    final fontColor = ref.watch(hpProvider).fontColor;
 
     return Container(
         alignment: Alignment.center,
-        child: Consumer(builder: (context, userDataProvider, child) {
+        child: provider.Consumer(builder: (context, userDataProvider, child) {
           return Stack(
             children: <Widget>[
               AnimatedBuilder(

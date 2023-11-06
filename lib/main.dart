@@ -1,23 +1,23 @@
-import 'package:provider/provider.dart';
+import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:flutter/material.dart";
 import "package:logger/logger.dart";
 import "package:salomon_bottom_bar/salomon_bottom_bar.dart";
 import "package:google_fonts/google_fonts.dart";
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:your_hit_point/client/oauth_fitbit.dart';
+import 'package:your_hit_point/utils/timer_func.dart';
+import 'package:your_hit_point/view_model/HP_notifier.dart';
 
-import "friend.dart";
-import "myself.dart";
-import "register.dart";
-import 'user_data.dart';
+import 'view/friend.dart';
+import 'view/myself.dart';
+import 'view/register.dart';
 
 const locale = Locale("ja", "JP");
 var logger = Logger();
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(ChangeNotifierProvider<UserDataProvider>(
-      create: (context) => UserDataProvider(), child: const MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -57,46 +57,47 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MainPage extends StatefulWidget {
+final isFinishedMainProvider = StateProvider<bool>((ref) => false);
+final pageViewControllerProvider =
+    StateProvider<PageController>((ref) => PageController());
+final pageIndexProvider = StateProvider<int>((ref) => 0);
+
+class MainPage extends ConsumerStatefulWidget {
   const MainPage({Key? key}) : super(key: key);
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  MainPageState createState() => MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
-  final _pageViewController = PageController();
-
+class MainPageState extends ConsumerState<MainPage> {
   //ページ起動時に呼ばれる初期化関数
   @override
   void initState() {
     super.initState();
-    
-    context
-        .read<UserDataProvider>()
-        .setTimerFunc(900, context.read<UserDataProvider>().updateUserData);
-    context.read<UserDataProvider>().initMain();
+    logger.d("hello world");
+    ref.read(hpProvider.notifier).initMain(ref);
+    setTimerFunc(900, ref.read(hpProvider.notifier).updateUserData, ref);
   }
 
   //ページ移動系
   void _onItemTapped(int index) {
     setState(() {
-      _pageViewController.animateToPage(index,
+      ref.read(pageViewControllerProvider).animateToPage(index,
           duration: const Duration(milliseconds: 100), curve: Curves.easeOut);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final UserDataProvider userDataProvider =
-        Provider.of<UserDataProvider>(context, listen: true);
-    if (userDataProvider.finishMain == false) {
+    final isFinishedMain = ref.watch(isFinishedMainProvider);
+    final accessToken = ref.watch(accessTokenProvider);
+    if (isFinishedMain == false) {
       return const Scaffold(
           body: Center(
         child: CircularProgressIndicator(),
       ));
     } else {
-      if (userDataProvider.accessToken == null) {
+      if (accessToken == null) {
         Future.microtask(() => Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 fullscreenDialog: true,
@@ -108,18 +109,18 @@ class _MainPageState extends State<MainPage> {
       } else {
         return Scaffold(
           body: PageView(
-            controller: _pageViewController,
+            controller: ref.watch(pageViewControllerProvider),
             children: const <Widget>[
               MyselfPage(),
               FriendPage(),
             ],
             onPageChanged: (index) {
-              userDataProvider.setPageIndex(index);
+              ref.watch(pageIndexProvider.notifier).state = index;
             },
           ),
           bottomNavigationBar: SalomonBottomBar(
               backgroundColor: const Color.fromARGB(255, 178, 211, 244),
-              currentIndex: userDataProvider.pageIndex,
+              currentIndex: ref.watch(pageIndexProvider),
               selectedItemColor: const Color(0xff6200ee),
               unselectedItemColor: const Color(0xff757575),
               onTap: _onItemTapped,
@@ -147,9 +148,7 @@ class _MainPageState extends State<MainPage> {
 }
 
 class Register extends StatelessWidget {
-  const Register({
-    super.key,
-  });
+  const Register({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -179,4 +178,3 @@ class Register extends StatelessWidget {
     );
   }
 }
-

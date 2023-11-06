@@ -1,21 +1,21 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:provider/provider.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:logger/logger.dart";
 
-import "user_data.dart";
-import "oauth_fitbit.dart";
+import 'package:your_hit_point/client/oauth_fitbit.dart';
+import "package:your_hit_point/view_model/user_data_notifier.dart";
 
 var logger = Logger();
 
-class RegisterPage extends StatefulWidget {
+class RegisterPage extends ConsumerStatefulWidget {
   const RegisterPage({super.key});
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  RegisterPageState createState() => RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class RegisterPageState extends ConsumerState<RegisterPage> {
   FocusNode? _focusEmailNode;
   FocusNode? _focusPasswordNode;
   TextEditingController? _emailController;
@@ -44,8 +44,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    final UserDataProvider userDataProvider =
-        Provider.of<UserDataProvider>(context, listen: true);
     return Focus(
         focusNode: _focusEmailNode,
         child: GestureDetector(
@@ -136,12 +134,13 @@ class _RegisterPageState extends State<RegisterPage> {
                                   _registering = true;
                                 });
                                 FocusScope.of(context).unfocus();
-                                var response =
-                                    await userDataProvider.registerFirebase(
-                                  _registering,
-                                  _emailController!.text,
-                                  _passwordController!.text,
-                                );
+                                var response = await ref
+                                    .read(userDataProvider.notifier)
+                                    .registerFirebase(
+                                      _registering,
+                                      _emailController!.text,
+                                      _passwordController!.text,
+                                    );
                                 if (response["isCompleted"] == true) {
                                   // メイン画面へ遷移
                                   if (context.mounted) {
@@ -190,12 +189,13 @@ class _RegisterPageState extends State<RegisterPage> {
                                   _registering = true;
                                 });
                                 FocusScope.of(context).unfocus();
-                                var response =
-                                    await userDataProvider.registerFirebase(
-                                  _registering,
-                                  _emailController!.text,
-                                  _passwordController!.text,
-                                );
+                                var response = await ref
+                                    .read(userDataProvider.notifier)
+                                    .registerFirebase(
+                                      _registering,
+                                      _emailController!.text,
+                                      _passwordController!.text,
+                                    );
                                 if (response["isCompleted"] == true) {
                                   // メイン画面へ遷移
                                   if (context.mounted) {
@@ -243,17 +243,17 @@ class _RegisterPageState extends State<RegisterPage> {
                                 _registering = true;
                               });
                               await callOAuth();
-                              userDataProvider.accessToken =
-                                await getToken();
-                              if (userDataProvider.accessToken != null) {
+                              String? accessToken = await getToken();
+                              ref.watch(accessTokenProvider.notifier).state =
+                                  accessToken;
+                              if (accessToken != null) {
                                 logger.d("認証できましたよ");
-                                var profile = await getProfile();
-                                userDataProvider.userId = profile["user"]["encodedId"];
-                                userDataProvider.userName = profile["user"]["displayName"];
-                                userDataProvider.gender = profile["user"]["gender"];
-                                profile["fitbit_id"] = userDataProvider.userId;
-                                profile["avatar_name"] = userDataProvider.avatarName;
-                                profile["avatar_type"] = userDataProvider.avatarType;
+                                // var profile = await getProfile();
+                                // userDataProvider.userId = profile["user"]["encodedId"];
+                                // userDataProvider.userName = profile["user"]["displayName"];
+                                // userDataProvider.gender = profile["user"]["gender"];
+                                // userDataProvider.avatarName = profile["avatar_name"];
+                                // userDataProvider.avatarType = profile["avatar_type"];
                                 // firebase登録のためのrequestを送る
 
                                 navigateMain();
@@ -263,7 +263,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(255, 65, 186, 227),
+                            backgroundColor:
+                                const Color.fromARGB(255, 65, 186, 227),
                             elevation: 16,
                           ),
                           child: const Text("calloauth",
@@ -285,6 +286,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void navigateMain() async {
+    logger.d("navigateMain");
     await Navigator.pushNamedAndRemoveUntil(
       context,
       "/home",
