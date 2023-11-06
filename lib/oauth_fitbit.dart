@@ -149,6 +149,15 @@ Future<Map> getHeartRate() async {
   return data;
 }
 
+Future<Map> getFriends() async {
+  final endpoint = Uri.https("api.fitbit.com",
+      "/1.1/user/-/friends.json");
+  final token = await getToken();
+  final headers = {'Authorization': "Bearer $token"};
+  final data = await fitbitRequest(url: endpoint, type: "get", headers: headers);
+  return data;
+}
+
 // debug
 // secure storageの中身全消し
 void deleteSecureStorage() {
