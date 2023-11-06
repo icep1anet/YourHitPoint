@@ -127,9 +127,7 @@ Future<Map> getCalories() async {
       "/1/user/-/activities/calories/date/today/1d/15min.json");
   final token = await getToken();
   final headers = {'Authorization': "Bearer $token"};
-  logger.d("c");
   final data = await fitbitRequest(url: endpoint, type: "get", headers: headers);
-  logger.d("d");
   return data;
 }
 
@@ -138,9 +136,16 @@ Future<Map> getSleeps() async {
       "/1.2/user/-/sleep/date/today.json");
   final token = await getToken();
   final headers = {'Authorization': "Bearer $token"};
-  logger.d("c");
   final data = await fitbitRequest(url: endpoint, type: "get", headers: headers);
-  logger.d("d");
+  return data;
+}
+
+Future<Map> getHeartRate() async {
+  final endpoint = Uri.https("api.fitbit.com",
+      "/1/user/-/activities/heart/date/today/1d/15min.json");
+  final token = await getToken();
+  final headers = {'Authorization': "Bearer $token"};
+  final data = await fitbitRequest(url: endpoint, type: "get", headers: headers);
   return data;
 }
 
