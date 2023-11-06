@@ -92,16 +92,15 @@ Future<Map> fitbitRequest(
 
 Future<void> refreshToken() async {
   const headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-  final refreshToken = getToken(key: "refresh_token");
+  final refreshToken = await getToken(key: "refresh_token");
   final body = {
     "grant_type": "refresh_token",
     "client_id": "23R5R4",
     "refresh_token": refreshToken
   };
-  final token =
-      request(url: tokenEndpoint, type: "post", headers: headers, body: body);
+  final token = await request(url: tokenEndpoint, type: "post", headers: headers, body: body);
   const storage = FlutterSecureStorage();
-  await storage.write(key: "fitbitToken", value: json.encode(token));
+  await storage.write(key: "fitbitToken", value: token.body);
 }
 
 Future<Map> getProfile() async {
