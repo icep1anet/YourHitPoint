@@ -46,10 +46,17 @@ class UserDataNotifier extends StateNotifier<UserDataState> {
     return responseBody;
   }
 
+  Future<Map> fetchProfile() async {
+    var profile = await getProfile();
+    String userId = profile["user"]["encodedId"];
+    state = state.copyWith(userId: userId);
+    return profile;
+  }
+
   Future<bool> registerFirebase() async {
     //リクエスト
     bool registerFlag = true;
-    var profile = await getProfile();
+    var profile = await fetchProfile();
     Map body = {};
     body["user"] = {};
     body["user"]["age"] = profile["user"]["age"];
@@ -58,9 +65,6 @@ class UserDataNotifier extends StateNotifier<UserDataState> {
     body["user"]["gender"] = profile["user"]["gender"];
     body["avatar_name"] = state.avatarName;
     body["avatar_type"] = state.avatarType;
-    //providerのuserIdの更新
-    state = state.copyWith(userId: body["user"]["encodedId"]);
-    logger.d(state.userId);
     logger.d(body);
     var url = Uri.parse(
         "https://your-hit-point-backend-2ledkxm6ta-an.a.run.app/register/");
