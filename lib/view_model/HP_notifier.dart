@@ -39,7 +39,7 @@ class HPNotifier extends StateNotifier<HPState> {
     Map befFetchedtime = calculateBeforeFetchedDatetime();
     DateTime hoursAgo = befFetchedtime["hoursAgo"];
     DateTime now = befFetchedtime["now"];
-    String userId = ref.read(userDataProvider).userId!;
+    String? userId = ref.read(userDataProvider).userId;
     Map responseBody = await fetchFirebaseData(hoursAgo, now, userId);
     if (!responseBody.containsKey("past_spots")) {
       return;
@@ -220,7 +220,7 @@ class HPNotifier extends StateNotifier<HPState> {
   }
 
   Future<Map> fetchFirebaseData(
-      DateTime hoursAgo, DateTime now, String userId) async {
+      DateTime hoursAgo, DateTime now, String? userId) async {
     //リクエスト
     var url = Uri.https("o2nr395oib.execute-api.ap-northeast-1.amazonaws.com",
         "/default/get_HP_data", {
