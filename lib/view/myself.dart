@@ -97,7 +97,7 @@ class MyselfPageState extends ConsumerState<MyselfPage>
                       //   ),
                       // ),
                       child: Text(
-                        avatarName ?? "アバター名",
+                        avatarName,
                         // style: GoogleFonts.orelegaOne(
                         style: GoogleFonts.bizUDGothic(
                           fontWeight: FontWeight.bold,

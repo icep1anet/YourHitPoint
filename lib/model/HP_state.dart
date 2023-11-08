@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import "package:fl_chart/fl_chart.dart";
 import 'package:flutter/material.dart';
