@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:logger/logger.dart";
+import 'package:your_hit_point/view_model/user_data_notifier.dart';
 
 import 'package:your_hit_point/client/oauth_fitbit.dart';
 
@@ -80,15 +81,16 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                                     accessToken;
                                 if (accessToken != null) {
                                   logger.d("認証できましたよ");
-                                  // var profile = await getProfile();
-                                  // userDataProvider.userId = profile["user"]["encodedId"];
-                                  // userDataProvider.userName = profile["user"]["displayName"];
-                                  // userDataProvider.gender = profile["user"]["gender"];
-                                  // userDataProvider.avatarName = profile["avatar_name"];
-                                  // userDataProvider.avatarType = profile["avatar_type"];
-                                  // firebase登録のためのrequestを送る
-
-                                  navigateMain();
+                                  bool registerFlag = await ref
+                                      .read(userDataProvider.notifier)
+                                      .registerFirebase();
+                                  if (registerFlag) {
+                                    navigateMain();
+                                  } else {
+                                    setState(() {
+                                      _registering = false;
+                                    });
+                                  }
                                 } else {
                                   logger.d("認証できませんでした泣");
                                   setState(() {
@@ -103,15 +105,17 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                             //   elevation: 16,
                             // ),
                             child: const SizedBox(
-                              height:60,
+                              height: 60,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   ClipOval(
-                                    child: Image(image: AssetImage("assets/images/fitbit_icon.png"),
-                                    width: 30,
-                                    height: 30,
-                                    fit:BoxFit.fill),
+                                    child: Image(
+                                        image: AssetImage(
+                                            "assets/images/fitbit_icon.png"),
+                                        width: 30,
+                                        height: 30,
+                                        fit: BoxFit.fill),
                                   ),
                                   SizedBox(width: 10),
                                   Text("Fitbitでログインする",

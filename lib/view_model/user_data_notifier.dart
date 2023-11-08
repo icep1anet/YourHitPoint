@@ -4,6 +4,7 @@ import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:your_hit_point/client/api.dart';
 import 'package:your_hit_point/model/user_state.dart';
+import 'package:your_hit_point/client/oauth_fitbit.dart';
 
 var logger = Logger();
 
@@ -45,24 +46,42 @@ class UserDataNotifier extends StateNotifier<UserDataState> {
     return responseBody;
   }
 
-  Future<Map> registerFirebase(Map? body) async {
+  Future<bool> registerFirebase() async {
     //リクエスト
+    bool registerFlag = true;
+    var profile = await getProfile();
+    Map body = {};
+    body["user"] = {};
+    body["user"]["age"] = profile["user"]["age"];
+    body["user"]["displayName"] = profile["user"]["displayName"];
+    body["user"]["encodedId"] = profile["user"]["encodedId"];
+    body["user"]["gender"] = profile["user"]["gender"];
+    body["avatar_name"] = state.avatarName;
+    body["avatar_type"] = state.avatarType;
+    //providerのuserIdの更新
+    state = state.copyWith(userId: body["user"]["encodedId"]);
+    logger.d(state.userId);
+    logger.d(body);
     var url = Uri.parse(
         "https://your-hit-point-backend-2ledkxm6ta-an.a.run.app/register/");
     final bodyEncoded = jsonEncode(body);
-    var response =
-        await request(url: url, type: "post", body: bodyEncoded);
+    var response = await request(url: url, type: "post", body: bodyEncoded);
     //リクエストの返り値をマップ形式に変換
     var responseBody = jsonDecode(response.body);
+    logger.d("response  $response");
+    logger.d(response.statusCode);
     //リクエスト成功時
-    if (response.statusCode == 200) {
-      // リクエストが成功した場合、レスポンスの内容を取得して表示します
+    if (response.statusCode == 201) {
       logger.d("register成功しました!");
-    } else {
+    } else if (response.statusCode == 409) {
+      logger.d("すでにFirebaseにデータがあります");
+    }
+    else {
       // リクエストが失敗した場合、エラーメッセージを表示します
       logger.d("Request failed with status: $responseBody");
+      registerFlag = false;
     }
-    return responseBody;
+    return registerFlag;
   }
 
   Future<void> setItemToSharedPref(

@@ -24,7 +24,6 @@ class HPNotifier extends StateNotifier<HPState> {
     String? accessToken = await getToken();
     if (accessToken != null) {
       logger.d("accessToken != null");
-      // ref.watch(accessTokenProvider.notifier).state = 
       await updateUserData(ref);
       changeHP(ref);
     } else {
