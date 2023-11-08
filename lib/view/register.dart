@@ -4,7 +4,6 @@ import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:logger/logger.dart";
 
 import 'package:your_hit_point/client/oauth_fitbit.dart';
-import "package:your_hit_point/view_model/user_data_notifier.dart";
 
 var logger = Logger();
 
@@ -103,19 +102,19 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                             //       Colors.white,
                             //   elevation: 16,
                             // ),
-                            child: SizedBox(
+                            child: const SizedBox(
                               height:60,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   ClipOval(
-                                    child: Image.asset("assets/images/fitbit_icon.png",
+                                    child: Image(image: AssetImage("assets/images/fitbit_icon.png"),
                                     width: 30,
                                     height: 30,
                                     fit:BoxFit.fill),
                                   ),
-                                  const SizedBox(width: 10),
-                                  const Text("Fitbitでログインする",
+                                  SizedBox(width: 10),
+                                  Text("Fitbitでログインする",
                                       style: TextStyle(
                                         fontSize: 20,
                                         color: Color.fromARGB(255, 0, 0, 0),
