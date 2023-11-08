@@ -27,7 +27,6 @@ class HPState with _$HPState {
     @Default(0) double recordHighHP,
     @Default(0) double recordLowHP,
     String? imgUrl,
-    DateTime? latestDataTime,
     @Default("") String activeLimitTime,
   }) = _HPState;
 }

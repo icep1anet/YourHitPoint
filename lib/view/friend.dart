@@ -135,11 +135,11 @@ class ChangeIdWidgetState extends ConsumerState<ChangeIdWidget> {
         ),
       ),
       TextButton(
-        onPressed: () {
-          ref
+        onPressed: () async{
+          await ref
               .read(userDataProvider.notifier)
               .refreshUserID(_userIdController!.text);
-          ref.read(hpProvider.notifier).updateUserData(ref);
+          await ref.read(hpProvider.notifier).requestHP(ref);
         },
         child: const Text("Change userId"),
       )

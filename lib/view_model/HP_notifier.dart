@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import "package:fl_chart/fl_chart.dart";
 import 'package:flutter/material.dart';
@@ -24,23 +25,18 @@ class HPNotifier extends StateNotifier<HPState> {
     String? accessToken = await getToken();
     if (accessToken != null) {
       logger.d("accessToken != null");
-      await updateUserData(ref);
+      await ref.read(userDataProvider.notifier).fetchProfile();
+      await requestHP(ref);
       changeHP(ref);
     } else {
       logger.d("accessToken == null");
     }
     ref.watch(isFinishedMainProvider.notifier).state = true;
-    // await updateUserData(ref);
-    // changeHP();
   }
 
-  Future<void> updateUserData(WidgetRef ref) async {
-    Map befFetchedtime = calculateBeforeFetchedDatetime();
-    DateTime hoursAgo = befFetchedtime["hoursAgo"];
-    DateTime now = befFetchedtime["now"];
-    String? userId = ref.read(userDataProvider).userId;
-    Map responseBody = await fetchFirebaseData(hoursAgo, now, userId);
+  Future<void> updateUserData(WidgetRef ref, Map responseBody) async {
     if (!responseBody.containsKey("past_spots")) {
+      logger.d("no past_spots data");
       return;
     }
     List<FlSpot> pastTmpSpots = convertHPSpotsList(responseBody["past_spots"]);
@@ -48,25 +44,23 @@ class HPNotifier extends StateNotifier<HPState> {
     state = state.copyWith(
       futureSpots: convertHPSpotsList(responseBody["future_spots"]),
       pastSpots: state.pastSpots + pastTmpSpots,
-      imgUrl: responseBody["url"],
-      recordHighHP: responseBody["recordHighHP"].toDouble(),
-      recordLowHP: responseBody["recordLowHP"].toDouble(),
-      activeLimitTime: responseBody["activeLimitTime"],
-      // maxSleepDuration: responseBody["maxSleepDuration"],
+      // imgUrl: responseBody["url"],
+      recordHighHP: responseBody["recordHigh"].toDouble(),
+      recordLowHP: responseBody["recordLow"].toDouble(),
+      // activeLimitTime: responseBody["activeLimitTime"],
       maxDayHP: responseBody["maxDayHP"].toInt(),
-      // maxTotalDaySteps: responseBody["maxTotalDaySteps"],
-      // maxSleepDuration: responseBody["maxSleepDuration"],
-      // experienceLevel: responseBody["experienceLevel"],
-      // experiencePoint: responseBody["experiencePoint"] % 360,
-      latestDataTime: now,
       hpNumber: 0,
     );
-    // logger.d("pastSpots: $state.pastSpots");
+    ref.read(userDataProvider.notifier).updateUserRecord(
+      responseBody["maxSleepDuration"], 
+      responseBody["maxTotalDaySteps"], 
+      responseBody["experienceLevel"], 
+      responseBody["experiencePoint"]
+      );
 
     updateMinMaxSpots();
 
     await setFriendDataList();
-    //latestDataTimeの更新
   }
 
   void removePastSpotsData(List<FlSpot> pastTmpSpots) {
@@ -241,4 +235,38 @@ class HPNotifier extends StateNotifier<HPState> {
     }
     return responseBody;
   }
+
+  Future<Map> requestHP(WidgetRef ref) async {
+    //リクエスト
+    DateTime now = DateTime.now();
+    String nowDate = DateFormat('yyyy-MM-dd').format(now);
+    String nowTime = DateFormat('HH:mm').format(now);
+    Map<String, dynamic>? body = {};
+    body["fitbit_id"] = ref.read(userDataProvider).userId;
+    body["current_time"] = nowTime;
+    body["current_date"] = nowDate;
+    logger.d(body);
+    var url = Uri.parse(
+        "https://your-hit-point-backend-2ledkxm6ta-an.a.run.app/hitpoint/check");
+    url = url.replace(queryParameters: body);
+    final bodyEncoded = jsonEncode(body);
+    var response = await request(url: url, type: "get", body: bodyEncoded);
+    //リクエストの返り値をマップ形式に変換
+    var responseBody = jsonDecode(response.body);
+    int statusCode = response.statusCode;
+    //リクエスト成功時
+    if (statusCode == 200) {
+      // リクエストが成功した場合、レスポンスの内容を取得して表示します
+      logger.d("requestHP成功しました！");
+      await updateUserData(ref, responseBody);
+    } else if (statusCode == 204) {
+
+    } else {
+      // リクエストが失敗した場合、エラーメッセージを表示します
+      logger.d("Request failed with status: $responseBody");
+    }
+    return responseBody;
+  }
+
+
 }

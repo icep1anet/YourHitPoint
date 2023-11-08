@@ -69,7 +69,7 @@ class MyselfPageState extends ConsumerState<MyselfPage>
       },
       body: RefreshIndicator(
         onRefresh: () async {
-          await ref.read(hpProvider.notifier).updateUserData(ref);
+          await ref.read(hpProvider.notifier).requestHP(ref);
         },
         child: SingleChildScrollView(
             child: Container(

@@ -102,4 +102,13 @@ class UserDataNotifier extends StateNotifier<UserDataState> {
   Future<void> refreshUserID(String id) async {
     await setItemToSharedPref(["userId"], [id]);
   }
+
+  void updateUserRecord(int maxSleepDuration, int maxTotalDaySteps, int experienceLevel, int experiencePoint) {
+    state = state.copyWith(
+      maxSleepDuration: maxSleepDuration,
+      maxTotalDaySteps: maxTotalDaySteps,
+      experienceLevel: experienceLevel,
+      experiencePoint: experiencePoint % 360,
+    );
+  }
 }
