@@ -51,6 +51,7 @@ flutter:
     - assets/images/heartshock.png
     - assets/images/heartshock2.jpg
     - assets/images/illust_normal.jpg
+    - assets/images/fitbit_icon.png
 
 flutter_icons:
   android: true 

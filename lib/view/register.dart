@@ -63,222 +63,74 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
               body: SingleChildScrollView(
                 child: Container(
                   padding: const EdgeInsets.only(top: 40, left: 24, right: 24),
-                  child: Column(
-                    children: [
-                      TextField(
-                        style: const TextStyle(fontSize: 20),
-                        autocorrect: false,
-                        autofocus: false,
-                        controller: _emailController,
-                        decoration: InputDecoration(
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8),
-                            ),
-                          ),
-                          labelText: "E-mail",
-                          labelStyle: const TextStyle(fontSize: 25),
-                          suffixIcon: IconButton(
-                            icon: const Icon(Icons.cancel),
-                            onPressed: () => _emailController?.clear(),
-                          ),
-                        ),
-                        keyboardType: TextInputType.text,
-                        onEditingComplete: () {
-                          _focusPasswordNode?.requestFocus();
-                        },
-                        readOnly: _registering,
-                        textCapitalization: TextCapitalization.none,
-                        textInputAction: TextInputAction.next,
-                      ),
-                      const SizedBox(height: 40),
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 8),
-                        child: TextField(
-                          style: const TextStyle(fontSize: 20),
-                          autocorrect: false,
-                          controller: _passwordController,
-                          decoration: InputDecoration(
-                            border: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8),
-                              ),
-                            ),
-                            labelText: "Password",
-                            labelStyle: const TextStyle(fontSize: 25),
-                            suffixIcon: IconButton(
-                              icon: const Icon(Icons.cancel),
-                              onPressed: () => _passwordController?.clear(),
-                            ),
-                          ),
-                          focusNode: _focusPasswordNode,
-                          keyboardType: TextInputType.text,
-                          obscureText: true,
-                          onEditingComplete: () {
-                            _focusPasswordNode?.unfocus();
-                          },
-                          textCapitalization: TextCapitalization.none,
-                          textInputAction: TextInputAction.done,
-                        ),
-                      ),
-                      const SizedBox(height: 30),
-                      Row(
-                        children: [
-                          TextButton(
+                  child: Center(
+                    child: Column(
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      // mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(height: 300),
+                        ElevatedButton(
                             onPressed: () async {
-                              // emailとpasswordは必須で入力しないと登録できないようにする
-                              if (_registering == false &&
-                                  _emailController!.text != "" &&
-                                  _passwordController!.text != "") {
+                              if (_registering == false) {
                                 setState(() {
                                   _registering = true;
                                 });
-                                FocusScope.of(context).unfocus();
-                                var response = await ref
-                                    .read(userDataProvider.notifier)
-                                    .registerFirebase(
-                                      _registering,
-                                      _emailController!.text,
-                                      _passwordController!.text,
-                                    );
-                                if (response["isCompleted"] == true) {
-                                  // メイン画面へ遷移
-                                  if (context.mounted) {
-                                    navigateMain();
-                                  }
-                                } else {
-                                  logger.d(response);
-                                  if (context.mounted) {
-                                    setState(() {
-                                      _registering = false;
-                                    });
-                                    await showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text("OK"),
-                                          ),
-                                        ],
-                                        content: Text(
-                                          response["error"].toString(),
-                                        ),
-                                        title: const Text("Error"),
-                                      ),
-                                    );
-                                  }
-                                }
-                              }
-                            },
-                            child: const Text(
-                              "ログイン",
-                              style: TextStyle(fontSize: 23),
-                            ),
-                          ),
-                          const SizedBox(width: 30),
-                          TextButton(
-                            onPressed: () async {
-                              // emailとpasswordは必須で入力しないと登録できないようにする
-                              if (_registering == false &&
-                                  _emailController!.text != "" &&
-                                  _passwordController!.text != "") {
-                                setState(() {
-                                  _registering = true;
-                                });
-                                FocusScope.of(context).unfocus();
-                                var response = await ref
-                                    .read(userDataProvider.notifier)
-                                    .registerFirebase(
-                                      _registering,
-                                      _emailController!.text,
-                                      _passwordController!.text,
-                                    );
-                                if (response["isCompleted"] == true) {
-                                  // メイン画面へ遷移
-                                  if (context.mounted) {
-                                    navigateMain();
-                                  }
-                                } else {
-                                  logger.d(response);
-                                  if (context.mounted) {
-                                    setState(() {
-                                      _registering = false;
-                                    });
-                                    await showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text("OK"),
-                                          ),
-                                        ],
-                                        content: Text(
-                                          response["error"].toString(),
-                                        ),
-                                        title: const Text("Error"),
-                                      ),
-                                    );
-                                  }
-                                }
-                              }
-                            },
-                            child: const Text(
-                              "新規登録",
-                              style: TextStyle(fontSize: 23),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 60),
-                      ElevatedButton(
-                          onPressed: () async {
-                            if (_registering == false) {
-                              setState(() {
-                                _registering = true;
-                              });
-                              await callOAuth();
-                              String? accessToken = await getToken();
-                              ref.watch(accessTokenProvider.notifier).state =
-                                  accessToken;
-                              if (accessToken != null) {
-                                logger.d("認証できましたよ");
-                                // var profile = await getProfile();
-                                // userDataProvider.userId = profile["user"]["encodedId"];
-                                // userDataProvider.userName = profile["user"]["displayName"];
-                                // userDataProvider.gender = profile["user"]["gender"];
-                                // userDataProvider.avatarName = profile["avatar_name"];
-                                // userDataProvider.avatarType = profile["avatar_type"];
-                                // firebase登録のためのrequestを送る
+                                await callOAuth();
+                                String? accessToken = await getToken();
+                                ref.watch(accessTokenProvider.notifier).state =
+                                    accessToken;
+                                if (accessToken != null) {
+                                  logger.d("認証できましたよ");
+                                  // var profile = await getProfile();
+                                  // userDataProvider.userId = profile["user"]["encodedId"];
+                                  // userDataProvider.userName = profile["user"]["displayName"];
+                                  // userDataProvider.gender = profile["user"]["gender"];
+                                  // userDataProvider.avatarName = profile["avatar_name"];
+                                  // userDataProvider.avatarType = profile["avatar_type"];
+                                  // firebase登録のためのrequestを送る
 
-                                navigateMain();
-                              } else {
-                                logger.d("認証できませんでした泣");
+                                  navigateMain();
+                                } else {
+                                  logger.d("認証できませんでした泣");
+                                  setState(() {
+                                    _registering = false;
+                                  });
+                                }
                               }
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 65, 186, 227),
-                            elevation: 16,
-                          ),
-                          child: const Text("calloauth",
-                              style: TextStyle(
-                                fontSize: 30,
-                                color: Color.fromARGB(255, 0, 0, 0),
-                                fontWeight: FontWeight.bold,
-                                fontStyle: FontStyle.italic,
-                              ))),
-                      const SizedBox(height: 5),
-                      //ローディング
-                      if (_registering == true)
-                        const CircularProgressIndicator(),
-                    ],
+                            },
+                            // style: ElevatedButton.styleFrom(
+                            //   backgroundColor:
+                            //       Colors.white,
+                            //   elevation: 16,
+                            // ),
+                            child: SizedBox(
+                              height:60,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ClipOval(
+                                    child: Image.asset("assets/images/fitbit_icon.png",
+                                    width: 30,
+                                    height: 30,
+                                    fit:BoxFit.fill),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  const Text("Fitbitでログインする",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Color.fromARGB(255, 0, 0, 0),
+                                        // fontWeight: FontWeight.bold,
+                                        // fontStyle: FontStyle.italic,
+                                      )),
+                                ],
+                              ),
+                            )),
+                        const SizedBox(height: 50),
+                        //ローディング
+                        if (_registering == true)
+                          const CircularProgressIndicator(),
+                      ],
+                    ),
                   ),
                 ),
               ),
