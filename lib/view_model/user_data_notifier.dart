@@ -7,7 +7,8 @@ import 'package:your_hit_point/model/user_state.dart';
 
 var logger = Logger();
 
-final userDataProvider = StateNotifierProvider<UserDataNotifier, UserDataState>((ref) => UserDataNotifier());
+final userDataProvider = StateNotifierProvider<UserDataNotifier, UserDataState>(
+    (ref) => UserDataNotifier());
 
 class UserDataNotifier extends StateNotifier<UserDataState> {
   UserDataNotifier() : super(const UserDataState());
@@ -46,9 +47,11 @@ class UserDataNotifier extends StateNotifier<UserDataState> {
 
   Future<Map> registerFirebase(Map? body) async {
     //リクエスト
-    var url = Uri.parse("https://your-hit-point-backend-2ledkxm6ta-an.a.run.app/register/");
+    var url = Uri.parse(
+        "https://your-hit-point-backend-2ledkxm6ta-an.a.run.app/register/");
     final bodyEncoded = jsonEncode(body);
-    var response = await request(url: url, type: "post", body: bodyEncoded, headers: null);
+    var response =
+        await request(url: url, type: "post", body: bodyEncoded);
     //リクエストの返り値をマップ形式に変換
     var responseBody = jsonDecode(response.body);
     //リクエスト成功時
@@ -60,7 +63,7 @@ class UserDataNotifier extends StateNotifier<UserDataState> {
       logger.d("Request failed with status: $responseBody");
     }
     return responseBody;
-  }  
+  }
 
   Future<void> setItemToSharedPref(
       List<String> itemNames, List<dynamic> items) async {

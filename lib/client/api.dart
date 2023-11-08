@@ -1,12 +1,10 @@
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 Future<http.Response> request(
     {required Uri url,
     String type = "get",
-    Map<String, String>? headers,
+    Map<String, String>? headers = const {"Content-Type": "application/json"},
     var body}) async {
-  final bodyEncoded = jsonEncode(body);
   http.Response response;
   if (type == "get") {
     response = await http.get(url, headers: headers);
