@@ -5,13 +5,13 @@ Future<http.Response> request(
     {required Uri url,
     String type = "get",
     Map<String, String>? headers,
-    Map? body}) async {
+    var body}) async {
   final bodyEncoded = jsonEncode(body);
   http.Response response;
   if (type == "get") {
     response = await http.get(url, headers: headers);
   } else if (type == "post") {
-    response = await http.post(url, headers: headers, body: bodyEncoded);
+    response = await http.post(url, headers: headers, body: body);
   } else {
     throw "Invalid request type";
   }
