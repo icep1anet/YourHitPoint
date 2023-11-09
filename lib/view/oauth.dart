@@ -8,14 +8,14 @@ import 'package:your_hit_point/client/oauth_fitbit.dart';
 
 var logger = Logger();
 
-class RegisterPage extends ConsumerStatefulWidget {
-  const RegisterPage({super.key});
+class OAuthPage extends ConsumerStatefulWidget {
+  const OAuthPage({super.key});
 
   @override
-  RegisterPageState createState() => RegisterPageState();
+  OAuthPageState createState() => OAuthPageState();
 }
 
-class RegisterPageState extends ConsumerState<RegisterPage> {
+class OAuthPageState extends ConsumerState<OAuthPage> {
   FocusNode? _focusEmailNode;
   FocusNode? _focusPasswordNode;
   TextEditingController? _emailController;

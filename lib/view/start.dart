@@ -7,7 +7,7 @@ import 'package:your_hit_point/client/oauth_fitbit.dart';
 import 'package:your_hit_point/utils/timer_func.dart';
 import 'package:your_hit_point/view_model/HP_notifier.dart';
 import 'package:your_hit_point/view/friend.dart';
-import 'package:your_hit_point/view/register.dart';
+import 'package:your_hit_point/view/oauth.dart';
 import 'package:your_hit_point/view/myself.dart';
 
 var logger = Logger();
@@ -57,7 +57,7 @@ class MainPageState extends ConsumerState<MainPage> {
         Future.microtask(() => Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 fullscreenDialog: true,
-                builder: (context) => const RegisterPage(),
+                builder: (context) => const OAuthPage(),
               ),
             ));
 
