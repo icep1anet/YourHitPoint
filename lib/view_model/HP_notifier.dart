@@ -224,10 +224,11 @@ class HPNotifier extends StateNotifier<HPState> {
     DateTime now = DateTime.now();
     String nowDate = DateFormat('yyyy-MM-dd').format(now);
     String nowTime = DateFormat('HH:mm').format(now);
-    Map<String, dynamic>? body = {};
-    body["fitbit_id"] = ref.read(userDataProvider).userId;
-    body["current_time"] = nowTime;
-    body["current_date"] = nowDate;
+    Map<String, dynamic>? body = {
+      "fitbit_id": ref.read(userDataProvider).userId,
+      "current_time": nowTime,
+      "current_date": nowDate
+    };
     var url = Uri.parse(
         "https://your-hit-point-backend-2ledkxm6ta-an.a.run.app/hitpoint/check");
     url = url.replace(queryParameters: body);
@@ -279,20 +280,23 @@ class HPNotifier extends StateNotifier<HPState> {
     Map calorieData = await getCalories(startDate, endDate, startTime, endTime);
     Map sleepData = await getSleeps(startDate, endDate);
     Map heartData = await getHeartRate(startDate, endDate, startTime, endTime);
-    Map fitbitData = {};
-    fitbitData["days_sleep"] = sleepData;
-    fitbitData["intradays_steps"] = stepData;
-    fitbitData["intradays_heartrate"] = heartData;
-    fitbitData["intradays_calories"] = calorieData;
+    Map fitbitData = {
+    "days_sleep": sleepData,
+    "intradays_steps": stepData,
+    "intradays_heartrate": heartData,
+    "intradays_calories": calorieData
+    };
     String? userId = ref.read(userDataProvider).userId;
-    Map flutterData = {};
-    flutterData["gender"] = ref.read(userDataProvider).gender;
-    flutterData["age"] = ref.read(userDataProvider).age;
+    Map flutterData = {
+      "gender": ref.read(userDataProvider).gender,
+      "age": ref.read(userDataProvider).age
+    };
     logger.d("flutterData: $flutterData");
-    Map requestBody = {};
-    requestBody["fitbit_id"] = userId;
-    requestBody["fitbit_data"] = fitbitData;
-    requestBody["flutter_data"] = flutterData;
+    Map requestBody = {
+      "fitbit_id": userId,
+      "fitbit_data": fitbitData,
+      "flutter_data": flutterData
+    };
     var url = Uri.parse(
         "https://your-hit-point-backend-2ledkxm6ta-an.a.run.app/hitpoint/calculate");
     final bodyEncoded = jsonEncode(requestBody);

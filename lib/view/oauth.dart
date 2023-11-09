@@ -118,7 +118,7 @@ class OAuthPageState extends ConsumerState<OAuthPage> {
                                         fit: BoxFit.fill),
                                   ),
                                   SizedBox(width: 10),
-                                  Text("Fitbitでログインする",
+                                  Text("Fitbitと連携する",
                                       style: TextStyle(
                                         fontSize: 20,
                                         color: Color.fromARGB(255, 0, 0, 0),
