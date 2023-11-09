@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import "package:fl_chart/fl_chart.dart";
 import 'package:flutter/material.dart';
@@ -25,7 +27,6 @@ class HPState with _$HPState {
     @Default(0) double recordHighHP,
     @Default(0) double recordLowHP,
     String? imgUrl,
-    DateTime? latestDataTime,
     @Default("") String activeLimitTime,
   }) = _HPState;
 }

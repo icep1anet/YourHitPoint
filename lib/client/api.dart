@@ -3,8 +3,8 @@ import 'package:http/http.dart' as http;
 Future<http.Response> request(
     {required Uri url,
     String type = "get",
-    Map<String, String>? headers,
-    Map? body}) async {
+    Map<String, String>? headers = const {"Content-Type": "application/json"},
+    var body}) async {
   http.Response response;
   if (type == "get") {
     response = await http.get(url, headers: headers);

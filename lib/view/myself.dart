@@ -69,7 +69,7 @@ class MyselfPageState extends ConsumerState<MyselfPage>
       },
       body: RefreshIndicator(
         onRefresh: () async {
-          await ref.read(hpProvider.notifier).updateUserData(ref);
+          await ref.read(hpProvider.notifier).requestHP(ref);
         },
         child: SingleChildScrollView(
             child: Container(
@@ -97,7 +97,7 @@ class MyselfPageState extends ConsumerState<MyselfPage>
                       //   ),
                       // ),
                       child: Text(
-                        avatarName ?? "アバター名",
+                        avatarName,
                         // style: GoogleFonts.orelegaOne(
                         style: GoogleFonts.bizUDGothic(
                           fontWeight: FontWeight.bold,

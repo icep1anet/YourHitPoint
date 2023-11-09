@@ -33,6 +33,7 @@ dependencies:
   freezed_annotation: ^2.4.1
   riverpod_annotation: ^2.3.0
   riverpod_generator: ^2.3.5
+  intl: ^0.18.0
   
 
 dev_dependencies:
@@ -51,6 +52,7 @@ flutter:
     - assets/images/heartshock.png
     - assets/images/heartshock2.jpg
     - assets/images/illust_normal.jpg
+    - assets/images/fitbit_icon.png
 
 flutter_icons:
   android: true 

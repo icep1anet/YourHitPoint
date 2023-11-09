@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import "package:fl_chart/fl_chart.dart";
 import 'package:flutter/material.dart';
 import "package:logger/logger.dart";
 import 'package:your_hit_point/client/api.dart';
 import 'package:your_hit_point/client/oauth_fitbit.dart';
-import 'package:your_hit_point/main.dart';
+import 'package:your_hit_point/view/start.dart';
 import 'package:your_hit_point/model/HP_state.dart';
 import 'package:your_hit_point/utils/hp_graph.dart';
 import 'package:your_hit_point/view_model/user_data_notifier.dart';
@@ -24,50 +25,43 @@ class HPNotifier extends StateNotifier<HPState> {
     String? accessToken = await getToken();
     if (accessToken != null) {
       logger.d("accessToken != null");
-      // ref.watch(accessTokenProvider.notifier).state = 
-      await updateUserData(ref);
+      await ref.read(userDataProvider.notifier).fetchProfile();
+      // await requestHP(ref);
+      // await requestHP(ref);
       changeHP(ref);
     } else {
       logger.d("accessToken == null");
     }
     ref.watch(isFinishedMainProvider.notifier).state = true;
-    // await updateUserData(ref);
-    // changeHP();
   }
 
-  Future<void> updateUserData(WidgetRef ref) async {
-    Map befFetchedtime = calculateBeforeFetchedDatetime();
-    DateTime hoursAgo = befFetchedtime["hoursAgo"];
-    DateTime now = befFetchedtime["now"];
-    String userId = ref.read(userDataProvider).userId!;
-    Map responseBody = await fetchFirebaseData(hoursAgo, now, userId);
+  Future<void> updateUserData(WidgetRef ref, Map responseBody) async {
     if (!responseBody.containsKey("past_spots")) {
+      logger.d("no past_spots data");
       return;
     }
-    List<FlSpot> pastTmpSpots = convertHPSpotsList(responseBody["past_spots"]);
+    List<FlSpot> pastTmpSpots = convertHPSpotsList(responseBody["graph_spots"]["past_spots"]);
     removePastSpotsData(pastTmpSpots);
     state = state.copyWith(
-      futureSpots: convertHPSpotsList(responseBody["future_spots"]),
+      futureSpots: convertHPSpotsList(responseBody["graph_spots"]["future_spots"]),
       pastSpots: state.pastSpots + pastTmpSpots,
-      imgUrl: responseBody["url"],
-      recordHighHP: responseBody["recordHighHP"].toDouble(),
-      recordLowHP: responseBody["recordLowHP"].toDouble(),
-      activeLimitTime: responseBody["activeLimitTime"],
-      // maxSleepDuration: responseBody["maxSleepDuration"],
-      maxDayHP: responseBody["maxDayHP"].toInt(),
-      // maxTotalDaySteps: responseBody["maxTotalDaySteps"],
-      // maxSleepDuration: responseBody["maxSleepDuration"],
-      // experienceLevel: responseBody["experienceLevel"],
-      // experiencePoint: responseBody["experiencePoint"] % 360,
-      latestDataTime: now,
+      // imgUrl: responseBody["url"],
+      recordHighHP: responseBody["firebase_user_dict"]["recordHigh"].toDouble(),
+      recordLowHP: responseBody["firebase_user_dict"]["recordLow"].toDouble(),
+      activeLimitTime: responseBody["firebase_user_dict"]["activeLimitTime"],
+      maxDayHP: responseBody["firebase_user_dict"]["maxDayHP"].toInt(),
       hpNumber: 0,
     );
-    // logger.d("pastSpots: $state.pastSpots");
+    ref.read(userDataProvider.notifier).updateUserRecord(
+      responseBody["firebase_user_dict"]["maxSleepDuration"], 
+      responseBody["firebase_user_dict"]["maxTotalDaySteps"], 
+      responseBody["firebase_user_dict"]["experienceLevel"], 
+      responseBody["firebase_user_dict"]["experiencePoint"]
+      );
 
     updateMinMaxSpots();
 
     await setFriendDataList();
-    //latestDataTimeの更新
   }
 
   void removePastSpotsData(List<FlSpot> pastTmpSpots) {
@@ -86,23 +80,6 @@ class HPNotifier extends StateNotifier<HPState> {
     } else {
       logger.d("spots is Empty or tes is Empty");
     }
-  }
-
-  Map calculateBeforeFetchedDatetime() {
-    //リクエストのための時間計算
-    logger.d("start before fetch time");
-    DateTime now = DateTime.now();
-    logger.d(now);
-    DateTime hoursAgo = now.add(const Duration(hours: 8) * -1);
-    if (state.latestDataTime != null) {
-      if (state.latestDataTime!.compareTo(hoursAgo) == 1) {
-        hoursAgo = state.latestDataTime!;
-      }
-    }
-    var res = {};
-    res["hoursAgo"] = hoursAgo;
-    res["now"] = now;
-    return res;
   }
 
   Future<void> setFriendDataList() async {
@@ -220,7 +197,7 @@ class HPNotifier extends StateNotifier<HPState> {
   }
 
   Future<Map> fetchFirebaseData(
-      DateTime hoursAgo, DateTime now, String userId) async {
+      DateTime hoursAgo, DateTime now, String? userId) async {
     //リクエスト
     var url = Uri.https("o2nr395oib.execute-api.ap-northeast-1.amazonaws.com",
         "/default/get_HP_data", {
@@ -229,7 +206,6 @@ class HPNotifier extends StateNotifier<HPState> {
       "endTimestamp": now.toString()
     });
     var response = await request(url: url);
-    logger.d("response.body: ${response.body}");
     //リクエストの返り値をマップ形式に変換
     var responseBody = jsonDecode(response.body);
     //リクエスト成功時
@@ -242,4 +218,99 @@ class HPNotifier extends StateNotifier<HPState> {
     }
     return responseBody;
   }
+
+  Future<Map> requestHP(WidgetRef ref) async {
+    //リクエスト
+    DateTime now = DateTime.now();
+    String nowDate = DateFormat('yyyy-MM-dd').format(now);
+    String nowTime = DateFormat('HH:mm').format(now);
+    Map<String, dynamic>? body = {
+      "fitbit_id": ref.read(userDataProvider).userId,
+      "current_time": nowTime,
+      "current_date": nowDate
+    };
+    var url = Uri.parse(
+        "https://your-hit-point-backend-2ledkxm6ta-an.a.run.app/hitpoint/check");
+    url = url.replace(queryParameters: body);
+    final bodyEncoded = jsonEncode(body);
+    var response = await request(url: url, type: "get", body: bodyEncoded);
+    //リクエストの返り値をマップ形式に変換
+    var responseBody = jsonDecode(response.body);
+    logger.d(responseBody);
+    int statusCode = response.statusCode;
+    //リクエスト成功時
+    if (statusCode == 200) {
+      // リクエストが成功した場合、レスポンスの内容を取得して表示します
+      logger.d("requestHP成功しました!");
+      bool resendFlag = responseBody["check_calculate"]["need_new_data"];
+
+      if (!resendFlag) {
+        logger.d("HPの計算は不必要です");
+        await updateUserData(ref, responseBody);
+      } else {
+      logger.d("新しいHPの計算が必要です");
+        await requestCalculate(ref, responseBody);
+      }
+    } else {
+      // リクエストが失敗した場合、エラーメッセージを表示します
+      logger.d("Request failed with status: $responseBody");
+    }
+    return responseBody;
+  }
+
+  Future? requestCalculate(WidgetRef ref, Map responseBody) async{
+    DateTime now = DateTime.now();
+    String beforeUpdateDate = responseBody["check_calculate"]["before_update_date"];
+    String beforeUpdateTime = responseBody["check_calculate"]["before_update_time"];
+    DateTime beforeDateTime = DateTime.parse("$beforeUpdateDate $beforeUpdateTime");
+    // 現在時刻の1時間前のdatetime
+    DateTime dayAgo = now.add(const Duration(hours: 23, minutes: 59) * -1);
+    // beforeDateTimeがdayAgoより前の時間の場合はdayAgoをstartDateに
+    bool exceedFlag = dayAgo.isAfter(beforeDateTime);
+    if (exceedFlag) {
+      beforeDateTime = dayAgo;
+    }
+    logger.d(now);
+    logger.d(beforeDateTime);
+    final startDate = DateFormat('yyyy-MM-dd').format(beforeDateTime);
+    final endDate = DateFormat('yyyy-MM-dd').format(now);
+    final startTime = DateFormat('HH:mm').format(beforeDateTime);
+    final endTime = DateFormat('HH:mm').format(now);
+    Map stepData = await getSteps(startDate, endDate, startTime, endTime);
+    Map calorieData = await getCalories(startDate, endDate, startTime, endTime);
+    Map sleepData = await getSleeps(startDate, endDate);
+    Map heartData = await getHeartRate(startDate, endDate, startTime, endTime);
+    Map fitbitData = {
+    "days_sleep": sleepData,
+    "intradays_steps": stepData,
+    "intradays_heartrate": heartData,
+    "intradays_calories": calorieData
+    };
+    String? userId = ref.read(userDataProvider).userId;
+    Map flutterData = {
+      "gender": ref.read(userDataProvider).gender,
+      "age": ref.read(userDataProvider).age
+    };
+    logger.d("flutterData: $flutterData");
+    Map requestBody = {
+      "fitbit_id": userId,
+      "fitbit_data": fitbitData,
+      "flutter_data": flutterData
+    };
+    var url = Uri.parse(
+        "https://your-hit-point-backend-2ledkxm6ta-an.a.run.app/hitpoint/calculate");
+    final bodyEncoded = jsonEncode(requestBody);
+    var response = await request(url: url, type: "post", body: bodyEncoded);
+    //リクエストの返り値をマップ形式に変換
+    var resBody = jsonDecode(response.body);
+    //リクエスト成功時
+    if (response.statusCode == 200) {
+      logger.d("register成功しました!");
+    } else {
+      // リクエストが失敗した場合、エラーメッセージを表示します
+      logger.d("Request failed with status: $resBody");
+    }
+    return resBody;
+  }
+
 }

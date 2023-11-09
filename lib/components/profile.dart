@@ -5,11 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import "package:logger/logger.dart";
 
 import "package:your_hit_point/view_model/user_data_notifier.dart";
+import 'package:your_hit_point/utils/dropdown_items.dart';
 
 var logger = Logger();
 
 class ProfilePage extends ConsumerStatefulWidget {
-  const ProfilePage({Key? key}) : super(key:key);
+  const ProfilePage({Key? key}) : super(key: key);
 
   @override
   ProfilePageState createState() => ProfilePageState();
@@ -21,36 +22,13 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
   TextEditingController? _userNameController;
   final _registering = false;
   TextEditingController? _avatarNameController;
-  // String avatarType = "猫";
   String? selectAvatarType;
+  String? selectStartTime;
+  String? selectEndTime;
   String? userId;
-  // List<String> choices = ["猫", "犬", "人間男", "ワニ", "フクロウ", "カブトムシ"];
-  List<DropdownMenuItem<String>> dropdownMenuItems = const [
-    DropdownMenuItem(
-      value: "neko",
-      child: Text("猫"),
-    ),
-    DropdownMenuItem(
-      value: "inu",
-      child: Text("犬"),
-    ),
-    DropdownMenuItem(
-      value: "man",
-      child: Text("人間男"),
-    ),
-    DropdownMenuItem(
-      value: "wani",
-      child: Text("ワニ"),
-    ),
-    DropdownMenuItem(
-      value: "hukurou",
-      child: Text("フクロウ"),
-    ),
-    DropdownMenuItem(
-      value: "kabutomushi",
-      child: Text("カブトムシ"),
-    ),
-  ];
+  List<DropdownMenuItem<String>> dropdownAvatarTypes = dropdownMenuItems;
+  List<DropdownMenuItem<String>> startTimes = dropdownTimes;
+  List<DropdownMenuItem<String>> endTimes = dropdownTimes;
 
   //ページ起動時に呼ばれる初期化関数
   @override
@@ -58,6 +36,9 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
     super.initState();
     _focusUserNameNode = FocusNode();
     _focusAvatarNameNode = FocusNode();
+    selectAvatarType = ref.read(userDataProvider).avatarType;
+    selectStartTime = "9:00";
+    selectEndTime = "17:00";
   }
 
   @override
@@ -160,6 +141,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                             style: TextStyle(
                                 fontSize: 18, color: Color(0xff696969))),
                       ),
+                      const SizedBox(height:10),
                       Container(
                         decoration: BoxDecoration(
                           border: Border.all(
@@ -169,8 +151,9 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                         child: DropdownButton(
                           style: const TextStyle(
                               fontSize: 25, color: Colors.black),
-                          items: dropdownMenuItems,
-                          value: selectAvatarType = ref.watch(userDataProvider).avatarType,
+                          items: dropdownAvatarTypes,
+                          value: selectAvatarType,
+                          // =ref.read(userDataProvider).avatarType,
                           alignment: Alignment.center,
                           onChanged: (String? value) {
                             setState(() {
@@ -189,6 +172,78 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                         ),
                       ),
                       const SizedBox(height: 30),
+                      Container(
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.only(right: 10, top: 10),
+                        child: const Text("デスクワーク時間",
+                            style: TextStyle(
+                                fontSize: 18, color: Color(0xff696969))),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: const Color(0xff696969), width: 1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: DropdownButton(
+                              style: const TextStyle(
+                                  fontSize: 25, color: Colors.black),
+                              items: startTimes,
+                              value: selectStartTime,
+                              alignment: Alignment.center,
+                              onChanged: (String? value) {
+                                setState(() {
+                                  selectStartTime = value!;
+                                });
+                              },
+                              icon: const Icon(
+                                Octicons.triangle_down,
+                                size: 15,
+                              ),
+                              iconEnabledColor: const Color(0xff696969),
+                              dropdownColor: Colors.white,
+                              underline: Container(),
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          const Text(
+                            "〜",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          const SizedBox(width: 20),
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: const Color(0xff696969), width: 1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: DropdownButton(
+                              style: const TextStyle(
+                                  fontSize: 25, color: Colors.black),
+                              items: endTimes,
+                              value: selectEndTime,
+                              alignment: Alignment.center,
+                              onChanged: (String? value) {
+                                setState(() {
+                                  selectEndTime = value!;
+                                });
+                              },
+                              icon: const Icon(
+                                Octicons.triangle_down,
+                                size: 15,
+                              ),
+                              iconEnabledColor: const Color(0xff696969),
+                              dropdownColor: Colors.white,
+                              underline: Container(),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 40),
                       TextButton(
                         onPressed: () async {
                           // firstNameとlastNameは必須で入力しないと登録できないようにする
@@ -196,39 +251,6 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                               _userNameController!.text != "" &&
                               _avatarNameController!.text != "") {
                             FocusScope.of(context).unfocus();
-                            // var response =
-                            //     await userDataProvider.registerFirebase(
-                            //         _registering,
-                            //         _userNameController!.text,
-                            //         _avatarNameController!.text,
-                            //         selectAvatarType,
-                            //         );
-                            // if (response["isCompleted"] == true) {
-                            //   // メイン画面へ遷移
-                            //   if (context.mounted) {
-                            //     navigateMain();
-                            //   }
-                            // } else {
-                            //   if (context.mounted) {
-                            //     await showDialog(
-                            //       context: context,
-                            //       builder: (context) => AlertDialog(
-                            //         actions: [
-                            //           TextButton(
-                            //             onPressed: () {
-                            //               Navigator.of(context).pop();
-                            //             },
-                            //             child: const Text("OK"),
-                            //           ),
-                            //         ],
-                            //         content: Text(
-                            //           response["error"],
-                            //         ),
-                            //         title: const Text("Error"),
-                            //       ),
-                            //     );
-                            //   }
-                            // }
                           }
                         },
                         child: const Text(

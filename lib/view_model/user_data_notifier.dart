@@ -4,10 +4,12 @@ import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:your_hit_point/client/api.dart';
 import 'package:your_hit_point/model/user_state.dart';
+import 'package:your_hit_point/client/oauth_fitbit.dart';
 
 var logger = Logger();
 
-final userDataProvider = StateNotifierProvider<UserDataNotifier, UserDataState>((ref) => UserDataNotifier());
+final userDataProvider = StateNotifierProvider<UserDataNotifier, UserDataState>(
+    (ref) => UserDataNotifier());
 
 class UserDataNotifier extends StateNotifier<UserDataState> {
   UserDataNotifier() : super(const UserDataState());
@@ -44,39 +46,51 @@ class UserDataNotifier extends StateNotifier<UserDataState> {
     return responseBody;
   }
 
-  //responseを送ってfirebaseにデータ登録する
-  Future<Map> registerFirebase(isRegistered, inputEmail, inputPassword) async {
-    isRegistered = true;
-    logger.d("register start");
-    var url = Uri.https("vignp7m26e.execute-api.ap-northeast-1.amazonaws.com",
-        "/default/register_firebase_yourHP", {
-      "email": inputEmail,
-      "password": inputPassword,
-      "userName": state.userName,
-      "avatarName": state.avatarName,
-      "avatarType": state.avatarType
-    });
-    try {
-      var response = await request(url: url);
-      logger.d("register.body: ${response.body}");
-      if (response.statusCode == 200) {
-        // リクエストが成功した場合、レスポンスの内容を取得して表示します
-        var responseMap = jsonDecode(response.body);
-        // logger.d(userId);
-        state = state.copyWith(userId: responseMap["userId"]);
-        setItemToSharedPref(["userId", "userName", "avatarName", "avatarType"],
-            [state.userId!, state.userName, state.avatarName, state.avatarType]);
-      } else {
-        // リクエストが失敗した場合、エラーメッセージを表示します
-        logger.d("Request failed with status: $response");
-        isRegistered = false;
-        return {"isCompleted": false, "error": response};
-      }
-      return {"isCompleted": true};
-    } catch (e) {
-      isRegistered = false;
-      return {"isCompleted": false, "error": e};
+  Future<Map> fetchProfile() async {
+    var profile = await getProfile();
+    String userId = profile["user"]["encodedId"];
+    String userName = profile["user"]["displayName"];
+    String gender = profile["user"]["gender"];
+    int age = profile["user"]["age"];
+    state = state.copyWith(
+      userId: userId,
+      userName: userName,
+      gender: gender,
+      age: age
+      );
+    return profile;
+  }
+
+  Future<bool> registerFirebase() async {
+    //リクエスト
+    bool registerFlag = true;
+    var profile = await fetchProfile();
+    Map body = {};
+    body["user"] = {};
+    body["user"]["age"] = profile["user"]["age"];
+    body["user"]["displayName"] = profile["user"]["displayName"];
+    body["user"]["encodedId"] = profile["user"]["encodedId"];
+    body["user"]["gender"] = profile["user"]["gender"];
+    body["avatar_name"] = state.avatarName;
+    body["avatar_type"] = state.avatarType;
+    var url = Uri.parse(
+        "https://your-hit-point-backend-2ledkxm6ta-an.a.run.app/register/");
+    final bodyEncoded = jsonEncode(body);
+    var response = await request(url: url, type: "post", body: bodyEncoded);
+    //リクエストの返り値をマップ形式に変換
+    var responseBody = jsonDecode(response.body);
+    //リクエスト成功時
+    if (response.statusCode == 201) {
+      logger.d("register成功しました!");
+    } else if (response.statusCode == 409) {
+      logger.d("すでにFirebaseにデータがあります");
     }
+    else {
+      // リクエストが失敗した場合、エラーメッセージを表示します
+      logger.d("Request failed with status: $responseBody");
+      registerFlag = false;
+    }
+    return registerFlag;
   }
 
   Future<void> setItemToSharedPref(
@@ -92,5 +106,14 @@ class UserDataNotifier extends StateNotifier<UserDataState> {
 
   Future<void> refreshUserID(String id) async {
     await setItemToSharedPref(["userId"], [id]);
+  }
+
+  void updateUserRecord(int maxSleepDuration, int maxTotalDaySteps, int experienceLevel, int experiencePoint) {
+    state = state.copyWith(
+      maxSleepDuration: maxSleepDuration,
+      maxTotalDaySteps: maxTotalDaySteps,
+      experienceLevel: experienceLevel,
+      experiencePoint: experiencePoint % 360,
+    );
   }
 }

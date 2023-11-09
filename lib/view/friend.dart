@@ -135,11 +135,11 @@ class ChangeIdWidgetState extends ConsumerState<ChangeIdWidget> {
         ),
       ),
       TextButton(
-        onPressed: () {
-          ref
+        onPressed: () async{
+          await ref
               .read(userDataProvider.notifier)
               .refreshUserID(_userIdController!.text);
-          ref.read(hpProvider.notifier).updateUserData(ref);
+          await ref.read(hpProvider.notifier).requestHP(ref);
         },
         child: const Text("Change userId"),
       )
@@ -224,32 +224,3 @@ class FriendCardWidget extends StatelessWidget {
     );
   }
 }
-
-
-
-    //card
-    //     return SizedBox(
-    //   height: 200,
-    //   // width: 800,
-    //   child: Card(
-    //     color: const Color(0xffe0ffff), // Card自体の色
-    //     margin: const EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 20),
-    //     elevation: 8, // 影の離れ具合
-    //     shadowColor: Colors.black, // 影の色
-    //     shape: RoundedRectangleBorder(
-    //       // 枠線を変更できる
-    //       borderRadius: BorderRadius.circular(10),
-    //     ),
-    //     child: Column(
-    //       mainAxisSize: MainAxisSize.max,
-    //       children: [
-    //         ListTile(
-    //           leading: _currentmyAvatar(avatarUrl),
-    //           title: Text(friendName),
-    //           subtitle: Text(currentHP.toString()),
-    //         ),
-    //         // Text('hello'),
-    //       ],
-    //     ),
-    //   ),
-    // );
