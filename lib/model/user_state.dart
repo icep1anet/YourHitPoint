@@ -11,6 +11,7 @@ class UserDataState with _$UserDataState {
     @Default(0) int experienceLevel,
     @Default(0) int experiencePoint,
     @Default("") String gender,
+    @Default(0) int age,
     @Default([]) List friendDataList,
     @Default(0) int maxSleepDuration,
     @Default(0) int maxTotalDaySteps,

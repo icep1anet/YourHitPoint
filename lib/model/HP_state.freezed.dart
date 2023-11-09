@@ -31,7 +31,6 @@ mixin _$HPState {
   double get recordHighHP => throw _privateConstructorUsedError;
   double get recordLowHP => throw _privateConstructorUsedError;
   String? get imgUrl => throw _privateConstructorUsedError;
-  DateTime? get latestDataTime => throw _privateConstructorUsedError;
   String get activeLimitTime => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -59,7 +58,6 @@ abstract class $HPStateCopyWith<$Res> {
       double recordHighHP,
       double recordLowHP,
       String? imgUrl,
-      DateTime? latestDataTime,
       String activeLimitTime});
 }
 
@@ -91,7 +89,6 @@ class _$HPStateCopyWithImpl<$Res, $Val extends HPState>
     Object? recordHighHP = null,
     Object? recordLowHP = null,
     Object? imgUrl = freezed,
-    Object? latestDataTime = freezed,
     Object? activeLimitTime = null,
   }) {
     return _then(_value.copyWith(
@@ -155,10 +152,6 @@ class _$HPStateCopyWithImpl<$Res, $Val extends HPState>
           ? _value.imgUrl
           : imgUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      latestDataTime: freezed == latestDataTime
-          ? _value.latestDataTime
-          : latestDataTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
       activeLimitTime: null == activeLimitTime
           ? _value.activeLimitTime
           : activeLimitTime // ignore: cast_nullable_to_non_nullable
@@ -190,7 +183,6 @@ abstract class _$$HPStateImplCopyWith<$Res> implements $HPStateCopyWith<$Res> {
       double recordHighHP,
       double recordLowHP,
       String? imgUrl,
-      DateTime? latestDataTime,
       String activeLimitTime});
 }
 
@@ -220,7 +212,6 @@ class __$$HPStateImplCopyWithImpl<$Res>
     Object? recordHighHP = null,
     Object? recordLowHP = null,
     Object? imgUrl = freezed,
-    Object? latestDataTime = freezed,
     Object? activeLimitTime = null,
   }) {
     return _then(_$HPStateImpl(
@@ -284,10 +275,6 @@ class __$$HPStateImplCopyWithImpl<$Res>
           ? _value.imgUrl
           : imgUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      latestDataTime: freezed == latestDataTime
-          ? _value.latestDataTime
-          : latestDataTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
       activeLimitTime: null == activeLimitTime
           ? _value.activeLimitTime
           : activeLimitTime // ignore: cast_nullable_to_non_nullable
@@ -315,7 +302,6 @@ class _$HPStateImpl implements _HPState {
       this.recordHighHP = 0,
       this.recordLowHP = 0,
       this.imgUrl,
-      this.latestDataTime,
       this.activeLimitTime = ""})
       : _futureSpots = futureSpots,
         _pastSpots = pastSpots;
@@ -373,14 +359,12 @@ class _$HPStateImpl implements _HPState {
   @override
   final String? imgUrl;
   @override
-  final DateTime? latestDataTime;
-  @override
   @JsonKey()
   final String activeLimitTime;
 
   @override
   String toString() {
-    return 'HPState(barColor: $barColor, currentHP: $currentHP, fontPosition: $fontPosition, fontColor: $fontColor, futureSpots: $futureSpots, hpNumber: $hpNumber, maxDayHP: $maxDayHP, pastSpots: $pastSpots, minGraphX: $minGraphX, maxGraphX: $maxGraphX, minGraphY: $minGraphY, maxGraphY: $maxGraphY, recordHighHP: $recordHighHP, recordLowHP: $recordLowHP, imgUrl: $imgUrl, latestDataTime: $latestDataTime, activeLimitTime: $activeLimitTime)';
+    return 'HPState(barColor: $barColor, currentHP: $currentHP, fontPosition: $fontPosition, fontColor: $fontColor, futureSpots: $futureSpots, hpNumber: $hpNumber, maxDayHP: $maxDayHP, pastSpots: $pastSpots, minGraphX: $minGraphX, maxGraphX: $maxGraphX, minGraphY: $minGraphY, maxGraphY: $maxGraphY, recordHighHP: $recordHighHP, recordLowHP: $recordLowHP, imgUrl: $imgUrl, activeLimitTime: $activeLimitTime)';
   }
 
   @override
@@ -417,8 +401,6 @@ class _$HPStateImpl implements _HPState {
             (identical(other.recordLowHP, recordLowHP) ||
                 other.recordLowHP == recordLowHP) &&
             (identical(other.imgUrl, imgUrl) || other.imgUrl == imgUrl) &&
-            (identical(other.latestDataTime, latestDataTime) ||
-                other.latestDataTime == latestDataTime) &&
             (identical(other.activeLimitTime, activeLimitTime) ||
                 other.activeLimitTime == activeLimitTime));
   }
@@ -441,7 +423,6 @@ class _$HPStateImpl implements _HPState {
       recordHighHP,
       recordLowHP,
       imgUrl,
-      latestDataTime,
       activeLimitTime);
 
   @JsonKey(ignore: true)
@@ -468,7 +449,6 @@ abstract class _HPState implements HPState {
       final double recordHighHP,
       final double recordLowHP,
       final String? imgUrl,
-      final DateTime? latestDataTime,
       final String activeLimitTime}) = _$HPStateImpl;
 
   @override
@@ -501,8 +481,6 @@ abstract class _HPState implements HPState {
   double get recordLowHP;
   @override
   String? get imgUrl;
-  @override
-  DateTime? get latestDataTime;
   @override
   String get activeLimitTime;
   @override

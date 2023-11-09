@@ -23,6 +23,7 @@ mixin _$UserDataState {
   int get experienceLevel => throw _privateConstructorUsedError;
   int get experiencePoint => throw _privateConstructorUsedError;
   String get gender => throw _privateConstructorUsedError;
+  int get age => throw _privateConstructorUsedError;
   List<dynamic> get friendDataList => throw _privateConstructorUsedError;
   int get maxSleepDuration => throw _privateConstructorUsedError;
   int get maxTotalDaySteps => throw _privateConstructorUsedError;
@@ -46,6 +47,7 @@ abstract class $UserDataStateCopyWith<$Res> {
       int experienceLevel,
       int experiencePoint,
       String gender,
+      int age,
       List<dynamic> friendDataList,
       int maxSleepDuration,
       int maxTotalDaySteps});
@@ -71,6 +73,7 @@ class _$UserDataStateCopyWithImpl<$Res, $Val extends UserDataState>
     Object? experienceLevel = null,
     Object? experiencePoint = null,
     Object? gender = null,
+    Object? age = null,
     Object? friendDataList = null,
     Object? maxSleepDuration = null,
     Object? maxTotalDaySteps = null,
@@ -104,6 +107,10 @@ class _$UserDataStateCopyWithImpl<$Res, $Val extends UserDataState>
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
               as String,
+      age: null == age
+          ? _value.age
+          : age // ignore: cast_nullable_to_non_nullable
+              as int,
       friendDataList: null == friendDataList
           ? _value.friendDataList
           : friendDataList // ignore: cast_nullable_to_non_nullable
@@ -136,6 +143,7 @@ abstract class _$$UserDataStateImplCopyWith<$Res>
       int experienceLevel,
       int experiencePoint,
       String gender,
+      int age,
       List<dynamic> friendDataList,
       int maxSleepDuration,
       int maxTotalDaySteps});
@@ -159,6 +167,7 @@ class __$$UserDataStateImplCopyWithImpl<$Res>
     Object? experienceLevel = null,
     Object? experiencePoint = null,
     Object? gender = null,
+    Object? age = null,
     Object? friendDataList = null,
     Object? maxSleepDuration = null,
     Object? maxTotalDaySteps = null,
@@ -192,6 +201,10 @@ class __$$UserDataStateImplCopyWithImpl<$Res>
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
               as String,
+      age: null == age
+          ? _value.age
+          : age // ignore: cast_nullable_to_non_nullable
+              as int,
       friendDataList: null == friendDataList
           ? _value._friendDataList
           : friendDataList // ignore: cast_nullable_to_non_nullable
@@ -219,6 +232,7 @@ class _$UserDataStateImpl implements _UserDataState {
       this.experienceLevel = 0,
       this.experiencePoint = 0,
       this.gender = "",
+      this.age = 0,
       final List<dynamic> friendDataList = const [],
       this.maxSleepDuration = 0,
       this.maxTotalDaySteps = 0})
@@ -243,6 +257,9 @@ class _$UserDataStateImpl implements _UserDataState {
   @override
   @JsonKey()
   final String gender;
+  @override
+  @JsonKey()
+  final int age;
   final List<dynamic> _friendDataList;
   @override
   @JsonKey()
@@ -261,7 +278,7 @@ class _$UserDataStateImpl implements _UserDataState {
 
   @override
   String toString() {
-    return 'UserDataState(avatarName: $avatarName, avatarType: $avatarType, userName: $userName, userId: $userId, experienceLevel: $experienceLevel, experiencePoint: $experiencePoint, gender: $gender, friendDataList: $friendDataList, maxSleepDuration: $maxSleepDuration, maxTotalDaySteps: $maxTotalDaySteps)';
+    return 'UserDataState(avatarName: $avatarName, avatarType: $avatarType, userName: $userName, userId: $userId, experienceLevel: $experienceLevel, experiencePoint: $experiencePoint, gender: $gender, age: $age, friendDataList: $friendDataList, maxSleepDuration: $maxSleepDuration, maxTotalDaySteps: $maxTotalDaySteps)';
   }
 
   @override
@@ -281,6 +298,7 @@ class _$UserDataStateImpl implements _UserDataState {
             (identical(other.experiencePoint, experiencePoint) ||
                 other.experiencePoint == experiencePoint) &&
             (identical(other.gender, gender) || other.gender == gender) &&
+            (identical(other.age, age) || other.age == age) &&
             const DeepCollectionEquality()
                 .equals(other._friendDataList, _friendDataList) &&
             (identical(other.maxSleepDuration, maxSleepDuration) ||
@@ -299,6 +317,7 @@ class _$UserDataStateImpl implements _UserDataState {
       experienceLevel,
       experiencePoint,
       gender,
+      age,
       const DeepCollectionEquality().hash(_friendDataList),
       maxSleepDuration,
       maxTotalDaySteps);
@@ -319,6 +338,7 @@ abstract class _UserDataState implements UserDataState {
       final int experienceLevel,
       final int experiencePoint,
       final String gender,
+      final int age,
       final List<dynamic> friendDataList,
       final int maxSleepDuration,
       final int maxTotalDaySteps}) = _$UserDataStateImpl;
@@ -337,6 +357,8 @@ abstract class _UserDataState implements UserDataState {
   int get experiencePoint;
   @override
   String get gender;
+  @override
+  int get age;
   @override
   List<dynamic> get friendDataList;
   @override
