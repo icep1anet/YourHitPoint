@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import "package:logger/logger.dart";
 
 import "package:your_hit_point/view_model/user_data_notifier.dart";
-import "package:your_hit_point/utils/dropdown_time.dart";
+import 'package:your_hit_point/utils/dropdown_items.dart';
 
 var logger = Logger();
 
