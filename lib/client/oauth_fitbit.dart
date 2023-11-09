@@ -101,8 +101,8 @@ Future<void> refreshToken() async {
     "client_id": "23R5R4",
     "refresh_token": refreshToken
   };
-  final token =
-      await request(url: tokenEndpoint, type: "post", headers: headers, body: body);
+  final token = await request(
+      url: tokenEndpoint, type: "post", headers: headers, body: body);
   const storage = FlutterSecureStorage();
   await storage.write(key: "fitbitToken", value: token.body);
 }
@@ -116,39 +116,43 @@ Future<Map> getProfile() async {
   return data;
 }
 
-Future<Map> getSteps() async {
+Future<Map> getSteps(String startDate, String endDate, String startTime, String endTime) async {
   final endpoint = Uri.https("api.fitbit.com",
-      "/1/user/-/activities/steps/date/2023-11-03/1d/5min.json");
+        "/1/user/-/activities/steps/date/$startDate/$endDate/15min/time/$startTime/$endTime.json");  
   final token = await getToken();
   final headers = {'Authorization': "Bearer $token"};
-  final data = await fitbitRequest(url: endpoint, type: "get", headers: headers);
+  final data =
+      await fitbitRequest(url: endpoint, type: "get", headers: headers);
   return data;
 }
 
-Future<Map> getCalories() async {
+Future<Map> getCalories(String startDate, String endDate, String startTime, String endTime) async {
   final endpoint = Uri.https("api.fitbit.com",
-      "/1/user/-/activities/calories/date/today/1d/5min.json");
+        "/1/user/-/activities/calories/date/$startDate/$endDate/15min/time/$startTime/$endTime.json");  
   final token = await getToken();
   final headers = {'Authorization': "Bearer $token"};
-  final data = await fitbitRequest(url: endpoint, type: "get", headers: headers);
+  final data =
+      await fitbitRequest(url: endpoint, type: "get", headers: headers);
   return data;
 }
 
-Future<Map> getSleeps() async {
-  final endpoint = Uri.https("api.fitbit.com",
-      "/1.2/user/-/sleep/date/today.json");
+Future<Map> getSleeps(String startDate, String endDate) async {
+  final endpoint =
+      Uri.https("api.fitbit.com", "/1.2/user/-/sleep/date/$startDate/$endDate.json");
   final token = await getToken();
   final headers = {'Authorization': "Bearer $token"};
-  final data = await fitbitRequest(url: endpoint, type: "get", headers: headers);
+  final data =
+      await fitbitRequest(url: endpoint, type: "get", headers: headers);
   return data;
 }
 
-Future<Map> getHeartRate() async {
-  final endpoint = Uri.https("api.fitbit.com",
-      "/1/user/-/activities/heart/date/today/1d/15min.json");
+Future<Map> getHeartRate(String startDate, String endDate, String startTime, String endTime) async {
+  final endpoint = Uri.https(
+      "api.fitbit.com", "/1/user/-/activities/heart/date/$startDate/$endDate/15min/time/$startTime/$endTime.json");
   final token = await getToken();
   final headers = {'Authorization': "Bearer $token"};
-  final data = await fitbitRequest(url: endpoint, type: "get", headers: headers);
+  final data =
+      await fitbitRequest(url: endpoint, type: "get", headers: headers);
   return data;
 }
 
