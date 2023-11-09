@@ -49,7 +49,15 @@ class UserDataNotifier extends StateNotifier<UserDataState> {
   Future<Map> fetchProfile() async {
     var profile = await getProfile();
     String userId = profile["user"]["encodedId"];
-    state = state.copyWith(userId: userId);
+    String userName = profile["user"]["displayName"];
+    String gender = profile["user"]["gender"];
+    int age = profile["user"]["age"];
+    state = state.copyWith(
+      userId: userId,
+      userName: userName,
+      gender: gender,
+      age: age
+      );
     return profile;
   }
 
@@ -65,15 +73,12 @@ class UserDataNotifier extends StateNotifier<UserDataState> {
     body["user"]["gender"] = profile["user"]["gender"];
     body["avatar_name"] = state.avatarName;
     body["avatar_type"] = state.avatarType;
-    logger.d(body);
     var url = Uri.parse(
         "https://your-hit-point-backend-2ledkxm6ta-an.a.run.app/register/");
     final bodyEncoded = jsonEncode(body);
     var response = await request(url: url, type: "post", body: bodyEncoded);
     //リクエストの返り値をマップ形式に変換
     var responseBody = jsonDecode(response.body);
-    logger.d("response  $response");
-    logger.d(response.statusCode);
     //リクエスト成功時
     if (response.statusCode == 201) {
       logger.d("register成功しました!");
