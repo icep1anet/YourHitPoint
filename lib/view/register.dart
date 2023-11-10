@@ -190,7 +190,11 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 5),
+                      const SizedBox(height: 20),
+                      if (ref.watch(errorMessageProvider) != null) Text(
+                        ref.read(errorMessageProvider).toString(),
+                        style: const TextStyle(color: Colors.red, fontSize: 20),
+                        ),
                     ],
                   ),
                 ),
