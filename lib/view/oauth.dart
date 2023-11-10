@@ -48,30 +48,34 @@ class OAuthPageState extends ConsumerState<OAuthPage> {
               children: [
                 const SizedBox(height: 300),
                 ElevatedButton(
-                  onPressed: () async {
-                    if (_registering == false) {
-                      setState(() => _registering = true);
-                      await callOAuth();
-                      String? accessToken = await getToken();
-                      ref.watch(accessTokenProvider.notifier).state =
-                        accessToken;
-                      if (accessToken != null) {
-                        logger.d("認証できましたよ");
-                        final userId = ref.read(userIdProvider);
-                        bool registerFlag = await ref
-                          .read(userDataProvider.notifier)
-                          .registerFirebase(userId);
-                        if (registerFlag) {
-                          navigateMain();
+                    onPressed: () async {
+                      if (_registering == false) {
+                        setState(() => _registering = true);
+                        await callOAuth();
+                        String? accessToken = await getToken();
+                        ref.watch(accessTokenProvider.notifier).state =
+                            accessToken;
+                        if (accessToken != null) {
+                          logger.d("認証できましたよ");
+                          final userId = ref.read(userIdProvider);
+                          bool registerFlag = await ref
+                              .read(userDataProvider.notifier)
+                              .registerFirebase(userId);
+                          if (registerFlag & mounted) {
+                            navigateMain();
+                          } else {
+                            if (mounted) {
+                              setState(() => _registering = false);
+                            }
+                          }
                         } else {
-                      setState(() => _registering = false);
+                          logger.d("認証できませんでした泣");
+                          if (mounted) {
+                            setState(() => _registering = false);
+                          }
                         }
-                      } else {
-                        logger.d("認証できませんでした泣");
-                        setState(() => _registering = false);
                       }
-                    }
-                  },
+                    },
                     child: const SizedBox(
                       height: 60,
                       child: Row(
@@ -79,8 +83,8 @@ class OAuthPageState extends ConsumerState<OAuthPage> {
                         children: [
                           ClipOval(
                             child: Image(
-                                image: AssetImage(
-                                    "assets/images/fitbit_icon.png"),
+                                image:
+                                    AssetImage("assets/images/fitbit_icon.png"),
                                 width: 30,
                                 height: 30,
                                 fit: BoxFit.fill),
@@ -98,8 +102,7 @@ class OAuthPageState extends ConsumerState<OAuthPage> {
                     )),
                 const SizedBox(height: 50),
                 //ローディング
-                if (_registering == true)
-                  const CircularProgressIndicator(),
+                if (_registering == true) const CircularProgressIndicator(),
               ],
             ),
           ),
