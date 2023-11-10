@@ -61,8 +61,11 @@ class MainPageState extends ConsumerState<MainPage> {
         data: (user) {
           if (user == null) {
             // registerページへ
-              return const RegisterPage();
+            return const RegisterPage();
           } else {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ref.watch(userIdProvider.notifier).state = user.uid;
+            });
             if (accessToken == null) {
               return const OAuthPage();
               // firebase Auth + fitbit OAuthが通っている時

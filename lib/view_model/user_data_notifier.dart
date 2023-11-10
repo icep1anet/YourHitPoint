@@ -53,39 +53,38 @@ class UserDataNotifier extends StateNotifier<UserDataState> {
     String gender = profile["user"]["gender"];
     int age = profile["user"]["age"];
     state = state.copyWith(
-      userId: userId,
-      userName: userName,
-      gender: gender,
-      age: age
-      );
+        userId: userId, userName: userName, gender: gender, age: age);
     return profile;
   }
 
-  Future<bool> registerFirebase() async {
+  Future<bool> registerFirebase(userId) async {
     //リクエスト
     bool registerFlag = true;
     var profile = await fetchProfile();
     Map body = {};
     body["user"] = {};
+    body["firebaseAuthId"] = userId;
+    body["deskworkTime"] = ["10:00:00", "18:00:00"];
     body["user"]["age"] = profile["user"]["age"];
     body["user"]["displayName"] = profile["user"]["displayName"];
-    body["user"]["encodedId"] = profile["user"]["encodedId"];
+    body["user"]["fitbitId"] = profile["user"]["encodedId"];
     body["user"]["gender"] = profile["user"]["gender"];
-    body["avatar_name"] = state.avatarName;
-    body["avatar_type"] = state.avatarType;
+    body["avatarName"] = state.avatarName;
+    body["avatarType"] = state.avatarType;
+    logger.d(body);
     var url = Uri.parse(
         "https://your-hit-point-backend-2ledkxm6ta-an.a.run.app/register/");
     final bodyEncoded = jsonEncode(body);
     var response = await request(url: url, type: "post", body: bodyEncoded);
     //リクエストの返り値をマップ形式に変換
+    logger.d(response.body);
     var responseBody = jsonDecode(response.body);
     //リクエスト成功時
     if (response.statusCode == 201) {
       logger.d("register成功しました!");
     } else if (response.statusCode == 409) {
       logger.d("すでにFirebaseにデータがあります");
-    }
-    else {
+    } else {
       // リクエストが失敗した場合、エラーメッセージを表示します
       logger.d("Request failed with status: $responseBody");
       registerFlag = false;
@@ -108,7 +107,8 @@ class UserDataNotifier extends StateNotifier<UserDataState> {
     await setItemToSharedPref(["userId"], [id]);
   }
 
-  void updateUserRecord(int maxSleepDuration, int maxTotalDaySteps, int experienceLevel, int experiencePoint) {
+  void updateUserRecord(int maxSleepDuration, int maxTotalDaySteps,
+      int experienceLevel, int experiencePoint) {
     state = state.copyWith(
       maxSleepDuration: maxSleepDuration,
       maxTotalDaySteps: maxTotalDaySteps,
