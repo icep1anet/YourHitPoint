@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:your_hit_point/client/api.dart';
+import 'package:your_hit_point/utils/hash.dart';
 
 var logger = Logger();
 
@@ -81,7 +82,7 @@ Future<Map> fitbitRequest(
   final authorizationHeaders = {'Authorization': "Bearer $token"};
   if (headers.isEmpty) {
     headers = authorizationHeaders;
-  } else { 
+  } else {
     headers.addAll(authorizationHeaders);
   }
   http.Response response =
@@ -117,6 +118,9 @@ Future<void> refreshToken() async {
 Future<Map> getProfile() async {
   final endpoint = Uri.https("api.fitbit.com", "/1/user/-/profile.json");
   final data = await fitbitRequest(url: endpoint, type: "get");
+  if (data.isNotEmpty) {
+    data["user"].update("encodedId", (val) => hash(val));
+  }
   return data;
 }
 
@@ -149,6 +153,39 @@ Future<Map> getHeartRate(
       "/1/user/-/activities/heart/date/$startDate/$endDate/15min/time/$startTime/$endTime.json");
   final data = await fitbitRequest(url: endpoint, type: "get");
   return data;
+}
+
+Future<Map> getFriends() async {
+// "data": [
+//   {
+//     "attributes": {
+//       "name": "とこなつ",
+//       "friend": true,
+//       "avatar": "https://static0.fitbit.com/images/profile/defaultProfile_150.png",
+//       "child": false
+//     },
+//     "id": "ABCDE1",
+//     "type": "person"
+//   },
+//   {
+//     "attributes": {
+//       "name": "tanker",
+//       "friend": true,
+//       "avatar": "https://static0.fitbit.com/images/profile/defaultProfile_150.png",
+//       "child": false
+//     },
+//     "id": "ABCDE2",
+//     "type": "person"
+//   }
+// ]
+  final endpoint = Uri.https("api.fitbit.com", "/1.1/user/-/friends.json");
+  final data = await fitbitRequest(url: endpoint, type: "get");
+  final friendList = data["data"];
+  var friendIdList = [];
+  for (var friendData in friendList) {
+    friendIdList.add(hash(friendData["id"]));
+  }
+  return {"data":friendIdList};
 }
 
 // debug

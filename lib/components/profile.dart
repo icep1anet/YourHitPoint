@@ -6,6 +6,7 @@ import "package:logger/logger.dart";
 
 import "package:your_hit_point/view_model/user_data_notifier.dart";
 import 'package:your_hit_point/utils/dropdown_items.dart';
+import 'package:your_hit_point/client/oauth_fitbit.dart';
 
 var logger = Logger();
 
@@ -141,7 +142,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                             style: TextStyle(
                                 fontSize: 18, color: Color(0xff696969))),
                       ),
-                      const SizedBox(height:10),
+                      const SizedBox(height: 10),
                       Container(
                         decoration: BoxDecoration(
                           border: Border.all(
@@ -263,6 +264,27 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                       if (_registering == true)
                         const CircularProgressIndicator(),
                       if (userId != null) Text(userId!),
+                      TextButton(
+                        onPressed: () async {
+                          await callOAuth();
+                          String? accessToken = await getToken();
+                          ref.watch(accessTokenProvider.notifier).state =
+                              accessToken;
+                        },
+                        child: const Text(
+                          "OAuth",
+                          style: TextStyle(fontSize: 23),
+                        ),
+                      ),
+                      TextButton(
+                          onPressed: () async {
+                            final data = await getFriends();
+                            logger.d(data);
+                          },
+                          child: const Text(
+                            "friends",
+                            style: TextStyle(fontSize: 23),
+                          ))
                     ],
                   ),
                 ),
