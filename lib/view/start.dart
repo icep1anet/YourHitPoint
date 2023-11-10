@@ -6,6 +6,7 @@ import "package:google_fonts/google_fonts.dart";
 import 'package:your_hit_point/client/firebase_authentication.dart';
 import 'package:your_hit_point/client/oauth_fitbit.dart';
 import 'package:your_hit_point/utils/timer_func.dart';
+import 'package:your_hit_point/view/oauth.dart';
 import 'package:your_hit_point/view_model/HP_notifier.dart';
 import 'package:your_hit_point/view/friend.dart';
 import 'package:your_hit_point/view/register.dart';
@@ -57,42 +58,53 @@ class MainPageState extends ConsumerState<MainPage> {
     }
 
     return firebaseAuthState.when(
-        data: (user) => user != null ? 
-          Scaffold(
-            body: PageView(
-              controller: ref.watch(pageViewControllerProvider),
-              children: const <Widget>[
-                MyselfPage(),
-                FriendPage(),
-              ],
-              onPageChanged: (index) {
-                ref.watch(pageIndexProvider.notifier).state = index;
-              },
-            ),
-            bottomNavigationBar: SalomonBottomBar(
-                backgroundColor: const Color.fromARGB(255, 178, 211, 244),
-                currentIndex: ref.watch(pageIndexProvider),
-                selectedItemColor: const Color(0xff6200ee),
-                unselectedItemColor: const Color(0xff757575),
-                onTap: _onItemTapped,
-                items: [
-                  SalomonBottomBarItem(
-                    icon: const Icon(Icons.person),
-                    title: Text(
-                      "Myself",
-                      //iconが真ん中startなのでできない
-                      // textAlign: TextAlign.left,
-                      style: GoogleFonts.orelegaOne(fontSize: 20),
-                    ),
-                    selectedColor: const Color.fromARGB(255, 2, 179, 8),
-                  ),
-                  SalomonBottomBarItem(
-                      icon: const Icon(Icons.people),
-                      title: Text("Friends",
-                          style: GoogleFonts.orelegaOne(fontSize: 20)),
-                      selectedColor: Colors.pink)
-                ]),
-          ) : const RegisterPage(),
+        data: (user) {
+          if (user == null) {
+            // registerページへ
+              return const RegisterPage();
+          } else {
+            if (accessToken == null) {
+              return const OAuthPage();
+              // firebase Auth + fitbit OAuthが通っている時
+            } else {
+              return Scaffold(
+                body: PageView(
+                  controller: ref.watch(pageViewControllerProvider),
+                  children: const <Widget>[
+                    MyselfPage(),
+                    FriendPage(),
+                  ],
+                  onPageChanged: (index) {
+                    ref.watch(pageIndexProvider.notifier).state = index;
+                  },
+                ),
+                bottomNavigationBar: SalomonBottomBar(
+                    backgroundColor: const Color.fromARGB(255, 178, 211, 244),
+                    currentIndex: ref.watch(pageIndexProvider),
+                    selectedItemColor: const Color(0xff6200ee),
+                    unselectedItemColor: const Color(0xff757575),
+                    onTap: _onItemTapped,
+                    items: [
+                      SalomonBottomBarItem(
+                        icon: const Icon(Icons.person),
+                        title: Text(
+                          "Myself",
+                          //iconが真ん中startなのでできない
+                          // textAlign: TextAlign.left,
+                          style: GoogleFonts.orelegaOne(fontSize: 20),
+                        ),
+                        selectedColor: const Color.fromARGB(255, 2, 179, 8),
+                      ),
+                      SalomonBottomBarItem(
+                          icon: const Icon(Icons.people),
+                          title: Text("Friends",
+                              style: GoogleFonts.orelegaOne(fontSize: 20)),
+                          selectedColor: Colors.pink)
+                    ]),
+              );
+            }
+          }
+        },
         error: (err, stack) => Text('Error: $err'),
         loading: () => const CircularProgressIndicator());
 

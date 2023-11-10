@@ -7,6 +7,7 @@ import "package:google_fonts/google_fonts.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:logger/logger.dart";
 import "package:your_hit_point/client/firebase_authentication.dart";
+import "package:your_hit_point/client/oauth_fitbit.dart";
 
 import 'package:your_hit_point/components/wave_view.dart';
 import 'package:your_hit_point/utils/hex_color.dart';
@@ -575,6 +576,9 @@ class SliverAppBarWidget extends StatelessWidget {
           )),
       leading: IconButton(
         onPressed: () {
+          // debug
+          deleteSecureStorage();
+          
           signOut();
           // userDataProvider.initRemoveUserId();
         },
