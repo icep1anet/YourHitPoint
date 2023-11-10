@@ -45,99 +45,99 @@ class OAuthPageState extends ConsumerState<OAuthPage> {
   @override
   Widget build(BuildContext context) {
     return Focus(
-        focusNode: _focusEmailNode,
-        child: GestureDetector(
-            onTap: () {
-              _focusEmailNode?.requestFocus();
-            },
-            child: Scaffold(
-              resizeToAvoidBottomInset: false,
-              appBar: AppBar(
-                backgroundColor: const Color(0xff00a5bf),
-                systemOverlayStyle: SystemUiOverlayStyle.light,
-                title: const Text(
-                  "Register",
-                  style: TextStyle(fontSize: 20, color: Colors.white),
-                ),
+      focusNode: _focusEmailNode,
+      child: GestureDetector(
+          onTap: () {
+            _focusEmailNode?.requestFocus();
+          },
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: AppBar(
+              backgroundColor: const Color(0xff00a5bf),
+              systemOverlayStyle: SystemUiOverlayStyle.light,
+              title: const Text(
+                "Register",
+                style: TextStyle(fontSize: 20, color: Colors.white),
               ),
-              body: SingleChildScrollView(
-                child: Container(
-                  padding: const EdgeInsets.only(top: 40, left: 24, right: 24),
-                  child: Center(
-                    child: Column(
-                      // mainAxisAlignment: MainAxisAlignment.center,
-                      // mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const SizedBox(height: 300),
-                        ElevatedButton(
-                            onPressed: () async {
-                              if (_registering == false) {
-                                setState(() {
-                                  _registering = true;
-                                });
-                                await callOAuth();
-                                String? accessToken = await getToken();
-                                ref.watch(accessTokenProvider.notifier).state =
-                                    accessToken;
-                                if (accessToken != null) {
-                                  logger.d("認証できましたよ");
-                                  bool registerFlag = await ref
-                                      .read(userDataProvider.notifier)
-                                      .registerFirebase();
-                                  if (registerFlag) {
-                                    navigateMain();
-                                  } else {
-                                    setState(() {
-                                      _registering = false;
-                                    });
-                                  }
-                                } else {
-                                  logger.d("認証できませんでした泣");
-                                  setState(() {
-                                    _registering = false;
-                                  });
-                                }
+            ),
+            body: SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.only(top: 40, left: 24, right: 24),
+                child: Center(
+                  child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    // mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: 300),
+                      ElevatedButton(
+                        onPressed: () async {
+                          if (_registering == false) {
+                            setState(() {
+                              _registering = true;
+                            });
+                            await callOAuth();
+                            String? accessToken = await getToken();
+                            ref.watch(accessTokenProvider.notifier).state =
+                              accessToken;
+                            if (accessToken != null) {
+                              logger.d("認証できましたよ");
+                              bool registerFlag = await ref
+                                .read(userDataProvider.notifier)
+                                .registerFirebase();
+                              if (registerFlag) {
+                                navigateMain();
+                              } else {
+                                setState(() => _registering = false);
                               }
-                            },
-                            // style: ElevatedButton.styleFrom(
-                            //   backgroundColor:
-                            //       Colors.white,
-                            //   elevation: 16,
-                            // ),
-                            child: const SizedBox(
-                              height: 60,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  ClipOval(
-                                    child: Image(
-                                        image: AssetImage(
-                                            "assets/images/fitbit_icon.png"),
-                                        width: 30,
-                                        height: 30,
-                                        fit: BoxFit.fill),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Text("Fitbitと連携する",
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        color: Color.fromARGB(255, 0, 0, 0),
-                                        // fontWeight: FontWeight.bold,
-                                        // fontStyle: FontStyle.italic,
-                                      )),
-                                ],
-                              ),
-                            )),
-                        const SizedBox(height: 50),
-                        //ローディング
-                        if (_registering == true)
-                          const CircularProgressIndicator(),
-                      ],
-                    ),
+                            } else {
+                              logger.d("認証できませんでした泣");
+                              setState(() {
+                                _registering = false;
+                              });
+                            }
+                          }
+                        },
+                          // style: ElevatedButton.styleFrom(
+                          //   backgroundColor:
+                          //       Colors.white,
+                          //   elevation: 16,
+                          // ),
+                          child: const SizedBox(
+                            height: 60,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ClipOval(
+                                  child: Image(
+                                      image: AssetImage(
+                                          "assets/images/fitbit_icon.png"),
+                                      width: 30,
+                                      height: 30,
+                                      fit: BoxFit.fill),
+                                ),
+                                SizedBox(width: 10),
+                                Text("Fitbitと連携する",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Color.fromARGB(255, 0, 0, 0),
+                                      // fontWeight: FontWeight.bold,
+                                      // fontStyle: FontStyle.italic,
+                                    )),
+                              ],
+                            ),
+                          )),
+                      const SizedBox(height: 50),
+                      //ローディング
+                      if (_registering == true)
+                        const CircularProgressIndicator(),
+                    ],
                   ),
                 ),
               ),
-            )));
+            ),
+          )
+        )
+    );
   }
 
   void navigateMain() async {

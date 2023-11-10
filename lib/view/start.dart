@@ -49,6 +49,13 @@ class MainPageState extends ConsumerState<MainPage> {
     final isFinishedMain = ref.watch(isFinishedMainProvider);
     final accessToken = ref.watch(accessTokenProvider);
 
+    if (isFinishedMain == false) {
+      return const Scaffold(
+          body: Center(
+        child: CircularProgressIndicator(),
+      ));
+    }
+
     return firebaseAuthState.when(
         data: (user) => user != null ? 
           Scaffold(
