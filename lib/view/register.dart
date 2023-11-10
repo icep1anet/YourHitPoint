@@ -3,6 +3,7 @@ import "package:flutter/services.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:logger/logger.dart";
 import 'package:your_hit_point/client/firebase_authentication.dart';
+import 'package:your_hit_point/components/validate_text.dart';
 
 var logger = Logger();
 
@@ -19,8 +20,10 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
   TextEditingController? _emailController;
   TextEditingController? _passwordController;
   String? userId;
-  bool _registering=false;
+  bool _registering = false;
   bool isVisible = false;
+  AutovalidateMode emailValidate = AutovalidateMode.disabled;
+  AutovalidateMode passwordValidate = AutovalidateMode.disabled;
 
   //ページ起動時に呼ばれる初期化関数
   @override
@@ -65,7 +68,9 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                   padding: const EdgeInsets.only(top: 40, left: 24, right: 24),
                   child: Column(
                     children: [
-                      TextField(
+                      TextFormField(
+                        autovalidateMode: emailValidate,
+                        validator: ValidateText.email,
                         style: const TextStyle(fontSize: 20),
                         autocorrect: false,
                         autofocus: false,
@@ -86,6 +91,9 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                         keyboardType: TextInputType.text,
                         onEditingComplete: () {
                           _focusPasswordNode?.requestFocus();
+                          setState(() {
+                            emailValidate = AutovalidateMode.onUserInteraction;
+                          });
                         },
                         readOnly: _registering,
                         textCapitalization: TextCapitalization.none,
@@ -94,7 +102,9 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                       const SizedBox(height: 40),
                       Container(
                         margin: const EdgeInsets.symmetric(vertical: 8),
-                        child: TextField(
+                        child: TextFormField(
+                          autovalidateMode: passwordValidate,
+                          validator: ValidateText.password,
                           style: const TextStyle(fontSize: 20),
                           autocorrect: false,
                           controller: _passwordController,
@@ -110,7 +120,9 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 IconButton(
-                                  icon:  Icon(isVisible? Icons.visibility_off : Icons.visibility) ,
+                                  icon: Icon(isVisible
+                                      ? Icons.visibility_off
+                                      : Icons.visibility),
                                   onPressed: () => toggleShowPassword(),
                                 ),
                                 IconButton(
@@ -125,6 +137,9 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                           obscureText: !isVisible,
                           onEditingComplete: () {
                             _focusPasswordNode?.unfocus();
+                          setState(() {
+                            passwordValidate = AutovalidateMode.always;
+                          });
                           },
                           textCapitalization: TextCapitalization.none,
                           textInputAction: TextInputAction.done,
@@ -192,7 +207,7 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
     );
   }
 
-  void toggleShowPassword () {
+  void toggleShowPassword() {
     setState(() {
       isVisible = !isVisible;
     });
