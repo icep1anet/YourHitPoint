@@ -2,9 +2,7 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:logger/logger.dart";
-
-import 'package:your_hit_point/client/oauth_fitbit.dart';
-import "package:your_hit_point/view_model/user_data_notifier.dart";
+import 'package:your_hit_point/client/firebase_authentication.dart';
 
 var logger = Logger();
 
@@ -19,18 +17,19 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
   FocusNode? _focusEmailNode;
   FocusNode? _focusPasswordNode;
   TextEditingController? _emailController;
-  bool _registering = false;
   TextEditingController? _passwordController;
   String? userId;
+  bool _registering=false;
 
   //ページ起動時に呼ばれる初期化関数
   @override
   void initState() {
     super.initState();
+    _registering = false;
     _focusEmailNode = FocusNode();
     _focusPasswordNode = FocusNode();
-    _emailController = TextEditingController(text: "abcde@gmail.com");
-    _passwordController = TextEditingController(text: "asdfgh");
+    _emailController = TextEditingController(text: "");
+    _passwordController = TextEditingController(text: "");
   }
 
   @override
@@ -131,14 +130,13 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                               if (_registering == false &&
                                   _emailController!.text != "" &&
                                   _passwordController!.text != "") {
-                                setState(() {
-                                  _registering = true;
-                                });
+                                setState(() => _registering = true);
                                 FocusScope.of(context).unfocus();
-                                //registerの処理を書く
-
-
-
+                                //loginの処理を書く
+                                await signIn(_emailController!.text,
+                                    _passwordController!.text, ref);
+                                logger.d(ref.watch(userIdProvider));
+                                logger.d(ref.watch(firebaseAuthStateProvider));
                               }
                             },
                             child: const Text(
@@ -153,14 +151,11 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                               if (_registering == false &&
                                   _emailController!.text != "" &&
                                   _passwordController!.text != "") {
-                                setState(() {
-                                  _registering = true;
-                                });
+                                setState(() => _registering = true);
                                 FocusScope.of(context).unfocus();
-                                //loginの処理を書く
-
-
-
+                                //registerの処理を書く
+                                await createAccount(_emailController!.text,
+                                    _passwordController!.text, ref);
                               }
                             },
                             child: const Text(
@@ -171,9 +166,6 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                         ],
                       ),
                       const SizedBox(height: 5),
-                      //ローディング
-                      if (_registering == true)
-                        const CircularProgressIndicator(),
                     ],
                   ),
                 ),

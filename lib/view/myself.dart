@@ -6,6 +6,7 @@ import "package:fluttericon/iconic_icons.dart";
 import "package:google_fonts/google_fonts.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:logger/logger.dart";
+import "package:your_hit_point/client/firebase_authentication.dart";
 
 import 'package:your_hit_point/components/wave_view.dart';
 import 'package:your_hit_point/utils/hex_color.dart';
@@ -122,8 +123,10 @@ class MyselfPageState extends ConsumerState<MyselfPage>
                     //   child: const Text('click here'),
                     // ),
                     MediterranesnDietView(
-                      experienceLevel: ref.watch(userDataProvider).experienceLevel,
-                      experiencePoint: ref.watch(userDataProvider).experiencePoint,
+                      experienceLevel:
+                          ref.watch(userDataProvider).experienceLevel,
+                      experiencePoint:
+                          ref.watch(userDataProvider).experiencePoint,
                     ),
                     const SizedBox(height: 30),
                     Container(
@@ -328,7 +331,10 @@ class WaveViewWidget extends ConsumerWidget {
                 blurRadius: 4),
           ],
         ),
-        child: WaveView(percentageValue: (ref.watch(hpProvider).currentHP / ref.watch(hpProvider).maxDayHP) * 100),
+        child: WaveView(
+            percentageValue: (ref.watch(hpProvider).currentHP /
+                    ref.watch(hpProvider).maxDayHP) *
+                100),
       ),
     );
   }
@@ -569,6 +575,7 @@ class SliverAppBarWidget extends StatelessWidget {
           )),
       leading: IconButton(
         onPressed: () {
+          signOut();
           // userDataProvider.initRemoveUserId();
         },
         icon: const Icon(Icons.logout),
@@ -591,7 +598,6 @@ class SliverAppBarWidget extends StatelessWidget {
     );
   }
 }
-
 
 Widget hpWarning(int currentHP) {
   double fontSize = 20;
