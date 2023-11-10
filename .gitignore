@@ -88,6 +88,7 @@ unlinked_spec.ds
 **/android/**/GeneratedPluginRegistrant.java
 **/android/key.properties
 *.jks
+**/android/app/debug.keystore
 
 # iOS/XCode related
 **/ios/**/*.mode1v3
