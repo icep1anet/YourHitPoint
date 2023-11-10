@@ -25,8 +25,6 @@ class DefaultFirebaseOptions {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
-      case TargetPlatform.iOS:
-        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -57,12 +55,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'your-hit-point.appspot.com',
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBKgvF5FfV3cwTedfhizoSsKQcKOpa39m4',
-    appId: '1:752312138768:ios:f40025dce68604239c1e95',
-    messagingSenderId: '752312138768',
-    projectId: 'your-hit-point',
-    storageBucket: 'your-hit-point.appspot.com',
-    iosBundleId: 'com.yourhitpoint20230900',
-  );
 }
