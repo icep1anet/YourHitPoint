@@ -20,6 +20,7 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
   TextEditingController? _passwordController;
   String? userId;
   bool _registering=false;
+  bool isVisible = false;
 
   //ページ起動時に呼ばれる初期化関数
   @override
@@ -105,14 +106,23 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                             ),
                             labelText: "Password",
                             labelStyle: const TextStyle(fontSize: 25),
-                            suffixIcon: IconButton(
-                              icon: const Icon(Icons.cancel),
-                              onPressed: () => _passwordController?.clear(),
+                            suffixIcon: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon:  Icon(isVisible? Icons.visibility_off : Icons.visibility) ,
+                                  onPressed: () => toggleShowPassword(),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.cancel),
+                                  onPressed: () => _passwordController?.clear(),
+                                ),
+                              ],
                             ),
                           ),
                           focusNode: _focusPasswordNode,
                           keyboardType: TextInputType.text,
-                          obscureText: true,
+                          obscureText: !isVisible,
                           onEditingComplete: () {
                             _focusPasswordNode?.unfocus();
                           },
@@ -180,5 +190,11 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
       "/home",
       (route) => false,
     );
+  }
+
+  void toggleShowPassword () {
+    setState(() {
+      isVisible = !isVisible;
+    });
   }
 }
