@@ -82,6 +82,9 @@ android {
         multiDexEnabled true
     }
    signingConfigs {
+        debug {
+            storeFile file("~/.android/debug.keystore")
+        }
        release {
            keyAlias keystoreProperties['keyAlias']
            keyPassword keystoreProperties['keyPassword']
