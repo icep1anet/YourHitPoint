@@ -110,59 +110,5 @@ class MainPageState extends ConsumerState<MainPage> {
         },
         error: (err, stack) => Text('Error: $err'),
         loading: () => const CircularProgressIndicator());
-
-    // if (isFinishedMain == false) {
-    //   return const Scaffold(
-    //       body: Center(
-    //     child: CircularProgressIndicator(),
-    //   ));
-    // } else {
-    //   if (accessToken == null) {
-    //     Future.microtask(() => Navigator.of(context).pushReplacement(
-    //           MaterialPageRoute(
-    //             fullscreenDialog: true,
-    //             builder: (context) => const RegisterPage(),
-    //           ),
-    //         ));
-
-    //     return Container();
-    //   } else {
-    //     return Scaffold(
-    //       body: PageView(
-    //         controller: ref.watch(pageViewControllerProvider),
-    //         children: const <Widget>[
-    //           MyselfPage(),
-    //           FriendPage(),
-    //         ],
-    //         onPageChanged: (index) {
-    //           ref.watch(pageIndexProvider.notifier).state = index;
-    //         },
-    //       ),
-    //       bottomNavigationBar: SalomonBottomBar(
-    //           backgroundColor: const Color.fromARGB(255, 178, 211, 244),
-    //           currentIndex: ref.watch(pageIndexProvider),
-    //           selectedItemColor: const Color(0xff6200ee),
-    //           unselectedItemColor: const Color(0xff757575),
-    //           onTap: _onItemTapped,
-    //           items: [
-    //             SalomonBottomBarItem(
-    //               icon: const Icon(Icons.person),
-    //               title: Text(
-    //                 "Myself",
-    //                 //iconが真ん中startなのでできない
-    //                 // textAlign: TextAlign.left,
-    //                 style: GoogleFonts.orelegaOne(fontSize: 20),
-    //               ),
-    //               selectedColor: const Color.fromARGB(255, 2, 179, 8),
-    //             ),
-    //             SalomonBottomBarItem(
-    //                 icon: const Icon(Icons.people),
-    //                 title: Text("Friends",
-    //                     style: GoogleFonts.orelegaOne(fontSize: 20)),
-    //                 selectedColor: Colors.pink)
-    //           ]),
-    //     );
-    //   }
-    // }
   }
 }
