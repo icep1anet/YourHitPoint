@@ -58,14 +58,10 @@ class OAuthPageState extends ConsumerState<OAuthPage> {
                       if (accessToken != null) {
                         logger.d("認証できましたよ");
                         final userId = ref.read(userIdProvider);
-                        bool registerFlag = await ref
+                        await ref
                           .read(userDataProvider.notifier)
                           .registerFirebase(userId);
-                        if (registerFlag) {
-                          navigateMain();
-                        } else {
-                      setState(() => _registering = false);
-                        }
+                        setState(() => _registering = false);
                       } else {
                         logger.d("認証できませんでした泣");
                         setState(() => _registering = false);
