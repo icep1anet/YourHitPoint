@@ -37,7 +37,7 @@ class HPNotifier extends StateNotifier<HPState> {
   }
 
   Future<void> updateUserData(WidgetRef ref, Map responseBody) async {
-    if (!responseBody.containsKey("past_spots")) {
+    if (!responseBody["graph_spots"].containsKey("past_spots")) {
       logger.d("no past_spots data");
       return;
     }
@@ -244,9 +244,9 @@ class HPNotifier extends StateNotifier<HPState> {
     if (statusCode == 200) {
       // リクエストが成功した場合、レスポンスの内容を取得して表示します
       logger.d("requestHP成功しました!");
-      bool resendFlag = responseBody["check_calculate"]["need_new_data"];
-
-      if (!resendFlag) {
+      bool needResend = responseBody["check_calculate"]["need_new_data"];
+      // "need_new_data" : 1, 1で必要 0で不要
+      if (!needResend) {
         logger.d("HPの計算は不必要です");
         await updateUserData(ref, responseBody);
       } else {
