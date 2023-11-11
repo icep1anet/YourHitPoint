@@ -48,7 +48,7 @@ class HPNotifier extends StateNotifier<HPState> {
       futureSpots:
           convertHPSpotsList(responseBody["graph_spots"]["future_spots"]),
       pastSpots: state.pastSpots + pastTmpSpots,
-      // imgUrl: responseBody["url"],
+      imgUrl: responseBody["firebase_user_dict"]["avatarUrl"],
       recordHighHP: responseBody["firebase_user_dict"]["recordHigh"].toDouble(),
       recordLowHP: responseBody["firebase_user_dict"]["recordLow"].toDouble(),
       activeLimitTime: responseBody["firebase_user_dict"]["activeLimitTime"],
