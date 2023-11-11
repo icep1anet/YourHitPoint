@@ -135,8 +135,9 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                                 //loginの処理を書く
                                 await signIn(_emailController!.text,
                                     _passwordController!.text, ref);
-                                logger.d(ref.watch(userIdProvider));
-                                logger.d(ref.watch(firebaseAuthStateProvider));
+                                setState(() => _registering = false);
+                                // logger.d(ref.watch(userIdProvider));
+                                // logger.d(ref.watch(firebaseAuthStateProvider));
                               }
                             },
                             child: const Text(
@@ -156,6 +157,7 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                                 //registerの処理を書く
                                 await createAccount(_emailController!.text,
                                     _passwordController!.text, ref);
+                                setState(() => _registering = false);
                               }
                             },
                             child: const Text(
