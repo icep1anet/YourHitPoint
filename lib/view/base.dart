@@ -109,6 +109,9 @@ class MainPageState extends ConsumerState<MainPage> {
           }
         },
         error: (err, stack) => Text('Error: $err'),
-        loading: () => const CircularProgressIndicator());
+        loading: () => const Scaffold(
+          body: Center(
+        child: CircularProgressIndicator(),
+      )));
   }
 }
