@@ -26,6 +26,7 @@ class HPNotifier extends StateNotifier<HPState> {
     String? accessToken = await getToken();
     if (accessToken != null) {
       logger.d("accessToken != null");
+      ref.watch(accessTokenProvider.notifier).state = accessToken;
       await ref.read(userDataProvider.notifier).fetchProfile();
       // await requestHP(ref);
       // await requestHP(ref);
@@ -43,7 +44,6 @@ class HPNotifier extends StateNotifier<HPState> {
     }
     List<FlSpot> pastTmpSpots =
         convertHPSpotsList(responseBody["graph_spots"]["past_spots"]);
-    removePastSpotsData(pastTmpSpots);
     state = state.copyWith(
       futureSpots:
           convertHPSpotsList(responseBody["graph_spots"]["future_spots"]),

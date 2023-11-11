@@ -50,68 +50,70 @@ class MainPageState extends ConsumerState<MainPage> {
     final isFinishedMain = ref.watch(isFinishedMainProvider);
     final accessToken = ref.watch(accessTokenProvider);
 
-    if (isFinishedMain == false) {
+    if (isFinishedMain) {
+      return firebaseAuthState.when(
+          data: (user) {
+            if (user == null) {
+              // registerページへ
+              return const RegisterPage();
+            } else {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                ref.watch(userIdProvider.notifier).state = user.uid;
+              });
+              if (accessToken == null) {
+                return const OAuthPage();
+                // firebase Auth + fitbit OAuthが通っている時
+              } else {
+                return Scaffold(
+                  body: PageView(
+                    controller: ref.watch(pageViewControllerProvider),
+                    children: const <Widget>[
+                      MyselfPage(),
+                      FriendPage(),
+                    ],
+                    onPageChanged: (index) {
+                      ref.watch(pageIndexProvider.notifier).state = index;
+                    },
+                  ),
+                  bottomNavigationBar: SalomonBottomBar(
+                      backgroundColor: const Color.fromARGB(255, 178, 211, 244),
+                      currentIndex: ref.watch(pageIndexProvider),
+                      selectedItemColor: const Color(0xff6200ee),
+                      unselectedItemColor: const Color(0xff757575),
+                      onTap: _onItemTapped,
+                      items: [
+                        SalomonBottomBarItem(
+                          icon: const Icon(Icons.person),
+                          title: Text(
+                            "Myself",
+                            //iconが真ん中startなのでできない
+                            // textAlign: TextAlign.left,
+                            style: GoogleFonts.orelegaOne(fontSize: 20),
+                          ),
+                          selectedColor: const Color.fromARGB(255, 2, 179, 8),
+                        ),
+                        SalomonBottomBarItem(
+                            icon: const Icon(Icons.people),
+                            title: Text("Friends",
+                                style: GoogleFonts.orelegaOne(fontSize: 20)),
+                            selectedColor: Colors.pink)
+                      ]),
+                );
+              }
+            }
+          },
+          error: (err, stack) => Text('Error: $err'),
+          loading: () => const Scaffold(
+                  body: Center(
+                child: CircularProgressIndicator(),
+              )));
+    } else {
       return const Scaffold(
           body: Center(
         child: CircularProgressIndicator(),
       ));
     }
 
-    return firebaseAuthState.when(
-        data: (user) {
-          if (user == null) {
-            // registerページへ
-            return const RegisterPage();
-          } else {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              ref.watch(userIdProvider.notifier).state = user.uid;
-            });
-            if (accessToken == null) {
-              return const OAuthPage();
-              // firebase Auth + fitbit OAuthが通っている時
-            } else {
-              return Scaffold(
-                body: PageView(
-                  controller: ref.watch(pageViewControllerProvider),
-                  children: const <Widget>[
-                    MyselfPage(),
-                    FriendPage(),
-                  ],
-                  onPageChanged: (index) {
-                    ref.watch(pageIndexProvider.notifier).state = index;
-                  },
-                ),
-                bottomNavigationBar: SalomonBottomBar(
-                    backgroundColor: const Color.fromARGB(255, 178, 211, 244),
-                    currentIndex: ref.watch(pageIndexProvider),
-                    selectedItemColor: const Color(0xff6200ee),
-                    unselectedItemColor: const Color(0xff757575),
-                    onTap: _onItemTapped,
-                    items: [
-                      SalomonBottomBarItem(
-                        icon: const Icon(Icons.person),
-                        title: Text(
-                          "Myself",
-                          //iconが真ん中startなのでできない
-                          // textAlign: TextAlign.left,
-                          style: GoogleFonts.orelegaOne(fontSize: 20),
-                        ),
-                        selectedColor: const Color.fromARGB(255, 2, 179, 8),
-                      ),
-                      SalomonBottomBarItem(
-                          icon: const Icon(Icons.people),
-                          title: Text("Friends",
-                              style: GoogleFonts.orelegaOne(fontSize: 20)),
-                          selectedColor: Colors.pink)
-                    ]),
-              );
-            }
-          }
-        },
-        error: (err, stack) => Text('Error: $err'),
-        loading: () => const Scaffold(
-          body: Center(
-        child: CircularProgressIndicator(),
-      )));
+    
   }
 }
