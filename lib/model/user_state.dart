@@ -5,7 +5,7 @@ part 'user_state.freezed.dart';
 class UserDataState with _$UserDataState {
   const factory UserDataState({
     @Default("Pochi") String avatarName,
-    @Default("hukurou") String avatarType,
+    @Default("neko") String avatarType,
     String? userName,
     String? userId,
     @Default(0) int experienceLevel,

@@ -226,7 +226,7 @@ class __$$UserDataStateImplCopyWithImpl<$Res>
 class _$UserDataStateImpl implements _UserDataState {
   const _$UserDataStateImpl(
       {this.avatarName = "Pochi",
-      this.avatarType = "hukurou",
+      this.avatarType = "neko",
       this.userName,
       this.userId,
       this.experienceLevel = 0,
