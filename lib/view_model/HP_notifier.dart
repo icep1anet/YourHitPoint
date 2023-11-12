@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import "package:logger/logger.dart";
 import 'package:your_hit_point/client/api.dart';
 import 'package:your_hit_point/client/oauth_fitbit.dart';
-import 'package:your_hit_point/utils/write_to_file.dart';
 import 'package:your_hit_point/view/base.dart';
 import 'package:your_hit_point/model/HP_state.dart';
 import 'package:your_hit_point/utils/hp_graph.dart';
