@@ -26,7 +26,6 @@ class FriendData extends _$FriendData {
   Widget createFriendCardWidget(index) {
     return FriendCardWidget(state[index].currentHP, state[index].friendName,
         state[index].avatarUrl, state[index].hpFontColor);
-
   }
 
   Future<void> fetchFriendData() async {
@@ -35,6 +34,7 @@ class FriendData extends _$FriendData {
     // fitbitからfriendIdデータを取得
     // {"id": "name"}
     Map friendDataDict = await getFriendData(friendIdDict);
+    logger.d(friendDataDict);
     // バックエンドからfriendのHP等を取得
     // {"id":
     //    {"frined_hp": currentHP,
@@ -43,9 +43,9 @@ class FriendData extends _$FriendData {
     friendDataDict.forEach((key, value) {
       add(FriendState(
           friendName: friendIdDict[key],
-          currentHP: friendDataDict[key]["friend_hp"],
-          avatarUrl: friendDataDict[key]["friend_avatar_image"],
-          hpFontColor: selectHPfontColor(friendDataDict[key]["friend_hp"])));
+          currentHP: value["friend_hp"],
+          avatarUrl: value["friend_avatar_image"],
+          hpFontColor: selectHPfontColor(value["friend_hp"])));
     });
   }
 

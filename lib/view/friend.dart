@@ -17,6 +17,11 @@ class FriendPage extends ConsumerStatefulWidget {
 }
 
 class FriendPageState extends ConsumerState<FriendPage> {
+  @override
+  void initState() {
+    super.initState();
+    logger.d("friend");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +43,7 @@ class FriendPageState extends ConsumerState<FriendPage> {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          await ref.read(userDataProvider.notifier).fetchFriendData();
+          await ref.read(friendDataProvider.notifier).fetchFriendData();
         },
         child: Center(
           child: SizedBox(
@@ -51,7 +56,7 @@ class FriendPageState extends ConsumerState<FriendPage> {
                     itemCount: ref.watch(friendDataProvider).length,
                     itemBuilder: (BuildContext context, int index) {
                       return ref
-                          .read(friendDataProvider.notifier)
+                          .watch(friendDataProvider.notifier)
                           .createFriendCardWidget(index);
                     },
                   ),

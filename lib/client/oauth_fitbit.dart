@@ -76,7 +76,9 @@ Future<Map> fitbitRequest(
   // tokenのリフレッシュもラップしているのでこれを使用してほしい
   Map data = {};
   if (depth >= 2) {
-    throw Exception("OAuthの更新に失敗しました");
+    logger.d("OAuthの更新に失敗しました");
+    deleteSecureStorage();
+    // throw Exception("OAuthの更新に失敗しました");
   }
   final token = await getToken();
   final authorizationHeaders = {'Authorization': "Bearer $token"};
