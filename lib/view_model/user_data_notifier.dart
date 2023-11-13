@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:your_hit_point/client/api.dart';
@@ -71,6 +72,10 @@ class UserDataNotifier extends StateNotifier<UserDataState> {
     body["user"]["gender"] = profile["user"]["gender"];
     body["avatarName"] = state.avatarName;
     body["avatarType"] = state.avatarType;
+    final yesterdayDatetime =
+        DateTime.now().toUtc().add(const Duration(hours: 15) * -1);
+    body["latestCalculatedSleepTime"] = DateFormat('yyyy-MM-ddThh:mm:ss.000').format(yesterdayDatetime);
+
     logger.d(body);
     var url = Uri.parse(
         "https://your-hit-point-backend-2ledkxm6ta-an.a.run.app/register/");
@@ -107,13 +112,10 @@ class UserDataNotifier extends StateNotifier<UserDataState> {
     await setItemToSharedPref(["userId"], [id]);
   }
 
-  void updateUserRecord(int maxSleepDuration, int maxTotalDaySteps,
-      int experienceLevel, int experiencePoint) {
+  void updateUserRecord(int maxSleepDuration, int maxTotalDaySteps,) {
     state = state.copyWith(
       maxSleepDuration: maxSleepDuration,
       maxTotalDaySteps: maxTotalDaySteps,
-      experienceLevel: experienceLevel,
-      experiencePoint: experiencePoint % 360,
     );
   }
 }

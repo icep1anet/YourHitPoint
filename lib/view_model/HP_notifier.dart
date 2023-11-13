@@ -9,6 +9,7 @@ import 'package:your_hit_point/client/oauth_fitbit.dart';
 import 'package:your_hit_point/view/base.dart';
 import 'package:your_hit_point/model/HP_state.dart';
 import 'package:your_hit_point/utils/hp_graph.dart';
+import 'package:your_hit_point/view_model/friend_data_notifier.dart';
 import 'package:your_hit_point/view_model/user_data_notifier.dart';
 
 var logger = Logger();
@@ -25,6 +26,7 @@ class HPNotifier extends StateNotifier<HPState> {
     String? accessToken = await getToken();
     if (accessToken != null) {
       logger.d("accessToken != null");
+      ref.watch(accessTokenProvider.notifier).state = accessToken;
       await ref.read(userDataProvider.notifier).fetchProfile();
       // await requestHP(ref);
       // await requestHP(ref);
@@ -36,16 +38,17 @@ class HPNotifier extends StateNotifier<HPState> {
   }
 
   Future<void> updateUserData(WidgetRef ref, Map responseBody) async {
-    if (!responseBody.containsKey("past_spots")) {
+    if (!responseBody["graph_spots"].containsKey("past_spots")) {
       logger.d("no past_spots data");
       return;
     }
-    List<FlSpot> pastTmpSpots = convertHPSpotsList(responseBody["graph_spots"]["past_spots"]);
-    removePastSpotsData(pastTmpSpots);
+    List<FlSpot> pastTmpSpots =
+        convertHPSpotsList(responseBody["graph_spots"]["past_spots"]);
     state = state.copyWith(
-      futureSpots: convertHPSpotsList(responseBody["graph_spots"]["future_spots"]),
+      futureSpots:
+          convertHPSpotsList(responseBody["graph_spots"]["future_spots"]),
       pastSpots: state.pastSpots + pastTmpSpots,
-      // imgUrl: responseBody["url"],
+      imgUrl: responseBody["firebase_user_dict"]["avatarUrl"],
       recordHighHP: responseBody["firebase_user_dict"]["recordHigh"].toDouble(),
       recordLowHP: responseBody["firebase_user_dict"]["recordLow"].toDouble(),
       activeLimitTime: responseBody["firebase_user_dict"]["activeLimitTime"],
@@ -53,15 +56,13 @@ class HPNotifier extends StateNotifier<HPState> {
       hpNumber: 0,
     );
     ref.read(userDataProvider.notifier).updateUserRecord(
-      responseBody["firebase_user_dict"]["maxSleepDuration"], 
-      responseBody["firebase_user_dict"]["maxTotalDaySteps"], 
-      responseBody["firebase_user_dict"]["experienceLevel"], 
-      responseBody["firebase_user_dict"]["experiencePoint"]
-      );
+        responseBody["firebase_user_dict"]["maxSleepDuration"],
+        responseBody["firebase_user_dict"]["maxTotalDaySteps"],
+        );
 
     updateMinMaxSpots();
 
-    await setFriendDataList();
+    await ref.read(friendDataProvider.notifier).fetchFriendData();
   }
 
   void removePastSpotsData(List<FlSpot> pastTmpSpots) {
@@ -80,11 +81,6 @@ class HPNotifier extends StateNotifier<HPState> {
     } else {
       logger.d("spots is Empty or tes is Empty");
     }
-  }
-
-  Future<void> setFriendDataList() async {
-    // Map friendResponseBody = await fetchFriendData();
-    // friendDataList = friendResponseBody["friendDataList"];
   }
 
   void changeHP(WidgetRef ref) {
@@ -242,14 +238,15 @@ class HPNotifier extends StateNotifier<HPState> {
     if (statusCode == 200) {
       // リクエストが成功した場合、レスポンスの内容を取得して表示します
       logger.d("requestHP成功しました!");
-      bool resendFlag = responseBody["check_calculate"]["need_new_data"];
-
-      if (!resendFlag) {
+      bool needResend = responseBody["check_calculate"]["need_new_data"];
+      // "need_new_data" : 1, 1で必要 0で不要
+      if (!needResend) {
         logger.d("HPの計算は不必要です");
         await updateUserData(ref, responseBody);
       } else {
-      logger.d("新しいHPの計算が必要です");
+        logger.d("新しいHPの計算が必要です");
         await requestCalculate(ref, responseBody);
+        await requestHP(ref);
       }
     } else {
       // リクエストが失敗した場合、エラーメッセージを表示します
@@ -258,11 +255,15 @@ class HPNotifier extends StateNotifier<HPState> {
     return responseBody;
   }
 
-  Future? requestCalculate(WidgetRef ref, Map responseBody) async{
-    DateTime now = DateTime.now();
-    String beforeUpdateDate = responseBody["check_calculate"]["before_update_date"];
-    String beforeUpdateTime = responseBody["check_calculate"]["before_update_time"];
-    DateTime beforeDateTime = DateTime.parse("$beforeUpdateDate $beforeUpdateTime");
+  Future? requestCalculate(WidgetRef ref, Map responseBody) async {
+    DateTime now = DateTime.now().toUtc().add(const Duration(hours: 9));
+    // 日本標準時UTC+9に変換
+    String beforeUpdateDate =
+        responseBody["check_calculate"]["before_update_date"];
+    String beforeUpdateTime =
+        responseBody["check_calculate"]["before_update_time"];
+    DateTime beforeDateTime =
+        DateTime.parse("$beforeUpdateDate $beforeUpdateTime");
     // 現在時刻の1時間前のdatetime
     DateTime dayAgo = now.add(const Duration(hours: 23, minutes: 59) * -1);
     // beforeDateTimeがdayAgoより前の時間の場合はdayAgoをstartDateに
@@ -270,8 +271,6 @@ class HPNotifier extends StateNotifier<HPState> {
     if (exceedFlag) {
       beforeDateTime = dayAgo;
     }
-    logger.d(now);
-    logger.d(beforeDateTime);
     final startDate = DateFormat('yyyy-MM-dd').format(beforeDateTime);
     final endDate = DateFormat('yyyy-MM-dd').format(now);
     final startTime = DateFormat('HH:mm').format(beforeDateTime);
@@ -281,10 +280,10 @@ class HPNotifier extends StateNotifier<HPState> {
     Map sleepData = await getSleeps(startDate, endDate);
     Map heartData = await getHeartRate(startDate, endDate, startTime, endTime);
     Map fitbitData = {
-    "days_sleep": sleepData,
-    "intradays_steps": stepData,
-    "intradays_heartrate": heartData,
-    "intradays_calories": calorieData
+      "days_sleep": sleepData,
+      "intradays_steps": stepData,
+      "intradays_heartrate": heartData,
+      "intradays_calories": calorieData
     };
     String? userId = ref.read(userDataProvider).userId;
     Map flutterData = {
@@ -301,6 +300,7 @@ class HPNotifier extends StateNotifier<HPState> {
         "https://your-hit-point-backend-2ledkxm6ta-an.a.run.app/hitpoint/calculate");
     final bodyEncoded = jsonEncode(requestBody);
     var response = await request(url: url, type: "post", body: bodyEncoded);
+    logger.d(response.body);
     //リクエストの返り値をマップ形式に変換
     var resBody = jsonDecode(response.body);
     //リクエスト成功時
@@ -312,5 +312,4 @@ class HPNotifier extends StateNotifier<HPState> {
     }
     return resBody;
   }
-
 }

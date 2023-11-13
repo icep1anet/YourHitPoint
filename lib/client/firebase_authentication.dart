@@ -47,6 +47,8 @@ Future<UserCredential?> createAccount(
       email: email,
       password: password,
     );
+    logger.d(credential.user!.uid);
+    ref.watch(userIdProvider.notifier).state = credential.user!.uid;
   }
 
   /// アカウントに失敗した場合のエラー処理
@@ -70,8 +72,6 @@ Future<UserCredential?> createAccount(
   } catch (e) {
     logger.d(e);
   }
-  logger.d(credential!.user!.uid);
-  ref.watch(userIdProvider.notifier).state = credential.user!.uid;
   return credential;
 }
 
@@ -83,6 +83,8 @@ Future<UserCredential?> signIn(String id, String pass, WidgetRef ref) async {
       email: id,
       password: pass,
     );
+    logger.d(credential.user!.uid);
+    ref.watch(userIdProvider.notifier).state = credential.user!.uid;
   } on FirebaseAuthException catch (e) {
     // サインインに失敗した場合のエラー処理
     // メールアドレスが無効の場合
@@ -110,8 +112,6 @@ Future<UserCredential?> signIn(String id, String pass, WidgetRef ref) async {
       logger.d('サインインエラー');
     }
   }
-  logger.d(credential!.user!.uid);
-  ref.watch(userIdProvider.notifier).state = credential.user!.uid;
   return credential;
 }
 

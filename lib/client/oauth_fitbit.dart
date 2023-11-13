@@ -76,7 +76,9 @@ Future<Map> fitbitRequest(
   // tokenのリフレッシュもラップしているのでこれを使用してほしい
   Map data = {};
   if (depth >= 2) {
-    throw Exception("OAuthの更新に失敗しました");
+    logger.d("OAuthの更新に失敗しました");
+    deleteSecureStorage();
+    // throw Exception("OAuthの更新に失敗しました");
   }
   final token = await getToken();
   final authorizationHeaders = {'Authorization': "Bearer $token"};
@@ -181,11 +183,11 @@ Future<Map> getFriends() async {
   final endpoint = Uri.https("api.fitbit.com", "/1.1/user/-/friends.json");
   final data = await fitbitRequest(url: endpoint, type: "get");
   final friendList = data["data"];
-  var friendIdList = [];
+  var friendIdDict = {};
   for (var friendData in friendList) {
-    friendIdList.add(hash(friendData["id"]));
+    friendIdDict[hash(friendData["id"])] = friendData["attributes"]["name"];
   }
-  return {"data":friendIdList};
+  return friendIdDict;
 }
 
 // debug

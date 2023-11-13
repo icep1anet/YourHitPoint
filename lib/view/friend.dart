@@ -4,6 +4,7 @@ import "package:logger/logger.dart";
 import "package:flutter/services.dart";
 import "package:google_fonts/google_fonts.dart";
 import "package:your_hit_point/view_model/HP_notifier.dart";
+import "package:your_hit_point/view_model/friend_data_notifier.dart";
 
 import "package:your_hit_point/view_model/user_data_notifier.dart";
 
@@ -16,7 +17,11 @@ class FriendPage extends ConsumerStatefulWidget {
 }
 
 class FriendPageState extends ConsumerState<FriendPage> {
-  Color hpFontColor = Colors.black;
+  @override
+  void initState() {
+    super.initState();
+    logger.d("friend");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +43,7 @@ class FriendPageState extends ConsumerState<FriendPage> {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          await ref.read(userDataProvider.notifier).fetchFriendData();
+          await ref.read(friendDataProvider.notifier).fetchFriendData();
         },
         child: Center(
           child: SizedBox(
@@ -48,27 +53,11 @@ class FriendPageState extends ConsumerState<FriendPage> {
                 Expanded(
                   child: ListView.builder(
                     // shrinkWrap: true,
-                    itemCount:
-                        ref.watch(userDataProvider).friendDataList.length,
+                    itemCount: ref.watch(friendDataProvider).length,
                     itemBuilder: (BuildContext context, int index) {
-                      Map friendData =
-                          ref.watch(userDataProvider).friendDataList[index];
-                      //各フレンドのHPによって表示の色が変わるようにする
-                      int friendHP = friendData["currentHP"].toInt();
-                      if (80 < friendHP) {
-                        hpFontColor = const Color(0xFF32cd32);
-                      } else if (30 < friendHP && friendHP <= 80) {
-                        hpFontColor = const Color(0xff00ff7f);
-                      } else if (0 < friendHP && friendHP <= 30) {
-                        hpFontColor = const Color(0xffffd700);
-                      } else {
-                        hpFontColor = const Color(0xffdc143c);
-                      }
-                      return FriendCardWidget(
-                          friendHP,
-                          friendData["friendName"],
-                          friendData["avatarUrl"],
-                          hpFontColor);
+                      return ref
+                          .watch(friendDataProvider.notifier)
+                          .createFriendCardWidget(index);
                     },
                   ),
                 ),
@@ -135,7 +124,7 @@ class ChangeIdWidgetState extends ConsumerState<ChangeIdWidget> {
         ),
       ),
       TextButton(
-        onPressed: () async{
+        onPressed: () async {
           await ref
               .read(userDataProvider.notifier)
               .refreshUserID(_userIdController!.text);
@@ -144,83 +133,5 @@ class ChangeIdWidgetState extends ConsumerState<ChangeIdWidget> {
         child: const Text("Change userId"),
       )
     ]);
-  }
-}
-
-class FriendCardWidget extends StatelessWidget {
-  final int currentHP;
-  final String friendName;
-  final String avatarUrl;
-  final Color hpFontColor;
-
-  const FriendCardWidget(
-      this.currentHP, this.friendName, this.avatarUrl, this.hpFontColor,
-      {Key? key})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 120,
-      margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 15.0),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: const [
-            BoxShadow(
-                color: Colors.grey,
-                spreadRadius: 1,
-                blurRadius: 3,
-                offset: Offset(3, 3))
-          ],
-          border: Border.all(color: const Color(0xFFE0E0E0)),
-          borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(8.0),
-              topRight: Radius.circular(54.0),
-              bottomLeft: Radius.circular(8.0),
-              bottomRight: Radius.circular(8.0))),
-      padding: const EdgeInsets.all(5),
-      child: Row(
-        children: [
-          const SizedBox(
-            width: 20,
-          ),
-          Expanded(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(friendName,
-                  style: GoogleFonts.roboto(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25,
-                      color: Colors.black)),
-              const SizedBox(height: 12),
-              Text(" HP: $currentHP",
-                  textAlign: TextAlign.left,
-                  style: GoogleFonts.roboto(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: hpFontColor)),
-              const SizedBox(height: 8),
-            ],
-          )),
-          Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                  // color: Colors.grey,
-                  border: Border.all(color: hpFontColor, width: 2),
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(avatarUrl),
-                  ))),
-          const SizedBox(
-            width: 20,
-          ),
-        ],
-      ),
-    );
   }
 }
