@@ -5,6 +5,7 @@ import "package:logger/logger.dart";
 import 'package:your_hit_point/view_model/user_data_notifier.dart';
 
 import 'package:your_hit_point/client/oauth_fitbit.dart';
+import 'package:your_hit_point/client/firebase_authentication.dart';
 
 var logger = Logger();
 
@@ -56,14 +57,11 @@ class OAuthPageState extends ConsumerState<OAuthPage> {
                         accessToken;
                       if (accessToken != null) {
                         logger.d("認証できましたよ");
-                        bool registerFlag = await ref
+                        final userId = ref.read(userIdProvider);
+                        await ref
                           .read(userDataProvider.notifier)
-                          .registerFirebase();
-                        if (registerFlag) {
-                          navigateMain();
-                        } else {
-                      setState(() => _registering = false);
-                        }
+                          .registerFirebase(userId);
+                        setState(() => _registering = false);
                       } else {
                         logger.d("認証できませんでした泣");
                         setState(() => _registering = false);

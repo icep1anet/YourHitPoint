@@ -6,8 +6,9 @@ import "package:fluttericon/iconic_icons.dart";
 import "package:google_fonts/google_fonts.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:logger/logger.dart";
-import "package:your_hit_point/client/firebase_authentication.dart";
 
+import "package:your_hit_point/client/firebase_authentication.dart";
+import "package:your_hit_point/client/oauth_fitbit.dart";
 import 'package:your_hit_point/components/wave_view.dart';
 import 'package:your_hit_point/utils/hex_color.dart';
 import 'package:your_hit_point/utils/avatar.dart';
@@ -49,6 +50,7 @@ class MyselfPageState extends ConsumerState<MyselfPage>
     // tween = Tween<double>(begin: 0.0, end: 1.0);
     // tween.chain(CurveTween(curve: curve));
     // animation = animationController!.drive(tween);
+    ref.read(hpProvider.notifier).requestHP(ref);
     setTimerFunc(60, ref.read(hpProvider.notifier).changeHP, ref);
     // animationController!.forward();
   }
@@ -575,6 +577,9 @@ class SliverAppBarWidget extends StatelessWidget {
           )),
       leading: IconButton(
         onPressed: () {
+          // debug
+          deleteSecureStorage();
+
           signOut();
           // userDataProvider.initRemoveUserId();
         },

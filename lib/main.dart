@@ -4,7 +4,7 @@ import "package:logger/logger.dart";
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import 'view/start.dart';
+import 'view/base.dart';
 import 'firebase_options.dart';
 
 const locale = Locale("ja", "JP");

@@ -264,27 +264,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                       if (_registering == true)
                         const CircularProgressIndicator(),
                       if (userId != null) Text(userId!),
-                      TextButton(
-                        onPressed: () async {
-                          await callOAuth();
-                          String? accessToken = await getToken();
-                          ref.watch(accessTokenProvider.notifier).state =
-                              accessToken;
-                        },
-                        child: const Text(
-                          "OAuth",
-                          style: TextStyle(fontSize: 23),
-                        ),
-                      ),
-                      TextButton(
-                          onPressed: () async {
-                            final data = await getFriends();
-                            logger.d(data);
-                          },
-                          child: const Text(
-                            "friends",
-                            style: TextStyle(fontSize: 23),
-                          ))
+                      
                     ],
                   ),
                 ),
