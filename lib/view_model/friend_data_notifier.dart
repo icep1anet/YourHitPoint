@@ -34,7 +34,6 @@ class FriendData extends _$FriendData {
     // fitbitからfriendIdデータを取得
     // {"id": "name"}
     Map friendDataDict = await getFriendData(friendIdDict);
-    logger.d(friendDataDict);
     // バックエンドからfriendのHP等を取得
     // {"id":
     //    {"frined_hp": currentHP,

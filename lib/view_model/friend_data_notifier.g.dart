@@ -6,7 +6,7 @@ part of 'friend_data_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$friendDataHash() => r'18116c757fb1e02e36575634371c69efa2767ea5';
+String _$friendDataHash() => r'1f3a9a7b2237e7740cbf1a230bc706dd81447999';
 
 /// See also [FriendData].
 @ProviderFor(FriendData)
