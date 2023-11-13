@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:your_hit_point/client/api.dart';
-import 'package:your_hit_point/client/oauth_fitbit.dart';
 
 const urlBase = "o2nr395oib.execute-api.ap-northeast-1.amazonaws.com";
 
@@ -18,18 +17,17 @@ Future<Response> backendRequest(
   return response;
 }
 
-Future<List> getFriendData() async {
-  List data = [];
-  List friendIdList = await getFriends();
-  if (friendIdList.isNotEmpty) {
-    // friendIdListをlistからstrに変換
-    // [id1, id2] => "id1,id2"
-    friendIdList.join(",");
+Future<Map> getFriendData(friendIdDict) async {
+  Map friendDataDict = {};
+  if (friendIdDict.isNotEmpty) {
+    // friendIdDictのkeyのlistをstrに変換
+    // {"id1":name1, "id2":name2} => "id1,id2"
+    final friendIdList = friendIdDict.keys.join(",");
     Response response = await backendRequest(
         path: "/friend", query: {"friend_fitbit_id_list": friendIdList});
     final responseBody = response.body;
-    data = json.decode(responseBody)["friends_data"];
+    friendDataDict = json.decode(responseBody);
   }
-  return data;
+  return friendDataDict;
 }
 

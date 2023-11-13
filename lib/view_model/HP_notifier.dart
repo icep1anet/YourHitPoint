@@ -9,6 +9,7 @@ import 'package:your_hit_point/client/oauth_fitbit.dart';
 import 'package:your_hit_point/view/base.dart';
 import 'package:your_hit_point/model/HP_state.dart';
 import 'package:your_hit_point/utils/hp_graph.dart';
+import 'package:your_hit_point/view_model/friend_data_notifier.dart';
 import 'package:your_hit_point/view_model/user_data_notifier.dart';
 
 var logger = Logger();
@@ -62,7 +63,7 @@ class HPNotifier extends StateNotifier<HPState> {
 
     updateMinMaxSpots();
 
-    await setFriendDataList();
+    await ref.read(friendDataProvider.notifier).fetchFriendData();
   }
 
   void removePastSpotsData(List<FlSpot> pastTmpSpots) {
@@ -81,11 +82,6 @@ class HPNotifier extends StateNotifier<HPState> {
     } else {
       logger.d("spots is Empty or tes is Empty");
     }
-  }
-
-  Future<void> setFriendDataList() async {
-    // Map friendResponseBody = await fetchFriendData();
-    // friendDataList = friendResponseBody["friendDataList"];
   }
 
   void changeHP(WidgetRef ref) {

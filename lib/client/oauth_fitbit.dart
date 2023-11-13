@@ -181,11 +181,11 @@ Future<Map> getFriends() async {
   final endpoint = Uri.https("api.fitbit.com", "/1.1/user/-/friends.json");
   final data = await fitbitRequest(url: endpoint, type: "get");
   final friendList = data["data"];
-  var friendIdList = [];
+  var friendIdDict = {};
   for (var friendData in friendList) {
-    friendIdList.add(hash(friendData["id"]));
+    friendIdDict[hash(friendData["id"])] = friendData["attributes"]["name"];
   }
-  return {"data":friendIdList};
+  return friendIdDict;
 }
 
 // debug
