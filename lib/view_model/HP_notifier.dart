@@ -58,8 +58,7 @@ class HPNotifier extends StateNotifier<HPState> {
     ref.read(userDataProvider.notifier).updateUserRecord(
         responseBody["firebase_user_dict"]["maxSleepDuration"],
         responseBody["firebase_user_dict"]["maxTotalDaySteps"],
-        responseBody["firebase_user_dict"]["experienceLevel"],
-        responseBody["firebase_user_dict"]["experiencePoint"]);
+        );
 
     updateMinMaxSpots();
 
@@ -247,6 +246,7 @@ class HPNotifier extends StateNotifier<HPState> {
       } else {
         logger.d("新しいHPの計算が必要です");
         await requestCalculate(ref, responseBody);
+        await requestHP(ref);
       }
     } else {
       // リクエストが失敗した場合、エラーメッセージを表示します
