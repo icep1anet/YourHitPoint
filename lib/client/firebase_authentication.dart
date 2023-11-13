@@ -79,7 +79,7 @@ Future<UserCredential?> signIn(String id, String pass, WidgetRef ref) async {
       email: id,
       password: pass,
     );
-    logger.d(credential!.user!.uid);
+    logger.d(credential.user!.uid);
     ref.watch(userIdProvider.notifier).state = credential.user!.uid;
   } on FirebaseAuthException catch (e) {
     // サインインに失敗した場合のエラー処理

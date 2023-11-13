@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import "package:logger/logger.dart";
 import 'package:your_hit_point/client/api.dart';
 import 'package:your_hit_point/client/oauth_fitbit.dart';
-import 'package:your_hit_point/utils/write_to_file.dart';
 import 'package:your_hit_point/view/base.dart';
 import 'package:your_hit_point/model/HP_state.dart';
 import 'package:your_hit_point/utils/hp_graph.dart';
+import 'package:your_hit_point/view_model/friend_data_notifier.dart';
 import 'package:your_hit_point/view_model/user_data_notifier.dart';
 
 var logger = Logger();
@@ -58,12 +58,11 @@ class HPNotifier extends StateNotifier<HPState> {
     ref.read(userDataProvider.notifier).updateUserRecord(
         responseBody["firebase_user_dict"]["maxSleepDuration"],
         responseBody["firebase_user_dict"]["maxTotalDaySteps"],
-        responseBody["firebase_user_dict"]["experienceLevel"],
-        responseBody["firebase_user_dict"]["experiencePoint"]);
+        );
 
     updateMinMaxSpots();
 
-    await setFriendDataList();
+    await ref.read(friendDataProvider.notifier).fetchFriendData();
   }
 
   void removePastSpotsData(List<FlSpot> pastTmpSpots) {
@@ -82,11 +81,6 @@ class HPNotifier extends StateNotifier<HPState> {
     } else {
       logger.d("spots is Empty or tes is Empty");
     }
-  }
-
-  Future<void> setFriendDataList() async {
-    // Map friendResponseBody = await fetchFriendData();
-    // friendDataList = friendResponseBody["friendDataList"];
   }
 
   void changeHP(WidgetRef ref) {
@@ -252,6 +246,7 @@ class HPNotifier extends StateNotifier<HPState> {
       } else {
         logger.d("新しいHPの計算が必要です");
         await requestCalculate(ref, responseBody);
+        await requestHP(ref);
       }
     } else {
       // リクエストが失敗した場合、エラーメッセージを表示します

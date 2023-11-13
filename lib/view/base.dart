@@ -33,7 +33,7 @@ class MainPageState extends ConsumerState<MainPage> {
     super.initState();
     logger.d("hello world");
     ref.read(hpProvider.notifier).initMain(ref);
-    setTimerFunc(900, ref.read(hpProvider.notifier).updateUserData, ref);
+    setTimerFunc(900, ref.read(hpProvider.notifier).requestHP, ref);
   }
 
   //ページ移動系
