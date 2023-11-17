@@ -9,7 +9,7 @@ class ValidateText {
         return null;
       }
     } else {
-      return null;
+      return "null error";
     }
   }
 
@@ -23,7 +23,7 @@ class ValidateText {
         return null;
       }
     } else{
-      return null;
+      return "null error";
     }
   }
 }

@@ -91,9 +91,6 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                         keyboardType: TextInputType.text,
                         onEditingComplete: () {
                           _focusPasswordNode?.requestFocus();
-                          setState(() {
-                            emailValidate = AutovalidateMode.onUserInteraction;
-                          });
                         },
                         readOnly: _registering,
                         textCapitalization: TextCapitalization.none,
@@ -137,9 +134,6 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                           obscureText: !isVisible,
                           onEditingComplete: () {
                             _focusPasswordNode?.unfocus();
-                          setState(() {
-                            passwordValidate = AutovalidateMode.always;
-                          });
                           },
                           textCapitalization: TextCapitalization.none,
                           textInputAction: TextInputAction.done,
@@ -157,12 +151,21 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                                   _passwordController!.text != "") {
                                 setState(() => _registering = true);
                                 FocusScope.of(context).unfocus();
-                                //loginの処理を書く
-                                await signIn(_emailController!.text,
-                                    _passwordController!.text, ref);
-                                setState(() => _registering = false);
-                                // logger.d(ref.watch(userIdProvider));
-                                // logger.d(ref.watch(firebaseAuthStateProvider));
+                                String? emailVal =
+                                    ValidateText.email(_emailController!.text);
+                                String? passwordVal = ValidateText.password(
+                                    _passwordController!.text);
+                                if (emailVal == null && passwordVal == null) {
+                                  await signIn(_emailController!.text,
+                                      _passwordController!.text, ref);
+                                  setState(() => _registering = false);
+                                } else {
+                                  setState(() {
+                                    emailValidate = AutovalidateMode.onUserInteraction;
+                                    passwordValidate = AutovalidateMode.onUserInteraction;
+                                    _registering = false;
+                                  });
+                                }
                               }
                             },
                             child: const Text(
@@ -179,10 +182,21 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                                   _passwordController!.text != "") {
                                 setState(() => _registering = true);
                                 FocusScope.of(context).unfocus();
-                                //registerの処理を書く
+                                String? emailVal =
+                                    ValidateText.email(_emailController!.text);
+                                String? passwordVal = ValidateText.password(
+                                    _passwordController!.text);
+                                if (emailVal == null && passwordVal == null) {
                                 await createAccount(_emailController!.text,
                                     _passwordController!.text, ref);
-                                setState(() => _registering = false);
+                                  setState(() => _registering = false);
+                                } else {
+                                  setState(() {
+                                    emailValidate = AutovalidateMode.onUserInteraction;
+                                    passwordValidate = AutovalidateMode.onUserInteraction;
+                                    _registering = false;
+                                  });
+                                }
                               }
                             },
                             child: const Text(
@@ -193,9 +207,11 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                         ],
                       ),
                       const SizedBox(height: 20),
-                      if (ref.watch(errorMessageProvider) != null) Text(
-                        ref.read(errorMessageProvider).toString(),
-                        style: const TextStyle(color: Colors.red, fontSize: 20),
+                      if (ref.watch(errorMessageProvider) != null)
+                        Text(
+                          ref.read(errorMessageProvider).toString(),
+                          style:
+                              const TextStyle(color: Colors.red, fontSize: 20),
                         ),
                     ],
                   ),
