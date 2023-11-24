@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 var logger = Logger();
 
 final userIdProvider = StateProvider<String?>((ref) => null);
+final errorMessageProvider = StateProvider<String?>((ref) => null);
 final firebaseAuthStateProvider =
     StreamProvider<User?>((ref) => FirebaseAuth.instance.userChanges());
 
@@ -54,15 +55,18 @@ Future<UserCredential?> createAccount(
   on FirebaseAuthException catch (e) {
     /// パスワードが弱い場合
     if (e.code == 'weak-password') {
+      ref.watch(errorMessageProvider.notifier).state = 'パスワードが弱いです';
       logger.d('パスワードが弱いです');
 
       /// メールアドレスが既に使用中の場合
     } else if (e.code == 'email-already-in-use') {
+      ref.watch(errorMessageProvider.notifier).state = 'すでに使用されているメールアドレスです';
       logger.d('すでに使用されているメールアドレスです');
     }
 
     /// その他エラー
     else {
+      ref.watch(errorMessageProvider.notifier).state = 'アカウント作成エラー';
       logger.d('アカウント作成エラー');
     }
   } catch (e) {
@@ -85,21 +89,25 @@ Future<UserCredential?> signIn(String id, String pass, WidgetRef ref) async {
     // サインインに失敗した場合のエラー処理
     // メールアドレスが無効の場合
     if (e.code == 'invalid-email') {
+      ref.watch(errorMessageProvider.notifier).state = 'メールアドレスが無効です';
       logger.d('メールアドレスが無効です');
     }
 
     /// ユーザーが存在しない場合
     else if (e.code == 'user-not-found') {
+      ref.watch(errorMessageProvider.notifier).state = 'ユーザーが存在しません';
       logger.d('ユーザーが存在しません');
     }
 
     /// パスワードが間違っている場合
     else if (e.code == 'wrong-password') {
+      ref.watch(errorMessageProvider.notifier).state = 'パスワードが間違っています';
       logger.d('パスワードが間違っています');
     }
 
     /// その他エラー
     else {
+      ref.watch(errorMessageProvider.notifier).state = 'サインインエラー';
       logger.d(e);
       logger.d('サインインエラー');
     }
