@@ -4,6 +4,7 @@ import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:logger/logger.dart";
 import 'package:your_hit_point/client/firebase_authentication.dart';
 import 'package:your_hit_point/components/validate_text.dart';
+import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 
 var logger = Logger();
 
@@ -23,7 +24,7 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
   bool _registering = false;
   bool isVisible = false;
   AutovalidateMode emailValidate = AutovalidateMode.disabled;
-  AutovalidateMode passwordValidate = AutovalidateMode.disabled;
+  bool passwordVal = false;
 
   //ページ起動時に呼ばれる初期化関数
   @override
@@ -100,8 +101,6 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                       Container(
                         margin: const EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
-                          autovalidateMode: passwordValidate,
-                          validator: ValidateText.password,
                           style: const TextStyle(fontSize: 20),
                           autocorrect: false,
                           controller: _passwordController,
@@ -139,6 +138,21 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                           textInputAction: TextInputAction.done,
                         ),
                       ),
+                      FlutterPwValidator(
+                          controller: _passwordController!,
+                          minLength: 8,
+                          uppercaseCharCount: 1,
+                          lowercaseCharCount: 1,
+                          numericCharCount: 1,
+                          specialCharCount: 1,
+                          width: 400,
+                          height: 200,
+                          onSuccess: () {
+                            passwordVal = true;
+                          },
+                          onFail: () {
+                            passwordVal = false;
+                          }),
                       const SizedBox(height: 30),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -153,16 +167,14 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                                 FocusScope.of(context).unfocus();
                                 String? emailVal =
                                     ValidateText.email(_emailController!.text);
-                                String? passwordVal = ValidateText.password(
-                                    _passwordController!.text);
-                                if (emailVal == null && passwordVal == null) {
+                                if (emailVal == null && passwordVal) {
                                   await signIn(_emailController!.text,
                                       _passwordController!.text, ref);
                                   setState(() => _registering = false);
                                 } else {
                                   setState(() {
-                                    emailValidate = AutovalidateMode.onUserInteraction;
-                                    passwordValidate = AutovalidateMode.onUserInteraction;
+                                    emailValidate =
+                                        AutovalidateMode.onUserInteraction;
                                     _registering = false;
                                   });
                                 }
@@ -184,16 +196,14 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                                 FocusScope.of(context).unfocus();
                                 String? emailVal =
                                     ValidateText.email(_emailController!.text);
-                                String? passwordVal = ValidateText.password(
-                                    _passwordController!.text);
-                                if (emailVal == null && passwordVal == null) {
-                                await createAccount(_emailController!.text,
-                                    _passwordController!.text, ref);
+                                if (emailVal == null && passwordVal) {
+                                  await createAccount(_emailController!.text,
+                                      _passwordController!.text, ref);
                                   setState(() => _registering = false);
                                 } else {
                                   setState(() {
-                                    emailValidate = AutovalidateMode.onUserInteraction;
-                                    passwordValidate = AutovalidateMode.onUserInteraction;
+                                    emailValidate =
+                                        AutovalidateMode.onUserInteraction;
                                     _registering = false;
                                   });
                                 }
