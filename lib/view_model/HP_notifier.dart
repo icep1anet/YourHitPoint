@@ -47,7 +47,7 @@ class HPNotifier extends StateNotifier<HPState> {
     state = state.copyWith(
       futureSpots:
           convertHPSpotsList(responseBody["graph_spots"]["future_spots"]),
-      pastSpots: state.pastSpots + pastTmpSpots,
+      pastSpots: pastTmpSpots,
       imgUrl: responseBody["firebase_user_dict"]["avatarUrl"],
       recordHighHP: responseBody["firebase_user_dict"]["recordHigh"].toDouble(),
       recordLowHP: responseBody["firebase_user_dict"]["recordLow"].toDouble(),
@@ -61,7 +61,7 @@ class HPNotifier extends StateNotifier<HPState> {
         );
 
     updateMinMaxSpots();
-
+    changeHP(ref);
     await ref.read(friendDataProvider.notifier).fetchFriendData();
   }
 
