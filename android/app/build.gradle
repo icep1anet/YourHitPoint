@@ -39,6 +39,10 @@ def keystorePropertiesFile = rootProject.file('keystore.properties')
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
+
+def applicationName = "yourHitPoint"
+def version = "0.9.1"
+
 android {
     namespace "com.yourhitpoint"
     compileSdkVersion 34
@@ -81,14 +85,25 @@ android {
         versionName flutterVersionName
         multiDexEnabled true
     }
-   signingConfigs {
-        debug {
-            storeFile file("debug.keystore")
+    applicationVariants.all { variant ->
+        if (variant.buildType.name != "release") {
+            return
         }
+        variant.outputs.all {
+            outputFileName = "${applicationName}-${version}.apk"  // ←ココ
+        }
+    }
+   signingConfigs {
+//        debug {
+//            storePassword "android"
+//            keyAlias "androiddebugkey"
+//            keyPassword "android"
+//            storeFile file("debug.keystore")
+//        }
        release {
            keyAlias keystoreProperties['keyAlias']
            keyPassword keystoreProperties['keyPassword']
-           storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+           storeFile file(keystoreProperties['storeFile'])
            storePassword keystoreProperties['storePassword']
        }
    }
