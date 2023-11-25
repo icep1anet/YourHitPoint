@@ -1,7 +1,7 @@
 name: your_hit_point
 description: visualize your hitpoint.
 publish_to: "none"
-version: 0.9.0
+version: 0.9.1
 
 assets:
   -.env
