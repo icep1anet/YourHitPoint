@@ -20,6 +20,9 @@ class FriendPageState extends ConsumerState<FriendPage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(friendDataProvider.notifier).fetchFriendData();
+    });
     logger.d("friend");
   }
 

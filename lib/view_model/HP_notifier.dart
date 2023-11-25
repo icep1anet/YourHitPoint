@@ -1,15 +1,15 @@
 import 'dart:convert';
-import 'package:intl/intl.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import "package:fl_chart/fl_chart.dart";
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import "package:logger/logger.dart";
 import 'package:your_hit_point/client/api.dart';
 import 'package:your_hit_point/client/oauth_fitbit.dart';
-import 'package:your_hit_point/view/base.dart';
 import 'package:your_hit_point/model/HP_state.dart';
 import 'package:your_hit_point/utils/hp_graph.dart';
-import 'package:your_hit_point/view_model/friend_data_notifier.dart';
+import 'package:your_hit_point/view/base.dart';
 import 'package:your_hit_point/view_model/user_data_notifier.dart';
 
 var logger = Logger();
@@ -56,13 +56,12 @@ class HPNotifier extends StateNotifier<HPState> {
       hpNumber: 0,
     );
     ref.read(userDataProvider.notifier).updateUserRecord(
-        responseBody["firebase_user_dict"]["maxSleepDuration"],
-        responseBody["firebase_user_dict"]["maxTotalDaySteps"],
+          responseBody["firebase_user_dict"]["maxSleepDuration"],
+          responseBody["firebase_user_dict"]["maxTotalDaySteps"],
         );
 
     updateMinMaxSpots();
     changeHP(ref);
-    await ref.read(friendDataProvider.notifier).fetchFriendData();
   }
 
   void removePastSpotsData(List<FlSpot> pastTmpSpots) {
@@ -215,7 +214,7 @@ class HPNotifier extends StateNotifier<HPState> {
     return responseBody;
   }
 
-  Future<Map> requestHP(WidgetRef ref) async {
+  Future<void> requestHP(WidgetRef ref) async {
     //リクエスト
     DateTime now = DateTime.now();
     String nowDate = DateFormat('yyyy-MM-dd').format(now);
@@ -252,7 +251,7 @@ class HPNotifier extends StateNotifier<HPState> {
       // リクエストが失敗した場合、エラーメッセージを表示します
       logger.d("Request failed with status: $responseBody");
     }
-    return responseBody;
+    return;
   }
 
   Future? requestCalculate(WidgetRef ref, Map responseBody) async {

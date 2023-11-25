@@ -25,28 +25,6 @@ class UserDataNotifier extends StateNotifier<UserDataState> {
         avatarType: prefs.getString("avatarType")!);
   }
 
-  Future<Map> fetchFriendData() async {
-    //リクエスト
-    var url = Uri.https("3fk5goov13.execute-api.ap-northeast-1.amazonaws.com",
-        "/default/get_friend_data_yourHP", {
-      "userId": state.userId,
-    });
-
-    var response = await request(url: url);
-    logger.d("friendbody: ${response.body}");
-    //リクエストの返り値をマップ形式に変換
-    var responseBody = jsonDecode(response.body);
-    //リクエスト成功時
-    if (response.statusCode == 200) {
-      // リクエストが成功した場合、レスポンスの内容を取得して表示します
-      logger.d("frined成功しました!");
-    } else {
-      // リクエストが失敗した場合、エラーメッセージを表示します
-      logger.d("Request failed with status: $responseBody");
-    }
-    return responseBody;
-  }
-
   Future<Map> fetchProfile() async {
     var profile = await getProfile();
     String userId = profile["user"]["encodedId"];

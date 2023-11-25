@@ -113,7 +113,5 @@ class MainPageState extends ConsumerState<MainPage> {
         child: CircularProgressIndicator(),
       ));
     }
-
-    
   }
 }
