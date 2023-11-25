@@ -90,8 +90,10 @@ class UserDataNotifier extends StateNotifier<UserDataState> {
     await setItemToSharedPref(["userId"], [id]);
   }
 
-  void updateUserRecord(int maxSleepDuration, int maxTotalDaySteps,) {
+  void updateUserRecord(String avatarName, String avatarType, int maxSleepDuration, int maxTotalDaySteps,) {
     state = state.copyWith(
+      avatarName: avatarName,
+      avatarType: avatarType,
       maxSleepDuration: maxSleepDuration,
       maxTotalDaySteps: maxTotalDaySteps,
     );

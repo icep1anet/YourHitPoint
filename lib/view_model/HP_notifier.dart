@@ -54,14 +54,16 @@ class HPNotifier extends StateNotifier<HPState> {
       activeLimitTime: responseBody["firebase_user_dict"]["activeLimitTime"],
       maxDayHP: responseBody["firebase_user_dict"]["maxDayHP"].toInt(),
       hpNumber: 0,
+      currentHP: responseBody["firebase_user_dict"]["pastHP"].toInt(),
     );
     ref.read(userDataProvider.notifier).updateUserRecord(
+          responseBody["firebase_user_dict"]["avatarName"],
+          responseBody["firebase_user_dict"]["avatarType"],
           responseBody["firebase_user_dict"]["maxSleepDuration"],
           responseBody["firebase_user_dict"]["maxTotalDaySteps"],
         );
 
     updateMinMaxSpots();
-    changeHP(ref);
   }
 
   void removePastSpotsData(List<FlSpot> pastTmpSpots) {
