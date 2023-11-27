@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 
-import "package:logger/logger.dart";
-import 'package:pkce/pkce.dart';
-import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
+import 'package:http/http.dart' as http;
+import "package:logger/logger.dart";
+import 'package:pkce/pkce.dart';
 import 'package:your_hit_point/client/api.dart';
 import 'package:your_hit_point/utils/hash.dart';
 
@@ -44,7 +44,7 @@ Future<void> callOAuth() async {
     'client_id': identifier,
     'code': code,
     'code_verifier': pkcePair.codeVerifier,
-    'grant_type': 'authorization_code',
+    'grant_type': 'authorization_code'
   };
   final response = await request(
       url: tokenEndpoint, type: "post", headers: urlencodedHeaders, body: body);
@@ -77,8 +77,8 @@ Future<Map> fitbitRequest(
   Map data = {};
   if (depth >= 2) {
     logger.d("OAuthの更新に失敗しました");
-    deleteSecureStorage();
-    // throw Exception("OAuthの更新に失敗しました");
+    // deleteSecureStorage();
+    throw Exception("OAuthの更新に失敗しました");
   }
   final token = await getToken();
   final authorizationHeaders = {'Authorization': "Bearer $token"};
@@ -90,7 +90,8 @@ Future<Map> fitbitRequest(
   http.Response response =
       await request(url: url, type: type, headers: headers, body: body);
   if (response.statusCode == 401) {
-    refreshToken();
+    // access_tokenの有効期限切れ時にtokenのrefreshを行う
+    await refreshToken();
     data = await fitbitRequest(
         url: url, type: type, headers: headers, body: body, depth: depth + 1);
   } else if (response.statusCode == 200) {
@@ -108,11 +109,12 @@ Future<void> refreshToken() async {
   final refreshToken = await getToken(key: "refresh_token");
   final body = {
     "grant_type": "refresh_token",
-    "client_id": "23R5R4",
-    "refresh_token": refreshToken
+    "client_id": identifier,
+    "refresh_token": refreshToken,
   };
   final token = await request(
       url: tokenEndpoint, type: "post", headers: headers, body: body);
+  logger.d(token.body);
   const storage = FlutterSecureStorage();
   await storage.write(key: "fitbitToken", value: token.body);
 }

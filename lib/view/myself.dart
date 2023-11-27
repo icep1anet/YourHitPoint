@@ -50,7 +50,9 @@ class MyselfPageState extends ConsumerState<MyselfPage>
     // tween = Tween<double>(begin: 0.0, end: 1.0);
     // tween.chain(CurveTween(curve: curve));
     // animation = animationController!.drive(tween);
-    ref.read(hpProvider.notifier).requestHP(ref);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(hpProvider.notifier).requestHP(ref);
+    });
     setTimerFunc(60, ref.read(hpProvider.notifier).changeHP, ref);
     // animationController!.forward();
   }

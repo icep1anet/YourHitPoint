@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:your_hit_point/client/api.dart';
 
-const urlBase = "o2nr395oib.execute-api.ap-northeast-1.amazonaws.com";
+const urlBase = "your-hit-point-backend-2ledkxm6ta-an.a.run.app";
 
 Future<Response> backendRequest(
     {required String path,
