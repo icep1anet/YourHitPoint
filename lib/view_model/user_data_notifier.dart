@@ -52,7 +52,8 @@ class UserDataNotifier extends StateNotifier<UserDataState> {
     body["avatarType"] = state.avatarType;
     final yesterdayDatetime =
         DateTime.now().toUtc().add(const Duration(hours: 15) * -1);
-    body["latestCalculatedSleepTime"] = DateFormat('yyyy-MM-ddThh:mm:ss.000').format(yesterdayDatetime);
+    body["latestCalculatedSleepTime"] =
+        DateFormat('yyyy-MM-ddThh:mm:ss.000').format(yesterdayDatetime);
 
     logger.d(body);
     var url = Uri.parse(
@@ -90,12 +91,81 @@ class UserDataNotifier extends StateNotifier<UserDataState> {
     await setItemToSharedPref(["userId"], [id]);
   }
 
-  void updateUserRecord(String avatarName, String avatarType, int maxSleepDuration, int maxTotalDaySteps,) {
+  void updateUserRecord(
+    String avatarName,
+    String avatarType,
+    int maxSleepDuration,
+    int maxTotalDaySteps,
+  ) {
     state = state.copyWith(
       avatarName: avatarName,
       avatarType: avatarType,
       maxSleepDuration: maxSleepDuration,
       maxTotalDaySteps: maxTotalDaySteps,
     );
+  }
+
+  Future? requestCalculateHL(WidgetRef ref, Map responseBody) async {
+    DateTime now = DateTime.now().toUtc().add(const Duration(hours: 9));
+    logger.d(now);
+    // 日本標準時UTC+9に変換
+    String beforeUpdateDate =
+        responseBody["check_calculate"]["before_update_date"];
+    String beforeUpdateTime =
+        responseBody["check_calculate"]["before_update_time"];
+    DateTime beforeDateTime =
+        DateTime.parse("$beforeUpdateDate $beforeUpdateTime");
+    // 現在時刻の1時間前のdatetime
+    DateTime dayAgo = now.add(const Duration(hours: 23, minutes: 59) * -1);
+    // beforeDateTimeがdayAgoより前の時間の場合はdayAgoをstartDateに
+    bool exceedFlag = dayAgo.isAfter(beforeDateTime);
+    if (exceedFlag) {
+      beforeDateTime = dayAgo;
+    }
+    final startDate = DateFormat('yyyy-MM-dd').format(beforeDateTime);
+    final endDate = DateFormat('yyyy-MM-dd').format(now);
+    final startTime = DateFormat('HH:mm').format(beforeDateTime);
+    final endTime = DateFormat('HH:mm').format(now);
+    Map stepData = await getSteps(startDate, endDate, startTime, endTime);
+    Map calorieData = await getCalories(startDate, endDate, startTime, endTime);
+    Map sleepData = await getSleeps(startDate, endDate);
+    Map heartData = await getHeartRate(startDate, endDate, startTime, endTime);
+    Map fitbitData = {
+      "days_sleep": sleepData,
+      "intradays_steps": stepData,
+      "intradays_heartrate": heartData,
+      "intradays_calories": calorieData
+    };
+    String? userId = ref.read(userDataProvider).userId;
+    Map flutterData = {
+      "gender": ref.read(userDataProvider).gender,
+      "age": ref.read(userDataProvider).age
+    };
+    logger.d("flutterData: $flutterData");
+    Map requestBody = {
+      "fitbit_id": userId,
+      "fitbit_data": fitbitData,
+      "flutter_data": flutterData
+    };
+    var url = Uri.parse(
+        "https://your-hit-point-backend-2ledkxm6ta-an.a.run.app/healthlevel/calculate");
+    final bodyEncoded = jsonEncode(requestBody);
+    var response = await request(url: url, type: "post", body: bodyEncoded);
+    logger.d("HL");
+    logger.d(response.body);
+    //リクエストの返り値をマップ形式に変換
+    var resBody = jsonDecode(response.body);
+    //リクエスト成功時
+    if (response.statusCode == 200) {
+      logger.d("calculateHL成功しました!");
+    state = state.copyWith(
+      // experienceLevel: ,
+      // experiencePoint: ,
+    );
+    } else {
+      // リクエストが失敗した場合、エラーメッセージを表示します
+      logger.d("Request failed with status: $resBody");
+    }
+    return resBody;
   }
 }

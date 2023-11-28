@@ -61,6 +61,7 @@ class HPNotifier extends StateNotifier<HPState> {
         );
     changeHP(ref, true);
     updateMinMaxSpots();
+    // await  ref.read(userDataProvider.notifier).requestCalculateHL(ref, responseBody);
   }
 
   void removePastSpotsData(List<FlSpot> pastTmpSpots) {
@@ -233,6 +234,7 @@ class HPNotifier extends StateNotifier<HPState> {
     var response = await request(url: url, type: "get", body: bodyEncoded);
     //リクエストの返り値をマップ形式に変換
     var responseBody = jsonDecode(response.body);
+    logger.d("ccccc");
     logger.d(responseBody);
     int statusCode = response.statusCode;
     //リクエスト成功時
