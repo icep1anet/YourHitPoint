@@ -28,9 +28,6 @@ class HPNotifier extends StateNotifier<HPState> {
       logger.d("accessToken != null");
       ref.watch(accessTokenProvider.notifier).state = accessToken;
       await ref.read(userDataProvider.notifier).fetchProfile();
-      // await requestHP(ref);
-      // await requestHP(ref);
-      changeHP(ref);
     } else {
       logger.d("accessToken == null");
     }
@@ -62,7 +59,7 @@ class HPNotifier extends StateNotifier<HPState> {
           responseBody["firebase_user_dict"]["maxSleepDuration"],
           responseBody["firebase_user_dict"]["maxTotalDaySteps"],
         );
-
+    changeHP(ref, true);
     updateMinMaxSpots();
   }
 
@@ -84,15 +81,18 @@ class HPNotifier extends StateNotifier<HPState> {
     }
   }
 
-  void changeHP(WidgetRef ref) {
-    if (state.hpNumber < state.futureSpots.length) {
+  void changeHP(WidgetRef ref, bool currentHPFlag) {
+    double hpPercent = 0.0;
+    // changeHPを2回目以降に呼ぶときはcurrentHPをfutureの値に置き換える
+    if (!currentHPFlag) {
       state = state.copyWith(
           currentHP: state.futureSpots[state.hpNumber].y.toInt());
-      double hpPercent = (state.currentHP / state.maxDayHP) * 100;
-      if (state.currentHP < 0) {
-        // currentHP = 0;
-        hpPercent = 0;
-      }
+    }
+    hpPercent = (state.currentHP / state.maxDayHP) * 100;
+    if (state.currentHP < 0) {
+      hpPercent = 0;
+    }
+    if (state.hpNumber < state.futureSpots.length || currentHPFlag) {
       if (80 < hpPercent) {
         state = state.copyWith(
             barColor: const Color(0xFF32cd32),
@@ -246,7 +246,7 @@ class HPNotifier extends StateNotifier<HPState> {
         await updateUserData(ref, responseBody);
       } else {
         logger.d("新しいHPの計算が必要です");
-        await requestCalculate(ref, responseBody);
+        await requestCalculateHP(ref, responseBody);
         await requestHP(ref);
       }
     } else {
@@ -256,7 +256,7 @@ class HPNotifier extends StateNotifier<HPState> {
     return;
   }
 
-  Future? requestCalculate(WidgetRef ref, Map responseBody) async {
+  Future? requestCalculateHP(WidgetRef ref, Map responseBody) async {
     DateTime now = DateTime.now().toUtc().add(const Duration(hours: 9));
     // 日本標準時UTC+9に変換
     String beforeUpdateDate =
@@ -306,7 +306,7 @@ class HPNotifier extends StateNotifier<HPState> {
     var resBody = jsonDecode(response.body);
     //リクエスト成功時
     if (response.statusCode == 200) {
-      logger.d("register成功しました!");
+      logger.d("calculateHP成功しました!");
     } else {
       // リクエストが失敗した場合、エラーメッセージを表示します
       logger.d("Request failed with status: $resBody");

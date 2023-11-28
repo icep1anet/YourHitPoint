@@ -53,7 +53,7 @@ class MyselfPageState extends ConsumerState<MyselfPage>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(hpProvider.notifier).requestHP(ref);
     });
-    setTimerFunc(60, ref.read(hpProvider.notifier).changeHP, ref);
+    setTimerChangeHP(60, ref.read(hpProvider.notifier).changeHP, ref, false);
     // animationController!.forward();
   }
 
@@ -314,6 +314,9 @@ class WaveViewWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    double hpPercent =
+        (ref.watch(hpProvider).currentHP / ref.watch(hpProvider).maxDayHP) *
+            100;
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 8, top: 16),
       child: Container(
@@ -335,10 +338,7 @@ class WaveViewWidget extends ConsumerWidget {
                 blurRadius: 4),
           ],
         ),
-        child: WaveView(
-            percentageValue: (ref.watch(hpProvider).currentHP /
-                    ref.watch(hpProvider).maxDayHP) *
-                100),
+        child: WaveView(percentageValue: hpPercent <= 0 ? 0 : hpPercent),
       ),
     );
   }
