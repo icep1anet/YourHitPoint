@@ -42,7 +42,8 @@ class HPNotifier extends StateNotifier<HPState> {
     Map recordBody = await requestRecord(ref);
     List<FlSpot> pastTmpSpots =
         convertHPSpotsList(responseBody["graph_spots"]["past_spots"]);
-    List<FlSpot> futureSpots = convertHPSpotsList(responseBody["graph_spots"]["future_spots"]);
+    List<FlSpot> futureSpots =
+        convertHPSpotsList(responseBody["graph_spots"]["future_spots"]);
     state = state.copyWith(
       futureSpots: futureSpots,
       pastSpots: pastTmpSpots,
@@ -59,8 +60,8 @@ class HPNotifier extends StateNotifier<HPState> {
           responseBody["firebase_user_dict"]["avatarType"],
           recordBody["record_data"]["maxSleepDuration"],
           recordBody["record_data"]["maxTotalDaySteps"],
-          recordBody["record_data"]["experienceLevel"],
-          recordBody["record_data"]["experiencePoint"],
+          recordBody["record_data"]["experienceLevel"].toInt(),
+          recordBody["record_data"]["experiencePoint"].toInt(),
           recordBody["record_data"]["deskworkTime"],
         );
     changeHP(ref, true);
@@ -221,7 +222,6 @@ class HPNotifier extends StateNotifier<HPState> {
   }
 
   Future<void> requestHP(WidgetRef ref) async {
-    logger.d("a");
     //リクエスト
     DateTime now = DateTime.now();
     String nowDate = DateFormat('yyyy-MM-dd').format(now);
@@ -234,7 +234,6 @@ class HPNotifier extends StateNotifier<HPState> {
     var url = Uri.parse(
         "https://your-hit-point-backend-2ledkxm6ta-an.a.run.app/hitpoint/check");
     url = url.replace(queryParameters: body);
-    logger.d("b");
     final bodyEncoded = jsonEncode(body);
     var response = await request(url: url, type: "get", body: bodyEncoded);
     //リクエストの返り値をマップ形式に変換
@@ -253,9 +252,9 @@ class HPNotifier extends StateNotifier<HPState> {
       } else {
         logger.d("新しいHPの計算が必要です");
         await requestCalculateHP(ref, responseBody);
-        // await ref
-        //     .read(userDataProvider.notifier)
-        //     .requestCalculateHL(ref, responseBody);
+        await ref
+            .read(userDataProvider.notifier)
+            .requestCalculateHL(ref, responseBody);
         await requestHP(ref);
       }
     } else {
