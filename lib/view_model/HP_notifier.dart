@@ -39,29 +39,31 @@ class HPNotifier extends StateNotifier<HPState> {
       logger.d("no past_spots data");
       return;
     }
+    Map recordBody = await requestRecord(ref);
     List<FlSpot> pastTmpSpots =
         convertHPSpotsList(responseBody["graph_spots"]["past_spots"]);
+    List<FlSpot> futureSpots = convertHPSpotsList(responseBody["graph_spots"]["future_spots"]);
     state = state.copyWith(
-      futureSpots:
-          convertHPSpotsList(responseBody["graph_spots"]["future_spots"]),
+      futureSpots: futureSpots,
       pastSpots: pastTmpSpots,
       imgUrl: responseBody["firebase_user_dict"]["avatarUrl"],
-      recordHighHP: responseBody["firebase_user_dict"]["recordHigh"].toDouble(),
-      recordLowHP: responseBody["firebase_user_dict"]["recordLow"].toDouble(),
+      recordHighHP: recordBody["record_data"]["recordHigh"].toDouble(),
+      recordLowHP: recordBody["record_data"]["recordLow"].toDouble(),
       activeLimitTime: responseBody["firebase_user_dict"]["activeLimitTime"],
-      maxDayHP: responseBody["firebase_user_dict"]["maxDayHP"].toInt(),
+      maxDayHP: recordBody["record_data"]["maxDayHP"].toInt(),
       hpNumber: 0,
       currentHP: responseBody["firebase_user_dict"]["pastHP"].toInt(),
     );
     ref.read(userDataProvider.notifier).updateUserRecord(
           responseBody["firebase_user_dict"]["avatarName"],
           responseBody["firebase_user_dict"]["avatarType"],
-          responseBody["firebase_user_dict"]["maxSleepDuration"],
-          responseBody["firebase_user_dict"]["maxTotalDaySteps"],
+          recordBody["record_data"]["maxSleepDuration"],
+          recordBody["record_data"]["maxTotalDaySteps"],
+          recordBody["record_data"]["experienceLevel"],
+          recordBody["record_data"]["experiencePoint"],
         );
     changeHP(ref, true);
     updateMinMaxSpots();
-    // await  ref.read(userDataProvider.notifier).requestCalculateHL(ref, responseBody);
   }
 
   void removePastSpotsData(List<FlSpot> pastTmpSpots) {
@@ -218,6 +220,7 @@ class HPNotifier extends StateNotifier<HPState> {
   }
 
   Future<void> requestHP(WidgetRef ref) async {
+    logger.d("a");
     //リクエスト
     DateTime now = DateTime.now();
     String nowDate = DateFormat('yyyy-MM-dd').format(now);
@@ -230,12 +233,12 @@ class HPNotifier extends StateNotifier<HPState> {
     var url = Uri.parse(
         "https://your-hit-point-backend-2ledkxm6ta-an.a.run.app/hitpoint/check");
     url = url.replace(queryParameters: body);
+    logger.d("b");
     final bodyEncoded = jsonEncode(body);
     var response = await request(url: url, type: "get", body: bodyEncoded);
     //リクエストの返り値をマップ形式に変換
     var responseBody = jsonDecode(response.body);
-    logger.d("ccccc");
-    logger.d(responseBody);
+    // logger.d(responseBody);
     int statusCode = response.statusCode;
     //リクエスト成功時
     if (statusCode == 200) {
@@ -249,6 +252,9 @@ class HPNotifier extends StateNotifier<HPState> {
       } else {
         logger.d("新しいHPの計算が必要です");
         await requestCalculateHP(ref, responseBody);
+        // await ref
+        //     .read(userDataProvider.notifier)
+        //     .requestCalculateHL(ref, responseBody);
         await requestHP(ref);
       }
     } else {
@@ -314,5 +320,30 @@ class HPNotifier extends StateNotifier<HPState> {
       logger.d("Request failed with status: $resBody");
     }
     return resBody;
+  }
+
+  Future<Map> requestRecord(WidgetRef ref) async {
+    //リクエスト
+    Map<String, dynamic>? body = {
+      "fitbit_id": ref.read(userDataProvider).userId,
+    };
+    var url = Uri.parse(
+        "https://your-hit-point-backend-2ledkxm6ta-an.a.run.app/record");
+    url = url.replace(queryParameters: body);
+    final bodyEncoded = jsonEncode(body);
+    var response = await request(url: url, type: "get", body: bodyEncoded);
+    //リクエストの返り値をマップ形式に変換
+    var responseBody = jsonDecode(response.body);
+    int statusCode = response.statusCode;
+    //リクエスト成功時
+    if (statusCode == 200) {
+      // リクエストが成功した場合、レスポンスの内容を取得して表示します
+      logger.d("requestRecord成功しました!");
+      logger.d(responseBody);
+    } else {
+      // リクエストが失敗した場合、エラーメッセージを表示します
+      logger.d("Request failed with status: $responseBody");
+    }
+    return responseBody;
   }
 }

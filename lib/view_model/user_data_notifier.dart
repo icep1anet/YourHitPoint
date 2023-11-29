@@ -96,12 +96,16 @@ class UserDataNotifier extends StateNotifier<UserDataState> {
     String avatarType,
     int maxSleepDuration,
     int maxTotalDaySteps,
+    int experienceLevel,
+    int experiencePoint,
   ) {
     state = state.copyWith(
       avatarName: avatarName,
       avatarType: avatarType,
       maxSleepDuration: maxSleepDuration,
       maxTotalDaySteps: maxTotalDaySteps,
+      experienceLevel: experienceLevel,
+      experiencePoint: experiencePoint
     );
   }
 
