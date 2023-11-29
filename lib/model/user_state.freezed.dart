@@ -27,6 +27,7 @@ mixin _$UserDataState {
   List<dynamic> get friendDataList => throw _privateConstructorUsedError;
   int get maxSleepDuration => throw _privateConstructorUsedError;
   int get maxTotalDaySteps => throw _privateConstructorUsedError;
+  List<dynamic> get deskworkTime => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $UserDataStateCopyWith<UserDataState> get copyWith =>
@@ -50,7 +51,8 @@ abstract class $UserDataStateCopyWith<$Res> {
       int age,
       List<dynamic> friendDataList,
       int maxSleepDuration,
-      int maxTotalDaySteps});
+      int maxTotalDaySteps,
+      List<dynamic> deskworkTime});
 }
 
 /// @nodoc
@@ -77,6 +79,7 @@ class _$UserDataStateCopyWithImpl<$Res, $Val extends UserDataState>
     Object? friendDataList = null,
     Object? maxSleepDuration = null,
     Object? maxTotalDaySteps = null,
+    Object? deskworkTime = null,
   }) {
     return _then(_value.copyWith(
       avatarName: null == avatarName
@@ -123,6 +126,10 @@ class _$UserDataStateCopyWithImpl<$Res, $Val extends UserDataState>
           ? _value.maxTotalDaySteps
           : maxTotalDaySteps // ignore: cast_nullable_to_non_nullable
               as int,
+      deskworkTime: null == deskworkTime
+          ? _value.deskworkTime
+          : deskworkTime // ignore: cast_nullable_to_non_nullable
+              as List<dynamic>,
     ) as $Val);
   }
 }
@@ -146,7 +153,8 @@ abstract class _$$UserDataStateImplCopyWith<$Res>
       int age,
       List<dynamic> friendDataList,
       int maxSleepDuration,
-      int maxTotalDaySteps});
+      int maxTotalDaySteps,
+      List<dynamic> deskworkTime});
 }
 
 /// @nodoc
@@ -171,6 +179,7 @@ class __$$UserDataStateImplCopyWithImpl<$Res>
     Object? friendDataList = null,
     Object? maxSleepDuration = null,
     Object? maxTotalDaySteps = null,
+    Object? deskworkTime = null,
   }) {
     return _then(_$UserDataStateImpl(
       avatarName: null == avatarName
@@ -217,6 +226,10 @@ class __$$UserDataStateImplCopyWithImpl<$Res>
           ? _value.maxTotalDaySteps
           : maxTotalDaySteps // ignore: cast_nullable_to_non_nullable
               as int,
+      deskworkTime: null == deskworkTime
+          ? _value._deskworkTime
+          : deskworkTime // ignore: cast_nullable_to_non_nullable
+              as List<dynamic>,
     ));
   }
 }
@@ -235,8 +248,10 @@ class _$UserDataStateImpl implements _UserDataState {
       this.age = 0,
       final List<dynamic> friendDataList = const [],
       this.maxSleepDuration = 0,
-      this.maxTotalDaySteps = 0})
-      : _friendDataList = friendDataList;
+      this.maxTotalDaySteps = 0,
+      final List<dynamic> deskworkTime = const ["9:00:00", "17:00:00"]})
+      : _friendDataList = friendDataList,
+        _deskworkTime = deskworkTime;
 
   @override
   @JsonKey()
@@ -275,10 +290,18 @@ class _$UserDataStateImpl implements _UserDataState {
   @override
   @JsonKey()
   final int maxTotalDaySteps;
+  final List<dynamic> _deskworkTime;
+  @override
+  @JsonKey()
+  List<dynamic> get deskworkTime {
+    if (_deskworkTime is EqualUnmodifiableListView) return _deskworkTime;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_deskworkTime);
+  }
 
   @override
   String toString() {
-    return 'UserDataState(avatarName: $avatarName, avatarType: $avatarType, userName: $userName, userId: $userId, experienceLevel: $experienceLevel, experiencePoint: $experiencePoint, gender: $gender, age: $age, friendDataList: $friendDataList, maxSleepDuration: $maxSleepDuration, maxTotalDaySteps: $maxTotalDaySteps)';
+    return 'UserDataState(avatarName: $avatarName, avatarType: $avatarType, userName: $userName, userId: $userId, experienceLevel: $experienceLevel, experiencePoint: $experiencePoint, gender: $gender, age: $age, friendDataList: $friendDataList, maxSleepDuration: $maxSleepDuration, maxTotalDaySteps: $maxTotalDaySteps, deskworkTime: $deskworkTime)';
   }
 
   @override
@@ -304,7 +327,9 @@ class _$UserDataStateImpl implements _UserDataState {
             (identical(other.maxSleepDuration, maxSleepDuration) ||
                 other.maxSleepDuration == maxSleepDuration) &&
             (identical(other.maxTotalDaySteps, maxTotalDaySteps) ||
-                other.maxTotalDaySteps == maxTotalDaySteps));
+                other.maxTotalDaySteps == maxTotalDaySteps) &&
+            const DeepCollectionEquality()
+                .equals(other._deskworkTime, _deskworkTime));
   }
 
   @override
@@ -320,7 +345,8 @@ class _$UserDataStateImpl implements _UserDataState {
       age,
       const DeepCollectionEquality().hash(_friendDataList),
       maxSleepDuration,
-      maxTotalDaySteps);
+      maxTotalDaySteps,
+      const DeepCollectionEquality().hash(_deskworkTime));
 
   @JsonKey(ignore: true)
   @override
@@ -341,7 +367,8 @@ abstract class _UserDataState implements UserDataState {
       final int age,
       final List<dynamic> friendDataList,
       final int maxSleepDuration,
-      final int maxTotalDaySteps}) = _$UserDataStateImpl;
+      final int maxTotalDaySteps,
+      final List<dynamic> deskworkTime}) = _$UserDataStateImpl;
 
   @override
   String get avatarName;
@@ -365,6 +392,8 @@ abstract class _UserDataState implements UserDataState {
   int get maxSleepDuration;
   @override
   int get maxTotalDaySteps;
+  @override
+  List<dynamic> get deskworkTime;
   @override
   @JsonKey(ignore: true)
   _$$UserDataStateImplCopyWith<_$UserDataStateImpl> get copyWith =>

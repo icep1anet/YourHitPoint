@@ -38,8 +38,9 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
     _focusUserNameNode = FocusNode();
     _focusAvatarNameNode = FocusNode();
     selectAvatarType = ref.read(userDataProvider).avatarType;
-    selectStartTime = "9:00";
-    selectEndTime = "17:00";
+    List deskworkTime = ref.read(userDataProvider).deskworkTime;
+    selectStartTime = deskworkTime[0];
+    selectEndTime = deskworkTime[1];
   }
 
   @override

@@ -61,6 +61,7 @@ class HPNotifier extends StateNotifier<HPState> {
           recordBody["record_data"]["maxTotalDaySteps"],
           recordBody["record_data"]["experienceLevel"],
           recordBody["record_data"]["experiencePoint"],
+          recordBody["record_data"]["deskworkTime"],
         );
     changeHP(ref, true);
     updateMinMaxSpots();

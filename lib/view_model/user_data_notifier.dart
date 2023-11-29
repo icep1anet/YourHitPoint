@@ -98,6 +98,7 @@ class UserDataNotifier extends StateNotifier<UserDataState> {
     int maxTotalDaySteps,
     int experienceLevel,
     int experiencePoint,
+    List deskworkTime
   ) {
     state = state.copyWith(
       avatarName: avatarName,
@@ -105,7 +106,8 @@ class UserDataNotifier extends StateNotifier<UserDataState> {
       maxSleepDuration: maxSleepDuration,
       maxTotalDaySteps: maxTotalDaySteps,
       experienceLevel: experienceLevel,
-      experiencePoint: experiencePoint
+      experiencePoint: experiencePoint,
+      deskworkTime: deskworkTime
     );
   }
 

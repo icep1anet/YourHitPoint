@@ -15,5 +15,6 @@ class UserDataState with _$UserDataState {
     @Default([]) List friendDataList,
     @Default(0) int maxSleepDuration,
     @Default(0) int maxTotalDaySteps,
+    @Default(["9:00:00", "17:00:00"]) List deskworkTime,
   }) = _UserDataState;
 }
