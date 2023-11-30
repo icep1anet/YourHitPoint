@@ -92,6 +92,7 @@ class UserDataNotifier extends StateNotifier<UserDataState> {
   }
 
   void updateUserRecord(
+    String userName,
     String avatarName,
     String avatarType,
     int maxSleepDuration,
@@ -101,6 +102,7 @@ class UserDataNotifier extends StateNotifier<UserDataState> {
     List deskworkTime
   ) {
     state = state.copyWith(
+      userName: userName,
       avatarName: avatarName,
       avatarType: avatarType,
       maxSleepDuration: maxSleepDuration,

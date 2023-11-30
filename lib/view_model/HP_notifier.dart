@@ -56,6 +56,7 @@ class HPNotifier extends StateNotifier<HPState> {
       currentHP: responseBody["firebase_user_dict"]["pastHP"].toInt(),
     );
     ref.read(userDataProvider.notifier).updateUserRecord(
+          responseBody["firebase_user_dict"]["userName"],
           responseBody["firebase_user_dict"]["avatarName"],
           responseBody["firebase_user_dict"]["avatarType"],
           recordBody["record_data"]["maxSleepDuration"],
