@@ -157,17 +157,43 @@ class UserDataNotifier extends StateNotifier<UserDataState> {
         "https://your-hit-point-backend-2ledkxm6ta-an.a.run.app/healthlevel/calculate");
     final bodyEncoded = jsonEncode(requestBody);
     var response = await request(url: url, type: "post", body: bodyEncoded);
-    logger.d("HL");
-    logger.d(response.body);
     //リクエストの返り値をマップ形式に変換
     var resBody = jsonDecode(response.body);
     //リクエスト成功時
     if (response.statusCode == 200) {
       logger.d("calculateHL成功しました!");
-    state = state.copyWith(
-      // experienceLevel: ,
-      // experiencePoint: ,
-    );
+    } else {
+      // リクエストが失敗した場合、エラーメッセージを表示します
+      logger.d("Request failed with status: $resBody");
+    }
+    return resBody;
+  }
+
+
+  Future changeProfile(String userId, String userName, String avatarName, String avatarType, List deskworkTime) async {
+
+    Map requestBody = {
+      "fitbit_id": userId,
+      "userName": userName,
+      "avatarName": avatarName,
+      "avatarType": avatarType,
+      "deskworkTime": deskworkTime,
+    };
+    var url = Uri.parse(
+        "https://your-hit-point-backend-2ledkxm6ta-an.a.run.app/change_data/");
+    final bodyEncoded = jsonEncode(requestBody);
+    var response = await request(url: url, type: "post", body: bodyEncoded);
+    //リクエストの返り値をマップ形式に変換
+    var resBody = jsonDecode(response.body);
+    //リクエスト成功時
+    if (response.statusCode == 200) {
+      logger.d("changeProfile成功しました!");
+      state = state.copyWith(
+        userName: userName,
+        avatarName: avatarName,
+        avatarType: avatarName,
+        deskworkTime: deskworkTime
+      );
     } else {
       // リクエストが失敗した場合、エラーメッセージを表示します
       logger.d("Request failed with status: $resBody");
