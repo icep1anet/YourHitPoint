@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "package:logger/logger.dart";
 import "package:salomon_bottom_bar/salomon_bottom_bar.dart";
 import "package:google_fonts/google_fonts.dart";
+import 'package:bordered_text/bordered_text.dart';
 import 'package:your_hit_point/client/firebase_authentication.dart';
 import 'package:your_hit_point/client/oauth_fitbit.dart';
 import 'package:your_hit_point/utils/timer_func.dart';
@@ -84,11 +85,15 @@ class MainPageState extends ConsumerState<MainPage> {
                       items: [
                         SalomonBottomBarItem(
                           icon: const Icon(Icons.person),
-                          title: Text(
-                            "Myself",
-                            //iconが真ん中startなのでできない
-                            // textAlign: TextAlign.left,
-                            style: GoogleFonts.orelegaOne(fontSize: 20),
+                          title: BorderedText(
+                            strokeWidth: 2,
+                            strokeColor: Colors.black,
+                            child: Text(
+                              "Myself",
+                              //iconが真ん中startなのでできない
+                              // textAlign: TextAlign.left,
+                              style: GoogleFonts.orelegaOne(fontSize: 20),
+                            ),
                           ),
                           selectedColor: const Color.fromARGB(255, 2, 179, 8),
                         ),
