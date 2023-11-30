@@ -53,7 +53,7 @@ class MyselfPageState extends ConsumerState<MyselfPage>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(hpProvider.notifier).requestHP(ref);
     });
-    setTimerChangeHP(60, ref.read(hpProvider.notifier).changeHP, ref, false);
+    setTimerChangeHP(900, ref.read(hpProvider.notifier).changeHP, ref, false);
     // animationController!.forward();
   }
 
