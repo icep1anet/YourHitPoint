@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "package:logger/logger.dart";
 import "package:salomon_bottom_bar/salomon_bottom_bar.dart";
 import "package:google_fonts/google_fonts.dart";
+import 'package:bordered_text/bordered_text.dart';
 import 'package:your_hit_point/client/firebase_authentication.dart';
 import 'package:your_hit_point/client/oauth_fitbit.dart';
 import 'package:your_hit_point/utils/timer_func.dart';
@@ -76,7 +77,7 @@ class MainPageState extends ConsumerState<MainPage> {
                     },
                   ),
                   bottomNavigationBar: SalomonBottomBar(
-                      backgroundColor: const Color.fromARGB(255, 178, 211, 244),
+                      backgroundColor: Theme.of(context).primaryColor,
                       currentIndex: ref.watch(pageIndexProvider),
                       selectedItemColor: const Color(0xff6200ee),
                       unselectedItemColor: const Color(0xff757575),
@@ -84,19 +85,19 @@ class MainPageState extends ConsumerState<MainPage> {
                       items: [
                         SalomonBottomBarItem(
                           icon: const Icon(Icons.person),
-                          title: Text(
-                            "Myself",
-                            //iconが真ん中startなのでできない
-                            // textAlign: TextAlign.left,
-                            style: GoogleFonts.orelegaOne(fontSize: 20),
-                          ),
-                          selectedColor: const Color.fromARGB(255, 2, 179, 8),
+                          title: Text("Myself",
+                              //iconが真ん中startなのでできない
+                              // textAlign: TextAlign.left,
+                              style: GoogleFonts.orelegaOne(
+                                  fontSize: 20, letterSpacing: 2)),
+                          selectedColor: Theme.of(context).cardColor,
                         ),
                         SalomonBottomBarItem(
                             icon: const Icon(Icons.people),
                             title: Text("Friends",
-                                style: GoogleFonts.orelegaOne(fontSize: 20)),
-                            selectedColor: Colors.pink)
+                                style: GoogleFonts.orelegaOne(
+                                    fontSize: 20, letterSpacing: 2)),
+                            selectedColor: Theme.of(context).cardColor)
                       ]),
                 );
               }

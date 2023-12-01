@@ -52,7 +52,6 @@ class HPNotifier extends StateNotifier<HPState> {
       recordLowHP: recordBody["record_data"]["recordLow"].toDouble(),
       activeLimitTime: responseBody["firebase_user_dict"]["activeLimitTime"],
       maxDayHP: recordBody["record_data"]["maxDayHP"].toInt(),
-      hpNumber: 0,
       currentHP: responseBody["firebase_user_dict"]["pastHP"].toInt(),
     );
     ref.read(userDataProvider.notifier).updateUserRecord(
@@ -65,8 +64,8 @@ class HPNotifier extends StateNotifier<HPState> {
           recordBody["record_data"]["experiencePoint"].toInt(),
           recordBody["record_data"]["deskworkTime"],
         );
-    changeHP(ref, true);
     updateMinMaxSpots();
+    changeHP();
   }
 
   void removePastSpotsData(List<FlSpot> pastTmpSpots) {
@@ -87,46 +86,40 @@ class HPNotifier extends StateNotifier<HPState> {
     }
   }
 
-  void changeHP(WidgetRef ref, bool currentHPFlag) {
+  void changeHP() {
     double hpPercent = 0.0;
-    // changeHPを2回目以降に呼ぶときはcurrentHPをfutureの値に置き換える
-    if (!currentHPFlag) {
-      state = state.copyWith(
-          currentHP: state.futureSpots[state.hpNumber].y.toInt());
-    }
     hpPercent = (state.currentHP / state.maxDayHP) * 100;
     if (state.currentHP < 0) {
       hpPercent = 0;
     }
-    if (state.hpNumber < state.futureSpots.length || currentHPFlag) {
-      if (80 < hpPercent) {
-        state = state.copyWith(
-            barColor: const Color(0xFF32cd32),
-            fontColor: Colors.white,
-            fontPosition: 60);
-      } else if (40 < hpPercent && hpPercent <= 80) {
-        state = state.copyWith(
-            barColor: const Color.fromARGB(255, 0, 226, 113),
-            fontColor: Colors.white,
-            fontPosition: 60);
-      } else if (30 < hpPercent && hpPercent <= 40) {
-        state = state.copyWith(
-            barColor: const Color.fromARGB(255, 0, 226, 113),
-            fontColor: Colors.black,
-            fontPosition: 0);
-      } else if (0 < hpPercent && hpPercent <= 30) {
-        state = state.copyWith(
-            barColor: const Color(0xffffd700),
-            fontColor: Colors.black,
-            fontPosition: 0);
-      } else {
-        state = state.copyWith(
-            barColor: const Color(0xffdc143c),
-            fontColor: Colors.black,
-            fontPosition: 0);
-      }
-      state = state.copyWith(hpNumber: state.hpNumber + 1);
+
+    if (80 < hpPercent) {
+      state = state.copyWith(
+          barColor: const Color(0xFF32cd32),
+          fontColor: Colors.white,
+          fontPosition: 60);
+    } else if (40 < hpPercent && hpPercent <= 80) {
+      state = state.copyWith(
+          barColor: const Color.fromARGB(255, 0, 226, 113),
+          fontColor: Colors.white,
+          fontPosition: 60);
+    } else if (30 < hpPercent && hpPercent <= 40) {
+      state = state.copyWith(
+          barColor: const Color.fromARGB(255, 0, 226, 113),
+          fontColor: Colors.black,
+          fontPosition: 0);
+    } else if (0 < hpPercent && hpPercent <= 30) {
+      state = state.copyWith(
+          barColor: const Color(0xffffd700),
+          fontColor: Colors.black,
+          fontPosition: 0);
+    } else {
+      state = state.copyWith(
+          barColor: const Color(0xffdc143c),
+          fontColor: Colors.black,
+          fontPosition: 0);
     }
+    state = state.copyWith(hpNumber: state.hpNumber + 1);
   }
 
   void updateMinMaxSpots() {
@@ -253,6 +246,7 @@ class HPNotifier extends StateNotifier<HPState> {
         await updateUserData(ref, responseBody);
       } else {
         logger.d("新しいHPの計算が必要です");
+
         await requestCalculateHP(ref, responseBody);
         await ref
             .read(userDataProvider.notifier)

@@ -6,7 +6,6 @@ import "package:logger/logger.dart";
 
 import "package:your_hit_point/view_model/user_data_notifier.dart";
 import 'package:your_hit_point/utils/dropdown_items.dart';
-import 'package:your_hit_point/client/oauth_fitbit.dart';
 
 var logger = Logger();
 
