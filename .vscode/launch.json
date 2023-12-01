@@ -11,6 +11,8 @@
             "program": "lib/main.dart",
             "args": [
                 "--debug",
+                "--web-renderer",
+                "html",
                 "--flavor",
                 "develop",
                 "--no-build"
