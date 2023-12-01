@@ -42,7 +42,7 @@ class FriendPageState extends ConsumerState<FriendPage> {
               color: Theme.of(context).cardColor),
         ),
         centerTitle: true,
-        backgroundColor: const Color(0xff00a5bf),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: RefreshIndicator(
         onRefresh: () async {

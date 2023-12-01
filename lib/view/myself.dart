@@ -89,7 +89,8 @@ class MyselfPageState extends ConsumerState<MyselfPage>
                       decoration: BoxDecoration(
                         border: Border(
                           bottom:
-                              BorderSide(color: Theme.of(context).focusColor),
+                              BorderSide(color: Theme.of(context).focusColor,
+                              width: 4),
                         ),
                       ),
                       // child: Text(
@@ -139,7 +140,7 @@ class MyselfPageState extends ConsumerState<MyselfPage>
                       decoration: BoxDecoration(
                         border: Border(
                           bottom:
-                              BorderSide(color: Theme.of(context).focusColor),
+                              BorderSide(color: Theme.of(context).focusColor,width: 4),
                         ),
                       ),
                       // child: Text(
@@ -185,7 +186,7 @@ class MyselfPageState extends ConsumerState<MyselfPage>
                         decoration: BoxDecoration(
                             border: Border(
                                 bottom: BorderSide(
-                                    color: Theme.of(context).focusColor))),
+                                    color: Theme.of(context).focusColor,width: 4))),
                         child: Align(
                           alignment: Alignment.center,
                           child: Text("HP グラフ",
@@ -205,7 +206,7 @@ class MyselfPageState extends ConsumerState<MyselfPage>
                             border: Border(
                                 bottom: BorderSide(
                                     color: Theme.of(context).focusColor,
-                                    width: 1.5))),
+                                    width: 4))),
                         child: Align(
                           alignment: Alignment.center,
                           // child: Text("HP record",
@@ -360,18 +361,18 @@ class LineChartWidget extends ConsumerWidget {
           maxX: ref.watch(hpProvider).maxGraphX,
           minY: ref.watch(hpProvider).minGraphY,
           maxY: ref.watch(hpProvider).maxGraphY,
-          backgroundColor: const Color(0xffd0e3ce),
+          backgroundColor: Theme.of(context).cardColor,
           lineBarsData: [
             LineChartBarData(
               isCurved: true,
-              color: Colors.blue,
+              color: Theme.of(context).primaryColor,
               barWidth: 3,
               dotData: FlDotData(show: false),
               spots: ref.watch(hpProvider).pastSpots,
             ),
             LineChartBarData(
               isCurved: true,
-              color: Colors.blue[400],
+              color: Theme.of(context).primaryColor,
               barWidth: 3,
               dotData: FlDotData(show: false),
               spots: ref.watch(hpProvider).futureSpots,
@@ -389,6 +390,7 @@ class LineChartWidget extends ConsumerWidget {
                   return bottomGraphWidgets(
                     value,
                     meta,
+                    context
                   );
                 },
                 reservedSize: 30,
@@ -398,17 +400,17 @@ class LineChartWidget extends ConsumerWidget {
           extraLinesData: ExtraLinesData(horizontalLines: [
             HorizontalLine(
               y: 0,
-              color: Colors.red,
+              color: Theme.of(context).hintColor,
               strokeWidth: 1,
             ),
           ])),
     );
   }
 
-  Widget bottomGraphWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
+  Widget bottomGraphWidgets(double value, TitleMeta meta, BuildContext context) {
+     final style = TextStyle(
       fontWeight: FontWeight.bold,
-      color: Colors.pink,
+      color: Theme.of(context).hintColor,
       fontFamily: "Digital",
     );
     String text = "";
@@ -562,7 +564,7 @@ class SliverAppBarWidget extends StatelessWidget {
       pinned: true,
       stretch: true,
       collapsedHeight: 100,
-      backgroundColor: Theme.of(context).focusColor,
+      backgroundColor: Theme.of(context).primaryColor,
       toolbarHeight: 100,
       flexibleSpace: FlexibleSpaceBar(
           centerTitle: true,

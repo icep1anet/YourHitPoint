@@ -27,15 +27,16 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        primaryColor: const Color(0xffdc143c),
+        primaryColor: const Color(0xff60c0e0),
         hintColor: Colors.red,
-        focusColor: const Color(0xff00a5bf),
+        //myselfのアクセントカラー
+        focusColor: const Color(0xFF32cd32),
         cardColor: Colors.white,
         shadowColor: Colors.black,
         canvasColor: const Color(0xffd0e3ce),
         hoverColor: const Color(0xFF32cd32),
         splashColor: const Color(0xff00ff7f),
-        dividerColor: const Color(0xffffd700),
+        dividerColor: const Color.fromARGB(255, 0, 226, 113),
       ),
       home: const MainPage(),
       //画面遷移するときのルート追加

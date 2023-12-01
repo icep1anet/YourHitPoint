@@ -77,7 +77,7 @@ class MainPageState extends ConsumerState<MainPage> {
                     },
                   ),
                   bottomNavigationBar: SalomonBottomBar(
-                      backgroundColor: const Color.fromARGB(255, 178, 211, 244),
+                      backgroundColor: Theme.of(context).primaryColor,
                       currentIndex: ref.watch(pageIndexProvider),
                       selectedItemColor: const Color(0xff6200ee),
                       unselectedItemColor: const Color(0xff757575),
@@ -85,23 +85,19 @@ class MainPageState extends ConsumerState<MainPage> {
                       items: [
                         SalomonBottomBarItem(
                           icon: const Icon(Icons.person),
-                          title: BorderedText(
-                            strokeWidth: 2,
-                            strokeColor: Colors.black,
-                            child: Text(
-                              "Myself",
-                              //iconが真ん中startなのでできない
-                              // textAlign: TextAlign.left,
-                              style: GoogleFonts.orelegaOne(fontSize: 20),
-                            ),
+                          title: Text(
+                            "Myself",
+                            //iconが真ん中startなのでできない
+                            // textAlign: TextAlign.left,
+                            style: GoogleFonts.orelegaOne(fontSize: 20),
                           ),
-                          selectedColor: const Color.fromARGB(255, 2, 179, 8),
+                          selectedColor: Theme.of(context).focusColor,
                         ),
                         SalomonBottomBarItem(
                             icon: const Icon(Icons.people),
                             title: Text("Friends",
                                 style: GoogleFonts.orelegaOne(fontSize: 20)),
-                            selectedColor: Colors.pink)
+                            selectedColor: Theme.of(context).focusColor)
                       ]),
                 );
               }
