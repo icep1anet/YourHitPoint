@@ -10,20 +10,16 @@ List<DropdownMenuItem<String>> dropdownMenuItems = const [
     child: Text("犬"),
   ),
   DropdownMenuItem(
-    value: "man",
-    child: Text("人間男"),
+    value: "suzume",
+    child: Text("雀"),
   ),
   DropdownMenuItem(
     value: "wani",
     child: Text("ワニ"),
   ),
   DropdownMenuItem(
-    value: "hukurou",
-    child: Text("フクロウ"),
-  ),
-  DropdownMenuItem(
-    value: "kabutomushi",
-    child: Text("カブトムシ"),
+    value: "pengin",
+    child: Text("ペンギン"),
   ),
 ];
 
