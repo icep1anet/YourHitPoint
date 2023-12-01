@@ -52,7 +52,6 @@ class HPNotifier extends StateNotifier<HPState> {
       recordLowHP: recordBody["record_data"]["recordLow"].toDouble(),
       activeLimitTime: responseBody["firebase_user_dict"]["activeLimitTime"],
       maxDayHP: recordBody["record_data"]["maxDayHP"].toInt(),
-      hpNumber: 0,
       currentHP: responseBody["firebase_user_dict"]["pastHP"].toInt(),
     );
     ref.read(userDataProvider.notifier).updateUserRecord(
@@ -65,7 +64,6 @@ class HPNotifier extends StateNotifier<HPState> {
           recordBody["record_data"]["experiencePoint"].toInt(),
           recordBody["record_data"]["deskworkTime"],
         );
-    changeHP(ref, true);
     updateMinMaxSpots();
   }
 
@@ -90,7 +88,7 @@ class HPNotifier extends StateNotifier<HPState> {
   void changeHP(WidgetRef ref, bool currentHPFlag) {
     double hpPercent = 0.0;
     // changeHPを2回目以降に呼ぶときはcurrentHPをfutureの値に置き換える
-    if (!currentHPFlag) {
+    if (!currentHPFlag && state.hpNumber < state.futureSpots.length) {
       state = state.copyWith(
           currentHP: state.futureSpots[state.hpNumber].y.toInt());
     }
@@ -250,9 +248,11 @@ class HPNotifier extends StateNotifier<HPState> {
       // "need_new_data" : 1, 1で必要 0で不要
       if (!needResend) {
         logger.d("HPの計算は不必要です");
+      logger.d(responseBody);
         await updateUserData(ref, responseBody);
       } else {
         logger.d("新しいHPの計算が必要です");
+
         await requestCalculateHP(ref, responseBody);
         await ref
             .read(userDataProvider.notifier)
