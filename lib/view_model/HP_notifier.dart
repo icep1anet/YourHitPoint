@@ -224,7 +224,7 @@ class HPNotifier extends StateNotifier<HPState> {
 
   Future<void> requestHP(WidgetRef ref) async {
     //リクエスト
-    DateTime now = DateTime.now();
+    DateTime now = DateTime.now().toUtc().add(const Duration(hours: 9));
     String nowDate = DateFormat('yyyy-MM-dd').format(now);
     String nowTime = DateFormat('HH:mm').format(now);
     Map<String, dynamic>? body = {
