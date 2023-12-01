@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 // import 'package:provider/provider.dart';
 // import 'package:vector_math/vector_math.dart' as vector;
 
-import "package:your_hit_point/utils/hex_color.dart";
 import "package:your_hit_point/utils/calculate_levelup.dart";
 
 class MediterranesnDietView extends StatelessWidget {

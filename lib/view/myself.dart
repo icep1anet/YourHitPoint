@@ -14,7 +14,6 @@ import 'package:your_hit_point/utils/hex_color.dart';
 import 'package:your_hit_point/utils/avatar.dart';
 import 'package:your_hit_point/components/profile.dart';
 import 'package:your_hit_point/components/health_level2.dart';
-import "package:your_hit_point/utils/timer_func.dart";
 import "package:your_hit_point/view_model/HP_notifier.dart";
 import "package:your_hit_point/view_model/user_data_notifier.dart";
 
