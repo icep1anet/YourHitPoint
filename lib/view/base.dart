@@ -85,19 +85,19 @@ class MainPageState extends ConsumerState<MainPage> {
                       items: [
                         SalomonBottomBarItem(
                           icon: const Icon(Icons.person),
-                          title: Text(
-                            "Myself",
-                            //iconが真ん中startなのでできない
-                            // textAlign: TextAlign.left,
-                            style: GoogleFonts.orelegaOne(fontSize: 20),
-                          ),
-                          selectedColor: Theme.of(context).focusColor,
+                          title: Text("Myself",
+                              //iconが真ん中startなのでできない
+                              // textAlign: TextAlign.left,
+                              style: GoogleFonts.orelegaOne(
+                                  fontSize: 20, letterSpacing: 2)),
+                          selectedColor: Theme.of(context).cardColor,
                         ),
                         SalomonBottomBarItem(
                             icon: const Icon(Icons.people),
                             title: Text("Friends",
-                                style: GoogleFonts.orelegaOne(fontSize: 20)),
-                            selectedColor: Theme.of(context).focusColor)
+                                style: GoogleFonts.orelegaOne(
+                                    fontSize: 20, letterSpacing: 2)),
+                            selectedColor: Theme.of(context).cardColor)
                       ]),
                 );
               }
