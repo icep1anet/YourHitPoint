@@ -7,3 +7,10 @@ void setTimerFunc(int time, Function func, WidgetRef ref) {
     func(ref);
   });
 }
+
+void setTimerChangeHP(
+    int time, Function func, WidgetRef ref, bool changeHPFlag) {
+  Timer.periodic(Duration(seconds: time), (timer) {
+    func(ref, changeHPFlag);
+  });
+}

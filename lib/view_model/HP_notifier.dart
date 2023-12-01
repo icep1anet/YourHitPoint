@@ -28,9 +28,6 @@ class HPNotifier extends StateNotifier<HPState> {
       logger.d("accessToken != null");
       ref.watch(accessTokenProvider.notifier).state = accessToken;
       await ref.read(userDataProvider.notifier).fetchProfile();
-      // await requestHP(ref);
-      // await requestHP(ref);
-      changeHP(ref);
     } else {
       logger.d("accessToken == null");
     }
@@ -42,27 +39,33 @@ class HPNotifier extends StateNotifier<HPState> {
       logger.d("no past_spots data");
       return;
     }
+    Map recordBody = await requestRecord(ref);
     List<FlSpot> pastTmpSpots =
         convertHPSpotsList(responseBody["graph_spots"]["past_spots"]);
+    List<FlSpot> futureSpots =
+        convertHPSpotsList(responseBody["graph_spots"]["future_spots"]);
     state = state.copyWith(
-      futureSpots:
-          convertHPSpotsList(responseBody["graph_spots"]["future_spots"]),
+      futureSpots: futureSpots,
       pastSpots: pastTmpSpots,
       imgUrl: responseBody["firebase_user_dict"]["avatarUrl"],
-      recordHighHP: responseBody["firebase_user_dict"]["recordHigh"].toDouble(),
-      recordLowHP: responseBody["firebase_user_dict"]["recordLow"].toDouble(),
+      recordHighHP: recordBody["record_data"]["recordHigh"].toDouble(),
+      recordLowHP: recordBody["record_data"]["recordLow"].toDouble(),
       activeLimitTime: responseBody["firebase_user_dict"]["activeLimitTime"],
-      maxDayHP: responseBody["firebase_user_dict"]["maxDayHP"].toInt(),
+      maxDayHP: recordBody["record_data"]["maxDayHP"].toInt(),
       hpNumber: 0,
       currentHP: responseBody["firebase_user_dict"]["pastHP"].toInt(),
     );
     ref.read(userDataProvider.notifier).updateUserRecord(
+          responseBody["firebase_user_dict"]["userName"],
           responseBody["firebase_user_dict"]["avatarName"],
           responseBody["firebase_user_dict"]["avatarType"],
-          responseBody["firebase_user_dict"]["maxSleepDuration"],
-          responseBody["firebase_user_dict"]["maxTotalDaySteps"],
+          recordBody["record_data"]["maxSleepDuration"],
+          recordBody["record_data"]["maxTotalDaySteps"],
+          recordBody["record_data"]["experienceLevel"].toInt(),
+          recordBody["record_data"]["experiencePoint"].toInt(),
+          recordBody["record_data"]["deskworkTime"],
         );
-
+    changeHP(ref, true);
     updateMinMaxSpots();
   }
 
@@ -84,15 +87,18 @@ class HPNotifier extends StateNotifier<HPState> {
     }
   }
 
-  void changeHP(WidgetRef ref) {
-    if (state.hpNumber < state.futureSpots.length) {
+  void changeHP(WidgetRef ref, bool currentHPFlag) {
+    double hpPercent = 0.0;
+    // changeHPを2回目以降に呼ぶときはcurrentHPをfutureの値に置き換える
+    if (!currentHPFlag) {
       state = state.copyWith(
           currentHP: state.futureSpots[state.hpNumber].y.toInt());
-      double hpPercent = (state.currentHP / state.maxDayHP) * 100;
-      if (state.currentHP < 0) {
-        // currentHP = 0;
-        hpPercent = 0;
-      }
+    }
+    hpPercent = (state.currentHP / state.maxDayHP) * 100;
+    if (state.currentHP < 0) {
+      hpPercent = 0;
+    }
+    if (state.hpNumber < state.futureSpots.length || currentHPFlag) {
       if (80 < hpPercent) {
         state = state.copyWith(
             barColor: const Color(0xFF32cd32),
@@ -233,7 +239,7 @@ class HPNotifier extends StateNotifier<HPState> {
     var response = await request(url: url, type: "get", body: bodyEncoded);
     //リクエストの返り値をマップ形式に変換
     var responseBody = jsonDecode(response.body);
-    logger.d(responseBody);
+    // logger.d(responseBody);
     int statusCode = response.statusCode;
     //リクエスト成功時
     if (statusCode == 200) {
@@ -246,7 +252,10 @@ class HPNotifier extends StateNotifier<HPState> {
         await updateUserData(ref, responseBody);
       } else {
         logger.d("新しいHPの計算が必要です");
-        await requestCalculate(ref, responseBody);
+        await requestCalculateHP(ref, responseBody);
+        await ref
+            .read(userDataProvider.notifier)
+            .requestCalculateHL(ref, responseBody);
         await requestHP(ref);
       }
     } else {
@@ -256,7 +265,7 @@ class HPNotifier extends StateNotifier<HPState> {
     return;
   }
 
-  Future? requestCalculate(WidgetRef ref, Map responseBody) async {
+  Future? requestCalculateHP(WidgetRef ref, Map responseBody) async {
     DateTime now = DateTime.now().toUtc().add(const Duration(hours: 9));
     // 日本標準時UTC+9に変換
     String beforeUpdateDate =
@@ -306,11 +315,36 @@ class HPNotifier extends StateNotifier<HPState> {
     var resBody = jsonDecode(response.body);
     //リクエスト成功時
     if (response.statusCode == 200) {
-      logger.d("register成功しました!");
+      logger.d("calculateHP成功しました!");
     } else {
       // リクエストが失敗した場合、エラーメッセージを表示します
       logger.d("Request failed with status: $resBody");
     }
     return resBody;
+  }
+
+  Future<Map> requestRecord(WidgetRef ref) async {
+    //リクエスト
+    Map<String, dynamic>? body = {
+      "fitbit_id": ref.read(userDataProvider).userId,
+    };
+    var url = Uri.parse(
+        "https://your-hit-point-backend-2ledkxm6ta-an.a.run.app/record");
+    url = url.replace(queryParameters: body);
+    final bodyEncoded = jsonEncode(body);
+    var response = await request(url: url, type: "get", body: bodyEncoded);
+    //リクエストの返り値をマップ形式に変換
+    var responseBody = jsonDecode(response.body);
+    int statusCode = response.statusCode;
+    //リクエスト成功時
+    if (statusCode == 200) {
+      // リクエストが成功した場合、レスポンスの内容を取得して表示します
+      logger.d("requestRecord成功しました!");
+      logger.d(responseBody);
+    } else {
+      // リクエストが失敗した場合、エラーメッセージを表示します
+      logger.d("Request failed with status: $responseBody");
+    }
+    return responseBody;
   }
 }

@@ -21,7 +21,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
   FocusNode? _focusUserNameNode;
   FocusNode? _focusAvatarNameNode;
   TextEditingController? _userNameController;
-  final _registering = false;
+  bool _registering = false;
   TextEditingController? _avatarNameController;
   String? selectAvatarType;
   String? selectStartTime;
@@ -37,9 +37,14 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
     super.initState();
     _focusUserNameNode = FocusNode();
     _focusAvatarNameNode = FocusNode();
+    _userNameController =
+        TextEditingController(text: ref.read(userDataProvider).userName);
+    _avatarNameController =
+        TextEditingController(text: ref.read(userDataProvider).avatarName);
     selectAvatarType = ref.read(userDataProvider).avatarType;
-    selectStartTime = "9:00";
-    selectEndTime = "17:00";
+    List deskworkTime = ref.read(userDataProvider).deskworkTime;
+    selectStartTime = deskworkTime[0];
+    selectEndTime = deskworkTime[1];
   }
 
   @override
@@ -78,8 +83,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                         style: const TextStyle(fontSize: 20),
                         autocorrect: false,
                         autofocus: false,
-                        controller: _userNameController = TextEditingController(
-                            text: ref.watch(userDataProvider).userName),
+                        controller: _userNameController,
                         decoration: InputDecoration(
                           border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(
@@ -107,9 +111,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                         child: TextField(
                           style: const TextStyle(fontSize: 20),
                           autocorrect: false,
-                          controller: _avatarNameController =
-                              TextEditingController(
-                                  text: ref.watch(userDataProvider).avatarName),
+                          controller: _avatarNameController,
                           decoration: InputDecoration(
                             border: const OutlineInputBorder(
                               borderRadius: BorderRadius.all(
@@ -251,7 +253,20 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                           if (_registering == false &&
                               _userNameController!.text != "" &&
                               _avatarNameController!.text != "") {
+                            if (!context.mounted) return;
                             FocusScope.of(context).unfocus();
+                            setState(() {
+                              _registering = true;
+                            });
+                            await ref
+                                .read(userDataProvider.notifier)
+                                .changeProfile(
+                                    ref.read(userDataProvider).userId!,
+                                    _userNameController!.text,
+                                    _avatarNameController!.text,
+                                    selectAvatarType!,
+                                    [selectStartTime, selectEndTime]);
+                            navigateMain();
                           }
                         },
                         child: const Text(
@@ -263,8 +278,6 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                       //ローディング
                       if (_registering == true)
                         const CircularProgressIndicator(),
-                      if (userId != null) Text(userId!),
-                      
                     ],
                   ),
                 ),

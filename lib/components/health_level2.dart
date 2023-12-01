@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 // import 'package:vector_math/vector_math.dart' as vector;
 
 import "package:your_hit_point/utils/hex_color.dart";
+import "package:your_hit_point/utils/calculate_levelup.dart";
 
 class MediterranesnDietView extends StatelessWidget {
   final int? experienceLevel;
@@ -82,7 +83,7 @@ class MediterranesnDietView extends StatelessWidget {
                   // Color.fromARGB(255, 156, 95, 194),
                   // HexColor("#2A98E7"),
                   // HexColor("2698E8"),
-                ], angle: experiencePoint!.toDouble()),
+                ], angle: calculateLevelUp(experienceLevel!, experiencePoint!)),
                 child: const SizedBox(
                   width: 108,
                   height: 108,

@@ -29,99 +29,99 @@ List<DropdownMenuItem<String>> dropdownMenuItems = const [
 
 List<DropdownMenuItem<String>> dropdownTimes = const [
   DropdownMenuItem(
-    value: "0:00",
+    value: "0:00:00",
     child: Text("0時"),
   ),
   DropdownMenuItem(
-    value: "1:00",
+    value: "1:00:00",
     child: Text("1"),
   ),
   DropdownMenuItem(
-    value: "2:00",
+    value: "2:00:00",
     child: Text("2"),
   ),
   DropdownMenuItem(
-    value: "3:00",
+    value: "3:00:00",
     child: Text("3"),
   ),
   DropdownMenuItem(
-    value: "4:00",
+    value: "4:00:00",
     child: Text("4"),
   ),
   DropdownMenuItem(
-    value: "5:00",
+    value: "5:00:00",
     child: Text("5"),
   ),
   DropdownMenuItem(
-    value: "6:00",
+    value: "6:00:00",
     child: Text("6"),
   ),
   DropdownMenuItem(
-    value: "7:00",
+    value: "7:00:00",
     child: Text("7"),
   ),
   DropdownMenuItem(
-    value: "8:00",
+    value: "8:00:00",
     child: Text("8"),
   ),
   DropdownMenuItem(
-    value: "9:00",
+    value: "9:00:00",
     child: Text("9"),
   ),
   DropdownMenuItem(
-    value: "10:00",
+    value: "10:00:00",
     child: Text("10"),
   ),
   DropdownMenuItem(
-    value: "11:00",
+    value: "11:00:00",
     child: Text("11"),
   ),
   DropdownMenuItem(
-    value: "12:00",
+    value: "12:00:00",
     child: Text("12"),
   ),
   DropdownMenuItem(
-    value: "13:00",
+    value: "13:00:00",
     child: Text("13"),
   ),
   DropdownMenuItem(
-    value: "14:00",
+    value: "14:00:00",
     child: Text("14"),
   ),
   DropdownMenuItem(
-    value: "15:00",
+    value: "15:00:00",
     child: Text("15"),
   ),
   DropdownMenuItem(
-    value: "16:00",
+    value: "16:00:00",
     child: Text("16"),
   ),
   DropdownMenuItem(
-    value: "17:00",
+    value: "17:00:00",
     child: Text("17"),
   ),
   DropdownMenuItem(
-    value: "18:00",
+    value: "18:00:00",
     child: Text("18"),
   ),
   DropdownMenuItem(
-    value: "19:00",
+    value: "19:00:00",
     child: Text("19"),
   ),
   DropdownMenuItem(
-    value: "20:00",
+    value: "20:00:00",
     child: Text("20"),
   ),
   DropdownMenuItem(
-    value: "21:00",
+    value: "21:00:00",
     child: Text("21"),
   ),
   DropdownMenuItem(
-    value: "22:00",
+    value: "22:00:00",
     child: Text("22"),
   ),
   DropdownMenuItem(
-    value: "23:00",
+    value: "23:00:00",
     child: Text("23"),
   ),
 ];

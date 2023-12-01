@@ -43,11 +43,17 @@ class FriendCardWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(friendName,
-                  style: GoogleFonts.roboto(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25,
-                      color: Colors.black)),
+              Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Text(friendName,
+                      style: GoogleFonts.roboto(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                          color: Colors.black)),
+                ),
+              ),
               const SizedBox(height: 12),
               Text(" HP: $currentHP",
                   textAlign: TextAlign.left,
