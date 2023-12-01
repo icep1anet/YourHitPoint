@@ -25,8 +25,8 @@ Future<Map> getFriendData(friendIdDict) async {
     final friendIdList = friendIdDict.keys.join(",");
     Response response = await backendRequest(
         path: "/friend", query: {"friend_fitbit_id_list": friendIdList});
-    final responseBody = response.body;
-    friendDataDict = json.decode(responseBody);
+    String utf8DecodedResponseBody = utf8.decode(response.bodyBytes);
+    friendDataDict = json.decode(utf8DecodedResponseBody);
   }
   return friendDataDict;
 }

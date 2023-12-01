@@ -41,7 +41,7 @@ class FriendData extends _$FriendData {
     //     }}
     friendDataDict.forEach((key, value) {
       add(FriendState(
-          friendName: friendIdDict[key],
+          friendName: value["friend_name"],
           currentHP: value["friend_hp"].toInt(),
           avatarUrl: value["friend_avatar_image"],
           hpFontColor: selectHPfontColor(value["friend_hp"].toInt())));
