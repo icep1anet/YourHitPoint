@@ -41,7 +41,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 def applicationName = "yourHitPoint"
-def version = "0.9.1"
+def version = "0.9.2"
 
 android {
     namespace "com.yourhitpoint"
@@ -78,7 +78,7 @@ android {
         applicationId "com.yourhitpoint"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion 30
+        minSdkVersion 29
         // minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()

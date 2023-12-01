@@ -1,7 +1,7 @@
 name: your_hit_point
 description: visualize your hitpoint.
 publish_to: "none"
-version: 0.9.1
+version: 0.9.2
 
 assets:
   -.env
@@ -59,8 +59,25 @@ flutter:
     - assets/images/illust_normal.jpg
     - assets/images/fitbit_icon.png
 
-flutter_icons:
+flutter_launcher_icons:
   android: true 
   ios: true
   image_path: "lib/assets/yourHP_icon.jpg"
+  adaptive_icon_background: "#00a3af"
+  adaptive_icon_foreground: "lib/assets/app_icon.jpg"
 
+fonts:
+    - family: NotoSansJP
+      fonts:
+        - asset: assets/fonts/NotoSansJP-Black.otf
+          weight: 900
+        - asset: assets/fonts/NotoSansJP-Bold.otf
+          weight: 700
+        - asset: assets/fonts/NotoSansJP-Light.otf
+          weight: 300
+        - asset: assets/fonts/NotoSansJP-Medium.otf
+          weight: 500
+        - asset: assets/fonts/NotoSansJP-Regular.otf
+          weight: 400
+        - asset: assets/fonts/NotoSansJP-Thin.otf
+          weight: 100
