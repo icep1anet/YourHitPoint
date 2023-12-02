@@ -3,7 +3,6 @@ import "package:flutter/material.dart";
 import "package:logger/logger.dart";
 import "package:salomon_bottom_bar/salomon_bottom_bar.dart";
 import "package:google_fonts/google_fonts.dart";
-import 'package:bordered_text/bordered_text.dart';
 import 'package:your_hit_point/client/firebase_authentication.dart';
 import 'package:your_hit_point/client/oauth_fitbit.dart';
 import 'package:your_hit_point/utils/timer_func.dart';

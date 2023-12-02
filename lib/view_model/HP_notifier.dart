@@ -217,7 +217,7 @@ class HPNotifier extends StateNotifier<HPState> {
 
   Future<void> requestHP(WidgetRef ref) async {
     //リクエスト
-    DateTime now = DateTime.now();
+    DateTime now = DateTime.now().toUtc().add(const Duration(hours: 9));
     String nowDate = DateFormat('yyyy-MM-dd').format(now);
     String nowTime = DateFormat('HH:mm').format(now);
     Map<String, dynamic>? body = {
@@ -230,9 +230,9 @@ class HPNotifier extends StateNotifier<HPState> {
     url = url.replace(queryParameters: body);
     final bodyEncoded = jsonEncode(body);
     var response = await request(url: url, type: "get", body: bodyEncoded);
-    String utf8DecodedresponseBody = utf8.decode(response.bodyBytes);
+    String utf8DecodedResponseBody = utf8.decode(response.bodyBytes);
     //リクエストの返り値をマップ形式に変換
-    var responseBody = jsonDecode(utf8DecodedresponseBody);
+    var responseBody = jsonDecode(utf8DecodedResponseBody);
     // logger.d(responseBody);
     int statusCode = response.statusCode;
     //リクエスト成功時
